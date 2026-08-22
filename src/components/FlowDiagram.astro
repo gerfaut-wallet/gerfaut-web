@@ -1,0 +1,85 @@
+---
+/** The transaction flow diagram, as the app draws it: inputs left,
+    transaction node in the center, outputs right, fee as a dashed branch.
+    Curve thickness follows the amounts. Decorative. */
+---
+
+<figure
+  role="img"
+  aria-label="A transaction drawn as a flow diagram: two inputs on the left, the transaction node in the center, two outputs and a dashed network fee branch on the right"
+  class="card p-4 select-none sm:p-6"
+>
+  <svg viewBox="0 0 560 316" class="h-auto w-full" aria-hidden="true">
+    <g fill="none">
+      <path
+        d="M30 84 C 140 84, 140 148, 246 148"
+        stroke="var(--color-primary)"
+        stroke-width="8"
+        opacity="0.9"></path>
+      <path
+        d="M30 196 C 140 196, 140 174, 246 174"
+        stroke="var(--color-border)"
+        stroke-width="4"></path>
+      <path
+        d="M314 148 C 420 148, 420 94, 530 94"
+        stroke="var(--color-primary)"
+        stroke-width="7"
+        opacity="0.9"></path>
+      <path
+        d="M314 174 C 420 174, 420 206, 530 206"
+        stroke="var(--color-border)"
+        stroke-width="5"></path>
+      <path
+        d="M285 196 C 285 240, 300 262, 330 274"
+        stroke="var(--color-pending)"
+        stroke-width="2"
+        stroke-dasharray="5 5"></path>
+      <rect
+        x="246"
+        y="126"
+        width="68"
+        height="70"
+        rx="12"
+        fill="var(--color-sunken)"
+        stroke="var(--color-border)"></rect>
+    </g>
+    <g
+      font-family="var(--font-data)"
+      font-size="12"
+      fill="var(--color-muted)"
+      style="font-variant-numeric: tabular-nums"
+    >
+      <text x="30" y="60">bc1qxy&hellip;k9fz</text>
+      <text x="30" y="76" fill="var(--color-text)">0.04500000</text>
+      <text x="30" y="226">bc1prw&hellip;t2vu</text>
+      <text x="30" y="242">0.02000000</text>
+      <text x="530" y="66" text-anchor="end">bc1qme&hellip;q7dt</text>
+      <text x="530" y="82" text-anchor="end" fill="var(--color-text)"
+        >0.03920000</text>
+      <text x="530" y="236" text-anchor="end">bc1qex&hellip;a30j</text>
+      <text x="530" y="252" text-anchor="end">0.02560000</text>
+      <text x="342" y="278">Network fee &middot; 0.00020000</text>
+      <text x="280" y="166" text-anchor="middle" fill="var(--color-text)"
+        >tx</text
+      >
+    </g>
+  </svg>
+  <figcaption
+    class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border pt-4 text-[13px] text-muted"
+  >
+    <span class="inline-flex items-center gap-2">
+      <span class="h-0.5 w-5 rounded-full bg-primary"></span>
+      Your wallet
+    </span>
+    <span class="inline-flex items-center gap-2">
+      <span class="h-0.5 w-5 rounded-full bg-border"></span>
+      External
+    </span>
+    <span class="inline-flex items-center gap-2">
+      <span
+        class="w-5 border-t-2 border-dashed"
+        style="border-color: var(--color-pending)"></span>
+      Network fee
+    </span>
+  </figcaption>
+</figure>
