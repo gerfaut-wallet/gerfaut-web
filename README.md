@@ -4,13 +4,22 @@ Website of [Gerfaut](https://github.com/gerfaut-wallet), a Bitcoin watch-only wa
 
 ![Status: pre-alpha](https://img.shields.io/badge/status-pre--alpha-orange) ![License: AGPL-3.0-only](https://img.shields.io/badge/license-AGPL--3.0--only-blue)
 
-> Status: pre-development. The repository only holds conventions and scaffolding for now, no code yet.
-
 ## Scope
 
 - Product website and landing pages
 - User documentation
 - Changelog and release downloads
+
+## Development
+
+The site is built with [Astro](https://astro.build) and Tailwind CSS, and compiles to static files served by Cloudflare Pages.
+
+```sh
+npm install
+npm run dev      # local dev server
+npm run build    # static build into dist/
+npm run preview  # serve the built site locally
+```
 
 ## Project
 
