@@ -1,5 +1,4 @@
 ---
-import Icon from "./Icon.astro";
 import Mark from "./Mark.astro";
 
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
@@ -45,44 +44,7 @@ const links = [
             </li>
           ))
         }
-        <li>
-          <button
-            id="theme-toggle"
-            type="button"
-            class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-md text-muted transition-colors duration-150 hover:bg-sunken hover:text-text"
-            aria-label="Switch between light and dark theme"
-          >
-            <span class="theme-toggle-moon"><Icon name="moon" /></span>
-            <span class="theme-toggle-sun"><Icon name="sun" /></span>
-          </button>
-        </li>
       </ul>
     </nav>
   </div>
 </header>
-
-<style>
-  .theme-toggle-sun {
-    display: none;
-  }
-  :global([data-theme="dark"]) .theme-toggle-sun {
-    display: inline-flex;
-  }
-  :global([data-theme="dark"]) .theme-toggle-moon {
-    display: none;
-  }
-</style>
-
-<script>
-  const toggle = document.getElementById("theme-toggle");
-  toggle?.addEventListener("click", () => {
-    const root = document.documentElement;
-    const next = root.dataset.theme === "dark" ? "light" : "dark";
-    root.dataset.theme = next;
-    try {
-      localStorage.setItem("theme", next);
-    } catch {
-      /* private mode: the choice lasts for the page view */
-    }
-  });
-</script>

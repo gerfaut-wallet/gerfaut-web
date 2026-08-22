@@ -27,8 +27,7 @@ const ogImage = new URL("/og.png", Astro.site);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F4F7F9" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0B0F14" />
+    <meta name="theme-color" content="#F4F7F9" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Gerfaut" />
@@ -61,24 +60,6 @@ const ogImage = new URL("/og.png", Astro.site);
       type="font/woff2"
       crossorigin
     />
-
-    <script is:inline>
-      (() => {
-        let theme = "light";
-        try {
-          const stored = localStorage.getItem("theme");
-          theme =
-            stored === "dark" || stored === "light"
-              ? stored
-              : matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-        } catch {
-          /* storage unavailable: keep the light default */
-        }
-        document.documentElement.dataset.theme = theme;
-      })();
-    </script>
   </head>
   <body>
     <a

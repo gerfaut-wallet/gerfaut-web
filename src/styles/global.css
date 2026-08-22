@@ -1,5 +1,5 @@
-/* Toundra design tokens. Light theme is the default; [data-theme="dark"]
-   flips the ramp; .dark-island keeps a section dark in either theme. */
+/* Toundra design tokens. The site is light only; .dark-island paints a
+   section at the night end of the ramp (premium, footer, app mock rail). */
 
 @import "tailwindcss";
 
@@ -91,29 +91,8 @@
   --ease-out-toundra: cubic-bezier(0.2, 0, 0, 1);
 }
 
-/* Dark theme: same roles, other ramp. Utilities read the variables. */
-[data-theme="dark"] {
-  --color-background: #0b0f14;
-  --color-surface: #161e27;
-  --color-sunken: #1f2933; /* raised in dark, sunken in light */
-  --color-border: #2a3440;
-  --color-text: #e6ecf2;
-  --color-muted: #8a98a6;
-  --color-primary: #7dd3e8;
-  --color-primary-hover: #a5e1f0;
-  --color-on-primary: #06232b;
-  --color-alert: #ff706d;
-  --color-alert-surface: #161e27;
-  --color-confirmed: #50b771;
-  --color-confirmed-surface: #161e27;
-  --color-pending: #c1983a;
-  --color-pending-surface: #161e27;
-  --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.5);
-  color-scheme: dark;
-}
-
-/* A self-contained dark island, whatever the page theme: the premium
-   section and the footer sit at the night end of the ramp. */
+/* A self-contained dark island on the light page: the premium section
+   and the footer sit at the night end of the ramp. */
 .dark-island {
   --color-background: #0b0f14;
   --color-surface: #161e27;
@@ -149,9 +128,6 @@
   --color-pending-surface: #fdf0cf;
   color-scheme: light;
 }
-
-/* Tailwind dark: variant follows the page's data-theme. */
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* --- base --- */
 
