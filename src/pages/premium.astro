@@ -1,0 +1,198 @@
+---
+import Icon from "../components/Icon.astro";
+import Base from "../layouts/Base.astro";
+
+const services = [
+  {
+    icon: "shield-alert",
+    title: "Theft alert",
+    body: "Round-the-clock monitoring of your wallets. If a coin moves without you, a notification reaches you in about thirty seconds.",
+  },
+  {
+    icon: "timer",
+    title: "Timelock watch",
+    body: "Follow your recovery paths. Gerfaut warns you before a timelock opens, so an inheritance setup never takes you by surprise.",
+  },
+  {
+    icon: "bell",
+    title: "Multi-channel notifications",
+    body: "Push, email, ntfy, Telegram, or webhook. Alerts reach you on the channels you choose.",
+  },
+  {
+    icon: "file-spreadsheet",
+    title: "Accounting export",
+    body: "Your history valued in fiat at the rate of each transaction day. CSV or PDF, in several currencies.",
+  },
+  {
+    icon: "server",
+    title: "Dedicated backend",
+    body: "A fast private node and indexer, reachable over Tor, with no rate limits.",
+  },
+  {
+    icon: "lock",
+    title: "Encrypted sync relay",
+    body: "Keep several devices in sync through a relay that only ever sees ciphertext.",
+  },
+] as const;
+
+const prices = [
+  { duration: "1 month", price: "5 €", monthly: "5 € per month" },
+  { duration: "6 months", price: "24 €", monthly: "4 € per month" },
+  { duration: "12 months", price: "36 €", monthly: "3 € per month" },
+] as const;
+---
+
+<Base
+  title="Gerfaut Premium · Alerts for your cold storage"
+  description="Gerfaut Premium watches the chain around the clock: theft alerts within seconds, timelock warnings, multi-channel notifications. No account, paid in bitcoin."
+>
+  <section class="pt-14 pb-12 md:pt-20">
+    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+      <p class="text-label tracking-[0.04em] text-primary uppercase">
+        Gerfaut Premium
+      </p>
+      <h1
+        class="mt-4 max-w-2xl font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[2.5rem]"
+      >
+        You do not pay to see a balance. You pay to be warned.
+      </h1>
+      <p class="mt-5 max-w-xl text-lg text-muted">
+        The apps are free, open source, and complete on their own. Premium adds
+        what an app alone cannot do: a server that watches the chain for you,
+        around the clock, and reaches you the moment something happens.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-12" aria-labelledby="services-heading">
+    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+      <h2
+        id="services-heading"
+        class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
+      >
+        One plan, every service
+      </h2>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+        {
+          services.map((service) => (
+            <div class="card p-5">
+              <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken text-primary">
+                <Icon name={service.icon} size={18} />
+              </span>
+              <h3 class="mt-4 font-display text-[1rem] font-semibold">
+                {service.title}
+              </h3>
+              <p class="mt-1.5 text-sm text-muted">{service.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="pt-12 pb-16 md:pb-24" aria-labelledby="privacy-heading">
+    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div
+        class="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-16"
+      >
+        <div>
+          <h2
+            id="privacy-heading"
+            class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
+          >
+            No account. No email.
+          </h2>
+          <p class="mt-4 text-muted">
+            A subscription is a random key, nothing else, in the spirit of
+            Mullvad. It needs no email address and stores no personal data.
+            You pay in bitcoin through BTCPay and top up whenever you choose.
+          </p>
+        </div>
+        <div class="card p-6">
+          <h3 class="text-h2 font-display">Keep your key safe</h3>
+          <p class="mt-2 text-sm text-muted">
+            The key is the whole account. If you lose the key, you lose the
+            subscription, and there is no recovery. Store it in a password
+            manager the day you subscribe.
+          </p>
+          <p class="font-data mt-4 rounded-sm bg-sunken px-3 py-2 text-data text-muted">
+            8391 4472 0058 2276 &middot; example key
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section
+    class="dark-island bg-background py-16 text-text md:py-24"
+    aria-labelledby="pricing-heading"
+  >
+    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+      <h2
+        id="pricing-heading"
+        class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
+      >
+        Pricing
+      </h2>
+      <p class="mt-3 max-w-xl text-muted">
+        One plan with every service included. Prices are in euros, paid in
+        bitcoin.
+      </p>
+      <div class="mt-10 grid gap-4 sm:grid-cols-3 lg:gap-5">
+        {
+          prices.map((tier) => (
+            <div class="card p-6">
+              <p class="text-label tracking-[0.04em] text-muted uppercase">
+                {tier.duration}
+              </p>
+              <p class="font-data mt-3 text-amount">{tier.price}</p>
+              <p class="mt-1 text-sm text-muted">{tier.monthly}</p>
+            </div>
+          ))
+        }
+      </div>
+      <div class="mt-10">
+        <button
+          type="button"
+          id="subscribe"
+          class="btn btn-primary"
+          aria-expanded="false"
+          aria-controls="subscribe-note"
+        >
+          Subscribe
+        </button>
+        <div
+          id="subscribe-note"
+          role="status"
+          hidden
+          class="card mt-5 max-w-xl p-5"
+        >
+          <p class="text-sm">
+            Premium opens with the first public release of the apps. There is
+            nothing to buy yet.
+          </p>
+          <p class="mt-2 text-sm text-muted">
+            Watch the
+            <a
+              href="https://github.com/gerfaut-wallet"
+              class="text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover"
+              >GitHub repositories</a
+            >
+            to catch the first release.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const button = document.getElementById("subscribe");
+  const note = document.getElementById("subscribe-note");
+  button?.addEventListener("click", () => {
+    if (!note) return;
+    const open = note.hidden;
+    note.hidden = !open;
+    button.setAttribute("aria-expanded", String(open));
+  });
+</script>
