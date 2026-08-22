@@ -1,0 +1,238 @@
+---
+import Icon from "../components/Icon.astro";
+import Base from "../layouts/Base.astro";
+
+const platforms = [
+  {
+    slot: "windows",
+    name: "Windows",
+    icon: "monitor",
+    formats: ".msi and .exe installers",
+  },
+  {
+    slot: "macos",
+    name: "macOS",
+    icon: "monitor",
+    formats: ".dmg disk image",
+  },
+  {
+    slot: "linux",
+    name: "Linux",
+    icon: "monitor",
+    formats: ".AppImage, .deb, and .rpm packages",
+  },
+  {
+    slot: "android",
+    name: "Android",
+    icon: "smartphone",
+    formats: "direct .apk",
+  },
+] as const;
+
+const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
+---
+
+<Base
+  title="Download Gerfaut · Bitcoin watch-only wallet"
+  description="Download Gerfaut for Windows, macOS, Linux, and Android. Free and open source, with checksums signed by the author's minisign key."
+>
+  <section class="pt-14 pb-12 md:pt-20">
+    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+      <h1
+        class="font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[2.5rem]"
+      >
+        Download Gerfaut
+      </h1>
+      <p class="mt-4 max-w-xl text-lg text-muted">
+        Binaries ship with each GitHub release, along with checksums signed by
+        the author's minisign key.
+      </p>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:gap-5">
+        {
+          platforms.map((platform) => (
+            <div class="card flex flex-col p-6">
+              <div class="flex items-center gap-3">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sunken text-primary">
+                  <Icon name={platform.icon} />
+                </span>
+                <div class="min-w-0 flex-1">
+                  <h2 class="text-h2 font-display">{platform.name}</h2>
+                  <p class="text-sm text-muted">{platform.formats}</p>
+                </div>
+                <span
+                  class="font-data hidden rounded-sm bg-sunken px-2 py-1 text-data text-muted"
+                  data-release-version={platform.slot}
+                />
+              </div>
+              <div
+                class="mt-5 border-t border-border pt-4"
+                data-release={platform.slot}
+                aria-live="polite"
+              >
+                <div data-state="loading" hidden>
+                  <p class="text-sm text-muted">
+                    Checking the latest release&hellip;
+                  </p>
+                </div>
+                <div data-state="empty">
+                  <p class="text-sm font-medium">
+                    The first public release is coming.
+                  </p>
+                  <p class="mt-1 text-sm text-muted">
+                    Builds appear here the moment the first release is tagged.
+                    Until then, follow the project on
+                    <a
+                      href="https://github.com/gerfaut-wallet"
+                      class="text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover"
+                    >
+                      GitHub</a
+                    >.
+                  </p>
+                </div>
+                <ul data-state="list" hidden class="space-y-2" />
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="mt-8 text-sm text-muted">
+        All builds and release notes live on
+        <a
+          href="https://github.com/gerfaut-wallet"
+          class="text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover"
+          >github.com/gerfaut-wallet</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <section class="pt-12 pb-16 md:pb-24" aria-labelledby="verify-heading">
+    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+      <div class="card max-w-3xl p-6 md:p-8">
+        <div class="flex items-center gap-3">
+          <span
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sunken text-primary"
+          >
+            <Icon name="shield-check" />
+          </span>
+          <h2 id="verify-heading" class="text-h1 font-display">
+            Verify your download
+          </h2>
+        </div>
+        <p class="mt-4 text-sm text-muted">
+          Each release ships a <span class="font-data">SHA256SUMS</span> file
+          and its minisign signature. Two commands prove that the files were
+          signed by the author and arrived unchanged.
+        </p>
+        <h3 class="mt-6 text-sm font-medium">
+          1. Check the signature of the checksum file
+        </h3>
+        <pre
+          class="code-block mt-2"><code>minisign -Vm SHA256SUMS -P {minisignKey}</code></pre>
+        <h3 class="mt-5 text-sm font-medium">
+          2. Check the file you downloaded
+        </h3>
+        <pre
+          class="code-block mt-2"><code>sha256sum --check SHA256SUMS --ignore-missing</code></pre>
+        <h3 class="mt-6 text-sm font-medium">Author's minisign public key</h3>
+        <pre class="code-block mt-2"><code>{minisignKey}</code></pre>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  type Asset = { name: string; browser_download_url: string; size: number };
+  type Release = { tag_name: string; assets: Asset[] };
+
+  const matchers: Record<string, { repo: string; pattern: RegExp }> = {
+    windows: { repo: "gerfaut-desktop", pattern: /\.(msi|exe)$/i },
+    macos: { repo: "gerfaut-desktop", pattern: /\.dmg$/i },
+    linux: { repo: "gerfaut-desktop", pattern: /\.(appimage|deb|rpm)$/i },
+    android: { repo: "gerfaut-mobile", pattern: /\.apk$/i },
+  };
+
+  function setState(slot: Element, state: string) {
+    for (const panel of slot.querySelectorAll<HTMLElement>("[data-state]")) {
+      panel.hidden = panel.dataset.state !== state;
+    }
+  }
+
+  function formatSize(bytes: number): string {
+    const mb = bytes / (1024 * 1024);
+    return mb >= 100 ? `${Math.round(mb)} MB` : `${mb.toFixed(1)} MB`;
+  }
+
+  async function latest(repo: string): Promise<Release | null> {
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/gerfaut-wallet/${repo}/releases/latest`,
+        { headers: { Accept: "application/vnd.github+json" } },
+      );
+      if (!res.ok) return null;
+      const release = (await res.json()) as Release;
+      return Array.isArray(release.assets) ? release : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function render(name: string, release: Release | null) {
+    const slot = document.querySelector(`[data-release="${name}"]`);
+    if (!slot) return;
+    const assets =
+      release?.assets.filter((asset) =>
+        matchers[name]?.pattern.test(asset.name),
+      ) ?? [];
+    if (!release || assets.length === 0) {
+      setState(slot, "empty");
+      return;
+    }
+    const version = document.querySelector<HTMLElement>(
+      `[data-release-version="${name}"]`,
+    );
+    if (version) {
+      version.textContent = release.tag_name;
+      version.hidden = false;
+      version.classList.remove("hidden");
+    }
+    const list = slot.querySelector<HTMLElement>('[data-state="list"]');
+    if (!list) return;
+    list.textContent = "";
+    for (const asset of assets) {
+      const item = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = asset.browser_download_url;
+      link.className =
+        "flex cursor-pointer items-center justify-between gap-3 rounded-md bg-sunken px-3 py-2.5 transition-colors duration-150 hover:bg-border/60";
+      const label = document.createElement("span");
+      label.className = "font-data min-w-0 truncate text-data";
+      label.textContent = asset.name;
+      const size = document.createElement("span");
+      size.className = "shrink-0 text-sm text-muted";
+      size.textContent = formatSize(asset.size);
+      link.append(label, size);
+      item.append(link);
+      list.append(item);
+    }
+    setState(slot, "list");
+  }
+
+  async function load() {
+    for (const slot of document.querySelectorAll("[data-release]")) {
+      setState(slot, "loading");
+    }
+    const [desktop, mobile] = await Promise.all([
+      latest("gerfaut-desktop"),
+      latest("gerfaut-mobile"),
+    ]);
+    render("windows", desktop);
+    render("macos", desktop);
+    render("linux", desktop);
+    render("android", mobile);
+  }
+
+  load();
+</script>
