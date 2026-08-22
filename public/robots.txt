@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gerfaut-wallet.com/sitemap-index.xml

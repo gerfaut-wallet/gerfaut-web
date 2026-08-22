@@ -10,3 +10,8 @@ Desktop.ini
 
 # Local files
 *.local
+
+# Build
+node_modules/
+dist/
+.astro/

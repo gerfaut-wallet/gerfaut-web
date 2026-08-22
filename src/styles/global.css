@@ -1,0 +1,305 @@
+/* Toundra design tokens. Light theme is the default; [data-theme="dark"]
+   flips the ramp; .dark-island keeps a section dark in either theme. */
+
+@import "tailwindcss";
+
+/* --- fonts (SIL OFL 1.1, served with their license files) --- */
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/fonts/bricolage-grotesque/BricolageGrotesque-Variable.woff2")
+    format("woff2-variations");
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("/fonts/instrument-sans/InstrumentSans-Variable.woff2")
+    format("woff2-variations");
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fonts/jetbrains-mono/JetBrainsMono-Variable.woff2")
+    format("woff2-variations");
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+/* --- theme --- */
+
+@theme {
+  /* Colors, light theme (default) */
+  --color-background: #f4f7f9;
+  --color-surface: #ffffff;
+  --color-sunken: #ebf0f4;
+  --color-border: #c7d2db;
+  --color-text: #0d1317;
+  --color-muted: #55636f;
+  --color-primary: #0e7490;
+  --color-primary-hover: #0a5d75;
+  --color-on-primary: #ffffff;
+  --color-alert: #b3261e;
+  --color-alert-surface: #fde7e7;
+  --color-confirmed: #116b41;
+  --color-confirmed-surface: #dcf5e6;
+  --color-pending: #745400;
+  --color-pending-surface: #fdf0cf;
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-ui: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  /* Type scale */
+  --text-hero: 3.5rem;
+  --text-hero--line-height: 1.05;
+  --text-hero--letter-spacing: -0.03em;
+  --text-hero--font-weight: 600;
+  --text-display: 2rem;
+  --text-display--line-height: 1.15;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 600;
+  --text-h1: 1.5rem;
+  --text-h1--line-height: 1.25;
+  --text-h1--letter-spacing: -0.01em;
+  --text-h1--font-weight: 600;
+  --text-h2: 1.125rem;
+  --text-h2--line-height: 1.35;
+  --text-h2--font-weight: 600;
+  --text-body: 1rem;
+  --text-body--line-height: 1.55;
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.5;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.04em;
+  --text-label--font-weight: 500;
+  --text-amount: 2rem;
+  --text-amount--line-height: 1.1;
+  --text-amount--letter-spacing: -0.01em;
+  --text-amount--font-weight: 500;
+  --text-data: 0.8125rem;
+  --text-data--line-height: 1.6;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  --shadow-overlay: 0 8px 24px rgba(13, 19, 23, 0.14);
+
+  --ease-out-toundra: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Dark theme: same roles, other ramp. Utilities read the variables. */
+[data-theme="dark"] {
+  --color-background: #0b0f14;
+  --color-surface: #161e27;
+  --color-sunken: #1f2933; /* raised in dark, sunken in light */
+  --color-border: #2a3440;
+  --color-text: #e6ecf2;
+  --color-muted: #8a98a6;
+  --color-primary: #7dd3e8;
+  --color-primary-hover: #a5e1f0;
+  --color-on-primary: #06232b;
+  --color-alert: #ff706d;
+  --color-alert-surface: #161e27;
+  --color-confirmed: #50b771;
+  --color-confirmed-surface: #161e27;
+  --color-pending: #c1983a;
+  --color-pending-surface: #161e27;
+  --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+/* A self-contained dark island, whatever the page theme: the premium
+   section and the footer sit at the night end of the ramp. */
+.dark-island {
+  --color-background: #0b0f14;
+  --color-surface: #161e27;
+  --color-sunken: #1f2933;
+  --color-border: #2a3440;
+  --color-text: #e6ecf2;
+  --color-muted: #8a98a6;
+  --color-primary: #7dd3e8;
+  --color-primary-hover: #a5e1f0;
+  --color-on-primary: #06232b;
+  --color-confirmed: #50b771;
+  --color-confirmed-surface: #161e27;
+  --color-pending: #c1983a;
+  --color-pending-surface: #161e27;
+  color-scheme: dark;
+}
+
+/* The app screenshot in the hero always shows the light theme, framed
+   like a card; its sidebar stays a dark island via .dark-island. */
+.light-island {
+  --color-background: #f4f7f9;
+  --color-surface: #ffffff;
+  --color-sunken: #ebf0f4;
+  --color-border: #c7d2db;
+  --color-text: #0d1317;
+  --color-muted: #55636f;
+  --color-primary: #0e7490;
+  --color-primary-hover: #0a5d75;
+  --color-on-primary: #ffffff;
+  --color-confirmed: #116b41;
+  --color-confirmed-surface: #dcf5e6;
+  --color-pending: #745400;
+  --color-pending-surface: #fdf0cf;
+  color-scheme: light;
+}
+
+/* Tailwind dark: variant follows the page's data-theme. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* --- base --- */
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--color-text);
+  background: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Bitcoin data always in mono with tabular figures. */
+.font-data,
+[class*="font-data"] {
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Focus: 2px ring in the theme's action color, offset 2px. */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* --- shared component classes --- */
+
+@layer components {
+/* Buttons: 44px, radius 8px, Instrument Sans 14px/500, press scale 0.96. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: var(--radius-md);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 150ms var(--ease-out-toundra),
+    color 150ms var(--ease-out-toundra),
+    transform 100ms var(--ease-out-toundra);
+}
+.btn:active {
+  transform: scale(0.96);
+}
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+.btn-secondary {
+  background: var(--color-sunken);
+  color: var(--color-text);
+}
+.btn-secondary:hover {
+  background: color-mix(in srgb, var(--color-sunken) 80%, var(--color-border));
+}
+
+/* Card: surface, hairline border, radius 12px, never a shadow. */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+/* Status pill, light theme rule: tinted surface + dark text + 25% border.
+   In dark islands the tinted surface equals the card surface, which
+   leaves colored text alone, matching the dark theme rule. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.pill-confirmed {
+  background: var(--color-confirmed-surface);
+  color: var(--color-confirmed);
+  border: 1px solid color-mix(in srgb, var(--color-confirmed) 25%, transparent);
+}
+.pill-pending {
+  background: var(--color-pending-surface);
+  color: var(--color-pending);
+  border: 1px solid color-mix(in srgb, var(--color-pending) 25%, transparent);
+}
+
+/* Inline code and command blocks: data font on the sunken surface. */
+.code-block {
+  background: var(--color-sunken);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+  overflow-x: auto;
+  white-space: pre;
+}
+}
