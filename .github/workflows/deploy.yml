@@ -1,0 +1,37 @@
+# Builds the site and publishes it to the Cloudflare Pages project that
+# serves gerfaut-wallet.com.
+#
+# Run by hand for now: the site goes live the day the first release does,
+# not the day this file lands. Switch the trigger to `push` on `main`
+# once that day has passed.
+#
+# Needs two repository secrets:
+#   CLOUDFLARE_API_TOKEN   scoped to Cloudflare Pages: Edit
+#   CLOUDFLARE_ACCOUNT_ID
+
+name: Deploy
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=gerfaut-web --branch=main
