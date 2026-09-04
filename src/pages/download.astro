@@ -25,7 +25,7 @@ const platforms = [
     slot: "android",
     name: "Android",
     icon: "smartphone",
-    formats: "direct .apk",
+    formats: "one .apk per processor",
   },
 ] as const;
 
@@ -147,11 +147,26 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
   type Asset = { name: string; browser_download_url: string; size: number };
   type Release = { tag_name: string; assets: Asset[] };
 
-  const matchers: Record<string, { repo: string; pattern: RegExp }> = {
+  // A slot lists every asset its pattern matches. `variants` puts them in
+  // order and says what each one is for: Android ships one build per
+  // processor, and a name like armeabi-v7a answers nobody's question. The
+  // first variant is the one almost everyone wants; the rest fold away.
+  type Variant = { pattern: RegExp; note: string };
+  type Matcher = { repo: string; pattern: RegExp; variants?: Variant[] };
+
+  const matchers: Record<string, Matcher> = {
     windows: { repo: "gerfaut-desktop", pattern: /\.(msi|exe)$/i },
     macos: { repo: "gerfaut-desktop", pattern: /\.dmg$/i },
     linux: { repo: "gerfaut-desktop", pattern: /\.(appimage|deb|rpm)$/i },
-    android: { repo: "gerfaut-mobile", pattern: /\.apk$/i },
+    android: {
+      repo: "gerfaut-mobile",
+      pattern: /\.apk$/i,
+      variants: [
+        { pattern: /arm64-v8a/i, note: "Almost every phone sold since 2017" },
+        { pattern: /armeabi-v7a/i, note: "Older 32-bit phones" },
+        { pattern: /x86_64/i, note: "Emulators and x86 tablets" },
+      ],
+    },
   };
 
   function setState(slot: Element, state: string) {
@@ -179,6 +194,49 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     }
   }
 
+  // One downloadable file: its name, what it is for, and its weight.
+  function row(asset: Asset, note?: string): HTMLLIElement {
+    const item = document.createElement("li");
+    const link = document.createElement("a");
+    link.href = asset.browser_download_url;
+    link.className =
+      "flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-md bg-sunken px-3 py-2.5 transition-colors duration-150 hover:bg-border/60";
+    const text = document.createElement("span");
+    text.className = "min-w-0 flex-1";
+    const label = document.createElement("span");
+    label.className = "font-data block truncate text-data";
+    label.textContent = asset.name;
+    text.append(label);
+    if (note) {
+      const hint = document.createElement("span");
+      hint.className = "mt-0.5 block text-sm text-muted";
+      hint.textContent = note;
+      text.append(hint);
+    }
+    const size = document.createElement("span");
+    size.className = "shrink-0 text-sm text-muted";
+    size.textContent = formatSize(asset.size);
+    link.append(text, size);
+    item.append(link);
+    return item;
+  }
+
+  // Orders the assets the way the variants are declared, unmatched last,
+  // and carries each one's note along.
+  function ordered(
+    assets: Asset[],
+    variants?: Variant[],
+  ): { asset: Asset; note?: string }[] {
+    if (!variants) return assets.map((asset) => ({ asset }));
+    const rank = (asset: Asset) => {
+      const index = variants.findIndex((v) => v.pattern.test(asset.name));
+      return index === -1 ? variants.length : index;
+    };
+    return [...assets]
+      .sort((a, b) => rank(a) - rank(b))
+      .map((asset) => ({ asset, note: variants[rank(asset)]?.note }));
+  }
+
   function render(name: string, release: Release | null) {
     const slot = document.querySelector(`[data-release="${name}"]`);
     if (!slot) return;
@@ -201,20 +259,27 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     const list = slot.querySelector<HTMLElement>('[data-state="list"]');
     if (!list) return;
     list.textContent = "";
-    for (const asset of assets) {
+    const variants = matchers[name]?.variants;
+    const entries = ordered(assets, variants);
+    // Without variants every file is equal and they all stay in view. With
+    // them, only the first is offered outright: three processor names side
+    // by side turn a download into a quiz.
+    const shown = variants ? entries.slice(0, 1) : entries;
+    const folded = variants ? entries.slice(1) : [];
+    for (const { asset, note } of shown) list.append(row(asset, note));
+    if (folded.length > 0) {
+      const details = document.createElement("details");
+      details.className = "mt-2";
+      const summary = document.createElement("summary");
+      summary.className =
+        "cursor-pointer rounded-md px-1 py-2 text-sm text-muted transition-colors duration-150 hover:text-text";
+      summary.textContent = `Other architectures (${folded.length})`;
+      const inner = document.createElement("ul");
+      inner.className = "mt-2 space-y-2";
+      for (const { asset, note } of folded) inner.append(row(asset, note));
+      details.append(summary, inner);
       const item = document.createElement("li");
-      const link = document.createElement("a");
-      link.href = asset.browser_download_url;
-      link.className =
-        "flex cursor-pointer items-center justify-between gap-3 rounded-md bg-sunken px-3 py-2.5 transition-colors duration-150 hover:bg-border/60";
-      const label = document.createElement("span");
-      label.className = "font-data min-w-0 truncate text-data";
-      label.textContent = asset.name;
-      const size = document.createElement("span");
-      size.className = "shrink-0 text-sm text-muted";
-      size.textContent = formatSize(asset.size);
-      link.append(label, size);
-      item.append(link);
+      item.append(details);
       list.append(item);
     }
     setState(slot, "list");
