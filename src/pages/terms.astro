@@ -1,0 +1,149 @@
+---
+import Base from "../layouts/Base.astro";
+
+const linkClass =
+  "text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover";
+---
+
+<Base
+  title="Terms of Sale · Gerfaut Premium"
+  description="The terms of sale of Gerfaut Premium: seller, plans and prices, your key, payment in bitcoin, withdrawal, data, liability and applicable law."
+>
+  <section class="py-16 md:py-24">
+    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+      <article class="max-w-[68ch]">
+        <h1
+          class="font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[2.5rem]"
+        >
+          Terms of Sale
+        </h1>
+        <p class="mt-3 text-sm text-muted">
+          Gerfaut Premium &middot; Last updated
+          <time datetime="2026-09-05">5 September 2026</time>
+        </p>
+
+        <h2 class="mt-12 text-h2 font-display">1. Seller</h2>
+        <p class="mt-2 text-muted">
+          Gerfaut Premium is sold by Loïc Morel, sole trader (entreprise
+          individuelle) registered in France and trading as Pandul. Contact:
+          <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>.
+          VAT is not applicable under article 293 B of the French General Tax
+          Code (CGI).
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">2. What you buy</h2>
+        <p class="mt-2 text-muted">
+          Prepaid time on the Gerfaut alert service, tied to an account key.
+          From our server, the service watches the Bitcoin wallets you
+          register and notifies you through the channels you choose (ntfy,
+          Telegram, e-mail, webhook), plus the other Premium services listed
+          on the Premium page as they become available. It is a monitoring
+          service: it never holds keys or funds and cannot move them.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">3. Plans and prices</h2>
+        <p class="mt-2 text-muted">
+          1 month: 5&nbsp;€. 6 months: 24&nbsp;€. 1 year: 36&nbsp;€. Prices
+          are in euro and paid in bitcoin at the rate shown at checkout. A
+          launch offer, when displayed, applies to the plan it names. Paid
+          time adds to the end of the time you already have.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">4. Your key</h2>
+        <p class="mt-2 text-muted">
+          The account key is shown once, at checkout, before you pay. It is
+          the only way to use the time you bought. We store only a hash of it
+          and cannot recover, reset or re-issue a lost key. Anyone holding the
+          key can use the account. Keep it like a password.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">5. Payment</h2>
+        <p class="mt-2 text-muted">
+          Payments go through our own Bark Pay instance and settle on Bitcoin
+          (Ark, Lightning or on-chain). Time is credited when the payment is
+          confirmed. An underpaid charge is not credited until it is topped
+          up; the checkout page shows the remaining amount. An overpayment is
+          treated as paid and the difference is not refunded.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">6. Withdrawal</h2>
+        <p class="mt-2 text-muted">
+          Within 14 days of purchase you may withdraw by writing to
+          <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>
+          with your key: we refund the unused days pro rata, in bitcoin, to
+          the address you give us. After 14 days, prepaid time is not
+          refundable, except as stated in section 9.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">
+          7. What the service can and cannot do
+        </h2>
+        <p class="mt-2 text-muted">
+          Alerts are sent as fast as the Bitcoin network and our servers
+          allow, usually within seconds. We do not guarantee delivery time or
+          availability; incidents are published on
+          <a href="https://status.gerfaut-wallet.com" class={linkClass}
+            >status.gerfaut-wallet.com</a
+          >. The service does not prevent theft and cannot guarantee that
+          every movement is detected: network, channel or server outages
+          happen. Use it as one layer among others. Nothing here is financial
+          advice.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">8. Your data</h2>
+        <p class="mt-2 text-muted">
+          We store the descriptors you register, the addresses derived from
+          them, the coins and movements seen on them, the channels you add,
+          and the hash of your key. We store no name, no e-mail unless you add
+          one as a channel, no IP address and no request logs. Removing a
+          wallet in the app deletes its data on the server. To delete
+          everything, write to
+          <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>
+          with your key. We operate the servers ourselves, in Canada and
+          France. The data controller is Loïc Morel.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">
+          9. Changes and discontinuation
+        </h2>
+        <p class="mt-2 text-muted">
+          We may change or discontinue a service with 30 days' notice on the
+          status page. If we discontinue the alert service, unused time is
+          refunded pro rata in bitcoin on request.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">10. Acceptable use</h2>
+        <p class="mt-2 text-muted">
+          Do not overload the service, and do not register wallets you have
+          no right to monitor. We may stop serving a key that abuses the
+          service.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">11. Liability</h2>
+        <p class="mt-2 text-muted">
+          To the extent the law allows, our liability is limited to the
+          amount you paid in the 12 months before the claim. Nothing here
+          excludes liability that cannot be excluded under French consumer
+          law.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">12. Law and disputes</h2>
+        <p class="mt-2 text-muted">
+          French law applies. You may bring a dispute to a consumer mediator;
+          the mediator's details are available on request at
+          <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>.
+          EU consumers may also use the
+          <a href="https://ec.europa.eu/consumers/odr" class={linkClass}
+            >European online dispute resolution platform</a
+          >.
+        </p>
+
+        <h2 class="mt-10 text-h2 font-display">13. Changes to these terms</h2>
+        <p class="mt-2 text-muted">
+          Changes are posted on this page with their date. The terms in force
+          when you paid apply to that purchase.
+        </p>
+      </article>
+    </div>
+  </section>
+</Base>
