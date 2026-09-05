@@ -381,6 +381,13 @@ const linkClass =
           right away. Your key is not shown again, and the new time goes to
           the end of what you already have.
         </p>
+        <div id="renew-paste" class="note note-neutral mt-5" hidden>
+          <Icon name="copy" size={16} />
+          <p>
+            Paste your key here. If you came from the app, it is in your
+            clipboard already.
+          </p>
+        </div>
         <div class="mt-5">
           <label for="renew-key" class="text-sm font-medium">Account key</label>
           <input
@@ -727,6 +734,7 @@ const linkClass =
   const renewNote = document.getElementById("renew-note");
   const keyInput = document.getElementById("renew-key") as HTMLInputElement | null;
   const keyError = document.getElementById("renew-key-error");
+  const renewPaste = document.getElementById("renew-paste");
 
   // Lowercase, only letters and digits, a dash every four: what the user
   // types or pastes, made canonical while the caret stays where it was.
@@ -759,6 +767,7 @@ const linkClass =
 
   keyInput?.addEventListener("input", () => {
     formatKeyInput(keyInput);
+    if (renewPaste) renewPaste.hidden = true;
     if (keyError && !keyError.hidden) fieldError(null);
   });
 
@@ -814,8 +823,23 @@ const linkClass =
     }
   });
 
-  // The apps open this page with the key in the address to renew. Take
-  // it, then drop it from the address so it does not linger in history.
+  // Focus two frames after the page has loaded. On the first one the
+  // browser applies the #renew anchor, and since a section cannot take
+  // focus, that clears whatever had it, including a focus set earlier.
+  function focusWhenLoaded(target: HTMLElement) {
+    const go = () =>
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => target.focus({ preventScroll: true })),
+      );
+    if (document.readyState === "complete") go();
+    else window.addEventListener("load", go, { once: true });
+  }
+
+  // The apps used to open this page with the key in the address. Take
+  // it, then swap the address for a clean one. replaceState keeps the key
+  // out of the bar and out of a reload, but the browser has already
+  // written the visit to its global history: that is why the apps now
+  // open #renew instead and put the key on the clipboard.
   const params = new URLSearchParams(window.location.search);
   const presetKey = params.get("key");
   if (presetKey && keyInput) {
@@ -829,6 +853,17 @@ const linkClass =
       `${window.location.pathname}${query ? `?${query}` : ""}#renew`,
     );
     document.getElementById("renew")?.scrollIntoView();
-    renewButton?.focus({ preventScroll: true });
+    if (renewButton) focusWhenLoaded(renewButton);
+  } else if (window.location.hash === "#renew" && keyInput) {
+    // Opened straight on the renewal form: the browser scrolls to it,
+    // the field is empty, and the key is on the clipboard when the app
+    // sent you here.
+    if (renewPaste) renewPaste.hidden = false;
+    focusWhenLoaded(keyInput);
   }
+
+  // "Add time to a key" at the top of the page lands on the same form.
+  window.addEventListener("hashchange", () => {
+    if (window.location.hash === "#renew") keyInput?.focus({ preventScroll: true });
+  });
 </script>
