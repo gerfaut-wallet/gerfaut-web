@@ -82,7 +82,14 @@ import Mark from "./Mark.astro";
     <div
       class="mt-10 flex flex-col gap-2 border-t border-border pt-6 text-sm text-muted md:mt-12 md:flex-row md:items-center md:justify-between"
     >
-      <p>&copy; {new Date().getFullYear()} Lo&iuml;c Morel</p>
+      <p>
+        &copy; {new Date().getFullYear()} Lo&iuml;c Morel &middot;
+        <a
+          href="/terms"
+          class="text-text underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary"
+          >Terms</a
+        >
+      </p>
       <p>
         The Gerfaut name and logo are not covered by the code license. See
         <a
