@@ -2,121 +2,194 @@
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
 
-const services = [
+// Prices of the API contract, the standard ones. If the server runs a
+// launch offer, the checkout answer carries the real amount and the page
+// shows it before anyone pays; the cards never claim a discount the API
+// has not confirmed.
+const plans = [
+  { id: "month", name: "1 month", days: 31, price: 5, perMonth: "5 € a month" },
+  { id: "half_year", name: "6 months", days: 183, price: 24, perMonth: "4 € a month" },
+  { id: "year", name: "1 year", days: 366, price: 36, perMonth: "3 € a month" },
+] as const;
+
+const watches = [
   {
     icon: "shield-alert",
-    title: "Theft alert",
-    body: "Round-the-clock monitoring of your wallets. If a coin moves without you, a notification reaches you in about thirty seconds.",
+    title: "Coins move, you hear about it",
+    body: "A spend shows up in the node's mempool and the alert goes out. A second message follows when the transaction is in a block. Once a day, the server also rescans the UTXO set to catch anything the live watch could have missed.",
   },
   {
     icon: "timer",
-    title: "Timelock watch",
-    body: "Follow your recovery paths. Gerfaut warns you before a timelock opens, so an inheritance setup never takes you by surprise.",
+    title: "A timelock opens, you are warned first",
+    body: "If a wallet has a recovery path behind a timelock, an inheritance setup for instance, the server tells you 30 days, 7 days and 1 day before that path becomes spendable, then again the day it opens.",
   },
   {
     icon: "bell",
-    title: "Multi-channel notifications",
-    body: "Push, email, ntfy, Telegram, or webhook. Alerts reach you on the channels you choose.",
-  },
-  {
-    icon: "file-spreadsheet",
-    title: "Accounting export",
-    body: "Your history valued in fiat at the rate of each transaction day. CSV or PDF, in several currencies.",
-  },
-  {
-    icon: "server",
-    title: "Dedicated backend",
-    body: "A fast private node and indexer, reachable over Tor, with no rate limits.",
-  },
-  {
-    icon: "lock",
-    title: "Encrypted sync relay",
-    body: "Keep several devices in sync through a relay that only ever sees ciphertext.",
+    title: "On the channels you choose",
+    body: "ntfy on your phone, Telegram, e-mail, or a webhook signed with HMAC-SHA256 that your own scripts can check. An alert names the wallet and says what happened; addresses, amounts and transaction ids stay out of it.",
   },
 ] as const;
 
-const prices = [
-  { duration: "1 month", price: "5 €", monthly: "5 € per month" },
-  { duration: "6 months", price: "24 €", monthly: "4 € per month" },
-  { duration: "12 months", price: "36 €", monthly: "3 € per month" },
+const kept = [
+  "The descriptors of the wallets you register, and the names you gave them",
+  "The addresses derived from those descriptors, with the coins and movements seen on them",
+  "The channels you add: an ntfy topic, a Telegram link, an e-mail address or a webhook URL",
+  "A hash of your key. The key itself is never stored.",
 ] as const;
+
+const notKept = [
+  "Your name",
+  "Your e-mail, unless you add one as a channel",
+  "Your IP address, or any request log",
+] as const;
+
+const faq = [
+  {
+    q: "I lost my key. Can you find it?",
+    a: "No. The server stores a hash of your key, the way a website stores a password: the hash lets the server recognize the key when you type it, and lets nobody rebuild it, us included. When the key is gone, the time on it is gone with it. Treat it like a password and write it down the moment it appears, before you pay.",
+  },
+  {
+    q: "What exactly does the server see?",
+    a: "What a watch-only wallet sees: the descriptors you register, every address they derive, and the coins and transactions on those addresses. It also keeps the channels you add. It never sees a private key, and it keeps no name, no e-mail unless you add one as a channel, and no IP address. Remove a wallet in the app and its data leaves the server.",
+  },
+  {
+    q: "Can I cancel, or get a refund?",
+    a: "There is nothing to cancel: you prepay time, and it runs out on its own. Within 14 days of a purchase you can withdraw by writing to info@pandul.fr with your key; we refund the unused days pro rata, in bitcoin. After 14 days, prepaid time is not refunded, unless we discontinue the service. The Terms of Sale say it in full.",
+  },
+  {
+    q: "Which wallets can be watched?",
+    a: "Any wallet Gerfaut imports from a descriptor on mainnet: single-sig, multisig, and miniscript policies with timelocks. A wallet added from a single address cannot be watched yet. One key covers up to 50 wallets and 10 channels.",
+  },
+  {
+    q: "Does it work over Tor?",
+    a: "Yes. The app talks to api.gerfaut-wallet.com over HTTPS, and when Tor is on in the app, that traffic goes through Tor with the rest. Either way, the server keeps no IP address.",
+  },
+  {
+    q: "Can I run the server myself?",
+    a: "Not yet. A watcher you run on your own node, so that nothing leaves your home, is on the list for a later version. The idea is the one Bitwarden made familiar: whoever runs a server does not pay. Until then, the server that watches is ours, and this page says exactly what it keeps.",
+  },
+] as const;
+
+const linkClass =
+  "text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover";
 ---
 
 <Base
   title="Gerfaut Premium · Alerts for your cold storage"
-  description="Gerfaut Premium watches the chain around the clock: theft alerts within seconds, timelock warnings, multi-channel notifications. No account, paid in bitcoin."
+  description="Gerfaut Premium is a server that watches your Bitcoin wallets around the clock and tells you within seconds when coins move, over ntfy, Telegram, e-mail or webhook. From 5 € a month, paid in bitcoin, no account."
 >
-  <section class="pt-14 pb-12 md:pt-20">
+  <section class="dark-island bg-background pt-14 pb-14 text-text md:pt-20 md:pb-20">
     <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <p class="text-label tracking-[0.04em] text-primary uppercase">
-        Gerfaut Premium
-      </p>
+      <span class="pill-premium">
+        <Icon name="gem" size={12} />
+        Premium
+      </span>
       <h1
-        class="mt-4 max-w-2xl font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[2.5rem]"
+        class="mt-5 max-w-2xl font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[2.5rem] lg:text-hero"
       >
         You do not pay to see a balance. You pay to be warned.
       </h1>
       <p class="mt-5 max-w-xl text-lg text-muted">
-        The apps are free, open source, and complete on their own. Premium adds
-        what an app alone cannot do: a server that watches the chain for you,
-        around the clock, and reaches you the moment something happens.
+        The apps are free, open source and complete on their own. Premium adds
+        what an app cannot do once your phone is in your pocket: a server that
+        watches the wallets you choose, around the clock, and tells you within
+        seconds when coins move.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href="#buy" class="btn btn-primary">Get Premium</a>
+        <a href="#renew" class="btn btn-secondary">Add time to a key</a>
+      </div>
+      <p class="mt-6 text-sm text-muted">
+        From 5&nbsp;€ a month &middot; Paid in bitcoin &middot; No account to
+        create
       </p>
     </div>
   </section>
 
-  <section class="py-12" aria-labelledby="services-heading">
+  <section class="py-16 md:py-24" aria-labelledby="what-heading">
     <div class="mx-auto max-w-[1200px] px-4 md:px-6">
       <h2
-        id="services-heading"
+        id="what-heading"
         class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
       >
-        One plan, every service
+        What the server does
       </h2>
-      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+      <p class="mt-4 max-w-2xl text-muted">
+        Say your savings sit on a hardware wallet in a drawer. The app on your
+        desk shows the balance when you open it, and nothing happens in
+        between. With Premium, you hand the server the descriptor of that
+        wallet, the same public data the app already holds. From then on the
+        server follows every address of that wallet, present and future, from
+        its own Bitcoin node. The moment a transaction spending one of your
+        coins reaches the node's mempool, a message leaves for the channels you
+        chose. Usually that is a matter of seconds.
+      </p>
+
+      <div class="mt-10 grid gap-4 md:grid-cols-3 lg:gap-5">
         {
-          services.map((service) => (
+          watches.map((item) => (
             <div class="card p-5">
               <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken text-primary">
-                <Icon name={service.icon} size={18} />
+                <Icon name={item.icon} size={18} />
               </span>
               <h3 class="mt-4 font-display text-[1rem] font-semibold">
-                {service.title}
+                {item.title}
               </h3>
-              <p class="mt-1.5 text-sm text-muted">{service.body}</p>
+              <p class="mt-1.5 text-sm text-muted">{item.body}</p>
             </div>
           ))
         }
       </div>
-    </div>
-  </section>
 
-  <section class="pt-12 pb-16 md:pb-24" aria-labelledby="privacy-heading">
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <div
-        class="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-16"
-      >
+      <div class="mt-14 grid gap-10 md:grid-cols-2 md:gap-16">
         <div>
-          <h2
-            id="privacy-heading"
-            class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
+          <span
+            class="flex h-10 w-10 items-center justify-center rounded-md bg-sunken text-primary"
           >
-            No account. No email.
-          </h2>
-          <p class="mt-4 text-muted">
-            A subscription is a random key, nothing else, in the spirit of
-            Mullvad. It needs no email address and stores no personal data.
-            You pay in bitcoin through BTCPay and top up whenever you choose.
+            <Icon name="lock" />
+          </span>
+          <h3 class="mt-4 text-h1 font-display">Watch-only stays watch-only</h3>
+          <p class="mt-3 text-muted">
+            The server holds no key: not yours, and none of its own for your
+            wallets. It can see coins move and cannot move them. There is no
+            signing code anywhere in Gerfaut, app or server, and Premium does
+            not change that.
+          </p>
+          <p class="mt-3 text-muted">
+            Every service in Premium comes with the same plan, including the
+            ones added later; paid time covers them from the day they ship.
           </p>
         </div>
         <div class="card p-6">
-          <h3 class="text-h2 font-display">Keep your key safe</h3>
-          <p class="mt-2 text-sm text-muted">
-            The key is the whole account. If you lose the key, you lose the
-            subscription, and there is no recovery. Store it in a password
-            manager the day you subscribe.
+          <h3 class="text-h2 font-display">What the server learns</h3>
+          <p class="mt-3 text-label tracking-[0.04em] text-muted uppercase">
+            Kept on the server
           </p>
-          <p class="font-data mt-4 rounded-sm bg-sunken px-3 py-2 text-data text-muted">
-            8391 4472 0058 2276 &middot; example key
+          <ul class="mt-2 space-y-2 text-sm">
+            {
+              kept.map((line) => (
+                <li class="flex items-start gap-2.5">
+                  <Icon name="check" size={16} class="mt-0.5 shrink-0 text-primary" />
+                  <span>{line}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="mt-5 text-label tracking-[0.04em] text-muted uppercase">
+            Never kept
+          </p>
+          <ul class="mt-2 space-y-2 text-sm text-muted">
+            {
+              notKept.map((line) => (
+                <li class="flex items-start gap-2.5">
+                  <span class="mt-2.5 h-px w-4 shrink-0 bg-border" aria-hidden="true" />
+                  <span>{line}</span>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="mt-5 border-t border-border pt-4 text-sm text-muted">
+            Remove a wallet in the app and its data leaves the server with it.
           </p>
         </div>
       </div>
@@ -124,75 +197,634 @@ const prices = [
   </section>
 
   <section
-    class="dark-island bg-background py-16 text-text md:py-24"
-    aria-labelledby="pricing-heading"
+    id="buy"
+    class="scroll-mt-20 border-t border-border py-16 md:py-24"
+    aria-labelledby="buy-heading"
   >
     <div class="mx-auto max-w-[1200px] px-4 md:px-6">
       <h2
-        id="pricing-heading"
+        id="buy-heading"
         class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
       >
-        Pricing
+        Get Premium
       </h2>
-      <p class="mt-3 max-w-xl text-muted">
-        One plan with every service included. Prices are in euros, paid in
-        bitcoin.
+      <p class="mt-4 max-w-2xl text-muted">
+        One plan and every service. Choose how long the server watches for
+        you. Prices are in euro; you pay in bitcoin, through Ark, Lightning or
+        on-chain, on our own Bark Pay instance. The bitcoin amount is set at
+        the moment you pay, at the rate the checkout page shows.
       </p>
-      <div class="mt-10 grid gap-4 sm:grid-cols-3 lg:gap-5">
-        {
-          prices.map((tier) => (
-            <div class="card p-6">
-              <p class="text-label tracking-[0.04em] text-muted uppercase">
-                {tier.duration}
+
+      <form id="buy-form" novalidate class="mt-10">
+        <fieldset>
+          <legend class="sr-only">Plan</legend>
+          <div class="grid gap-3 sm:grid-cols-3 lg:gap-4">
+            {
+              plans.map((plan) => (
+                <label class="plan">
+                  <input
+                    type="radio"
+                    name="plan"
+                    value={plan.id}
+                    class="sr-only"
+                    checked={plan.id === "year"}
+                  />
+                  <span class="flex w-full items-start justify-between gap-4 p-5">
+                    <span>
+                      <span class="block text-label tracking-[0.04em] text-muted uppercase">
+                        {plan.name}
+                      </span>
+                      <span class="mt-3 block text-amount tabular-nums">
+                        {plan.price}&nbsp;€
+                      </span>
+                      <span class="mt-1 block text-sm text-muted">
+                        {plan.days} days &middot; {plan.perMonth}
+                      </span>
+                    </span>
+                    <span class="plan-dot" aria-hidden="true">
+                      <Icon name="check" size={12} />
+                    </span>
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+        <p class="mt-4 text-sm text-muted">
+          Paid time adds to the end of the time you already have.
+        </p>
+
+        <div id="buy-states" class="mt-8" aria-live="polite">
+          <div data-state="idle">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <button
+                type="submit"
+                id="buy-button"
+                class="btn btn-primary"
+                data-label="Get Premium"
+                data-busy="Creating your key…"
+              >
+                Get Premium
+              </button>
+              <p class="text-sm text-muted">
+                By paying you accept the
+                <a href="/terms" class={linkClass}>Terms of Sale</a>.
               </p>
-              <p class="font-data mt-3 text-amount">{tier.price}</p>
-              <p class="mt-1 text-sm text-muted">{tier.monthly}</p>
+            </div>
+            <div id="buy-note" class="note note-pending mt-5 max-w-xl" hidden>
+              <Icon name="info" size={16} />
+              <p></p>
+            </div>
+          </div>
+
+          <div data-state="key" hidden class="card max-w-2xl p-5 sm:p-6">
+            <h3 id="key-heading" tabindex="-1" class="text-h2 font-display">
+              Your account key
+            </h3>
+            <p class="mt-1 text-sm text-muted">
+              Shown once, before you pay. Save it now.
+            </p>
+            <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <p
+                id="key-value"
+                class="font-data m-0 min-w-0 flex-1 rounded-sm bg-sunken px-4 py-3 text-[1.375rem] leading-tight tracking-[0.04em] break-words select-all sm:text-[1.75rem]"
+              >
+              </p>
+              <button type="button" id="key-copy" class="btn btn-secondary shrink-0">
+                <Icon name="copy" size={16} class="key-copy-idle" />
+                <Icon name="check" size={16} class="key-copy-done" />
+                <span id="key-copy-label">Copy</span>
+              </button>
+            </div>
+            <p id="key-copied" class="sr-only" role="status"></p>
+            <div class="note note-alert mt-4">
+              <Icon name="triangle-alert" size={16} />
+              <p>
+                This key is the only proof of your purchase. We keep a hash of
+                it, never the key itself, so nobody can recover, reset or
+                re-issue it, us included. Write it down or put it in your
+                password manager before you pay.
+              </p>
+            </div>
+            <dl class="mt-5 grid gap-x-8 gap-y-2 text-sm sm:grid-cols-[auto_1fr]">
+              <dt class="text-muted">Plan</dt>
+              <dd id="key-plan" class="m-0 font-medium"></dd>
+              <dt class="text-muted">Price</dt>
+              <dd class="m-0 flex flex-wrap items-center gap-2 font-medium">
+                <span id="key-amount" class="tabular-nums"></span>
+                <span
+                  id="key-offer"
+                  class="pill border border-border bg-sunken text-text"
+                  hidden
+                >
+                  Launch offer
+                </span>
+                <span id="key-standard" class="font-normal text-muted"></span>
+              </dd>
+            </dl>
+            <p class="mt-3 text-sm text-muted">
+              You pay in bitcoin at the rate the checkout page shows. The
+              checkout stays open for one hour.
+            </p>
+            <div class="mt-5 border-t border-border pt-5">
+              <label class="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
+                <input type="checkbox" id="key-saved" class="checkbox" />
+                <span>I wrote my key down</span>
+              </label>
+              <button
+                type="button"
+                id="key-continue"
+                class="btn btn-primary mt-3"
+                aria-disabled="true"
+                aria-describedby="key-gate"
+              >
+                I saved my key, continue to payment
+              </button>
+              <p id="key-gate" class="mt-3 text-sm text-muted">
+                The button opens once the box is ticked. The checkout page
+                opens in this tab. By paying you accept the
+                <a href="/terms" class={linkClass}>Terms of Sale</a>.
+              </p>
+            </div>
+          </div>
+
+          <div data-state="soon" hidden class="card max-w-xl p-5">
+            <p class="font-medium">Premium opens soon</p>
+            <p class="mt-1 text-sm text-muted">
+              Payments are not open yet: Premium opens with the first public
+              release of the apps. Nothing was created and nothing was
+              charged. Follow the
+              <a href="https://github.com/gerfaut-wallet" class={linkClass}
+                >GitHub repositories</a
+              >
+              to catch the opening.
+            </p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section
+    id="renew"
+    class="scroll-mt-20 pb-16 md:pb-24"
+    aria-labelledby="renew-heading"
+  >
+    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+      <form id="renew-form" novalidate class="card max-w-2xl p-5 sm:p-6">
+        <h2 id="renew-heading" class="text-h1 font-display">
+          Already have a key? Add time
+        </h2>
+        <p class="mt-2 text-sm text-muted">
+          Enter your key, pick how much time to add, and the checkout opens
+          right away. Your key is not shown again, and the new time goes to
+          the end of what you already have.
+        </p>
+        <div class="mt-5">
+          <label for="renew-key" class="text-sm font-medium">Account key</label>
+          <input
+            id="renew-key"
+            name="key"
+            type="text"
+            class="field font-data mt-1.5"
+            inputmode="text"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="xxxx-xxxx-xxxx-xxxx"
+            aria-describedby="renew-key-hint"
+          />
+          <p id="renew-key-hint" class="mt-1.5 text-sm text-muted">
+            16 characters. Case and dashes do not matter, and keys never
+            contain l, o, 0 or 1.
+          </p>
+          <p id="renew-key-error" class="mt-1.5 text-sm font-medium" hidden></p>
+        </div>
+        <fieldset class="mt-5">
+          <legend class="text-sm font-medium">Time to add</legend>
+          <div class="mt-1.5 grid gap-2 sm:grid-cols-3">
+            {
+              plans.map((plan) => (
+                <label class="choice">
+                  <input
+                    type="radio"
+                    name="plan"
+                    value={plan.id}
+                    class="sr-only"
+                    checked={plan.id === "month"}
+                  />
+                  <span class="tabular-nums">
+                    {plan.name} &middot; {plan.price}&nbsp;€
+                  </span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+        <div id="renew-states" class="mt-6" aria-live="polite">
+          <div data-state="idle">
+            <button
+              type="submit"
+              id="renew-button"
+              class="btn btn-primary"
+              data-label="Add time"
+              data-busy="Opening the checkout…"
+            >
+              Add time
+            </button>
+            <p class="mt-3 text-sm text-muted">
+              The checkout opens in this tab. By paying you accept the
+              <a href="/terms" class={linkClass}>Terms of Sale</a>.
+            </p>
+            <div id="renew-note" class="note note-pending mt-4" hidden>
+              <Icon name="info" size={16} />
+              <p></p>
+            </div>
+          </div>
+          <div data-state="soon" hidden class="note note-neutral">
+            <Icon name="info" size={16} />
+            <p>
+              Payments are not open yet: Premium opens with the first public
+              release of the apps. Nothing was charged.
+            </p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section
+    class="border-t border-border py-16 md:py-24"
+    aria-labelledby="faq-heading"
+  >
+    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+      <h2
+        id="faq-heading"
+        class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
+      >
+        Questions
+      </h2>
+      <dl class="mt-10 grid gap-x-12 gap-y-10 md:grid-cols-2">
+        {
+          faq.map((item) => (
+            <div>
+              <dt class="text-h2 font-display">{item.q}</dt>
+              <dd class="m-0 mt-2 text-sm text-muted">{item.a}</dd>
             </div>
           ))
         }
-      </div>
-      <div class="mt-10">
-        <button
-          type="button"
-          id="subscribe"
-          class="btn btn-primary"
-          aria-expanded="false"
-          aria-controls="subscribe-note"
-        >
-          Subscribe
-        </button>
-        <div
-          id="subscribe-note"
-          role="status"
-          hidden
-          class="card mt-5 max-w-xl p-5"
-        >
-          <p class="text-sm">
-            Premium opens with the first public release of the apps. There is
-            nothing to buy yet.
-          </p>
-          <p class="mt-2 text-sm text-muted">
-            Watch the
-            <a
-              href="https://github.com/gerfaut-wallet"
-              class="text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover"
-              >GitHub repositories</a
-            >
-            to catch the first release.
-          </p>
-        </div>
-      </div>
+      </dl>
+      <p class="mt-10 text-sm text-muted">
+        Another question? Write to
+        <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>.
+        The full conditions are in the
+        <a href="/terms" class={linkClass}>Terms of Sale</a>.
+      </p>
     </div>
   </section>
 </Base>
 
+<style is:global>
+  .key-copy-done {
+    display: none;
+  }
+  #key-copy[data-done] .key-copy-idle {
+    display: none;
+  }
+  #key-copy[data-done] .key-copy-done {
+    display: block;
+  }
+</style>
+
 <script>
-  const button = document.getElementById("subscribe");
-  const note = document.getElementById("subscribe-note");
-  button?.addEventListener("click", () => {
-    if (!note) return;
-    const open = note.hidden;
-    note.hidden = !open;
-    button.setAttribute("aria-expanded", String(open));
+  const API = "https://api.gerfaut-wallet.com";
+  // Standard prices, in euro. A lower amount from the API is a launch
+  // offer, and the page says so next to the real figure.
+  const STANDARD: Record<string, number> = { month: 5, half_year: 24, year: 36 };
+  const NAMES: Record<string, string> = {
+    month: "1 month",
+    half_year: "6 months",
+    year: "1 year",
+  };
+  // The key alphabet of the server: no l, o, 0 or 1.
+  const KEY_SHAPE = /^[a-km-np-z2-9]{16}$/;
+
+  type Checkout = {
+    key: string | null;
+    plan: string;
+    days: number;
+    amount_eur: number;
+    charge_id: string;
+    checkout_url: string;
+  };
+  type Failure = {
+    kind: "offline" | "soon" | "busy" | "unknown-key" | "bad" | "server";
+    message: string;
+  };
+  type Result = { ok: true; data: Checkout } | ({ ok: false } & Failure);
+
+  async function checkout(body: { plan: string; key?: string }): Promise<Result> {
+    let res: Response;
+    try {
+      res = await fetch(`${API}/v1/checkout`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(body),
+      });
+    } catch {
+      return { ok: false, kind: "offline", message: "" };
+    }
+    const data = await res.json().catch(() => null);
+    if (res.ok && data && typeof data.checkout_url === "string") {
+      return { ok: true, data: data as Checkout };
+    }
+    const message = typeof data?.error === "string" ? data.error : "";
+    if (res.status === 404) {
+      const kind = /unknown key/i.test(message) ? "unknown-key" : "soon";
+      return { ok: false, kind, message };
+    }
+    if (res.status === 429) return { ok: false, kind: "busy", message };
+    if (res.status === 400) return { ok: false, kind: "bad", message };
+    return { ok: false, kind: "server", message };
+  }
+
+  // The page only ever leaves for an https address the API named.
+  function safeUrl(url: string): string | null {
+    try {
+      const parsed = new URL(url);
+      return parsed.protocol === "https:" ? parsed.href : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function euros(amount: number): string {
+    const text = Number.isInteger(amount) ? String(amount) : amount.toFixed(2);
+    return `${text} €`;
+  }
+
+  function setState(region: HTMLElement, state: string) {
+    for (const panel of region.querySelectorAll<HTMLElement>(":scope > [data-state]")) {
+      panel.hidden = panel.dataset.state !== state;
+    }
+  }
+
+  function busy(button: HTMLButtonElement, on: boolean) {
+    button.disabled = on;
+    button.textContent = (on ? button.dataset.busy : button.dataset.label) ?? "";
+  }
+
+  function note(box: HTMLElement, text: string) {
+    const p = box.querySelector("p");
+    if (p) p.textContent = text;
+    box.hidden = false;
+  }
+
+  const OFFLINE =
+    "Could not reach the Gerfaut server. Check your connection, then try again.";
+  const BUSY =
+    "Too many checkouts are being created right now. Wait a minute, then try again.";
+  const SERVER =
+    "The payment service did not answer. Nothing was charged. Try again in a moment.";
+
+  // --- buying: mint a key, show it once, then leave for the checkout ---
+
+  const buyForm = document.getElementById("buy-form") as HTMLFormElement | null;
+  const buyStates = document.getElementById("buy-states");
+  const buyButton = document.getElementById("buy-button") as HTMLButtonElement | null;
+  const buyNote = document.getElementById("buy-note");
+  const keyHeading = document.getElementById("key-heading");
+  const keyValue = document.getElementById("key-value");
+  const keyCopy = document.getElementById("key-copy") as HTMLButtonElement | null;
+  const keyCopyLabel = document.getElementById("key-copy-label");
+  const keyCopied = document.getElementById("key-copied");
+  const keyPlan = document.getElementById("key-plan");
+  const keyAmount = document.getElementById("key-amount");
+  const keyOffer = document.getElementById("key-offer");
+  const keyStandard = document.getElementById("key-standard");
+  const keySaved = document.getElementById("key-saved") as HTMLInputElement | null;
+  const keyContinue = document.getElementById("key-continue") as HTMLButtonElement | null;
+
+  let checkoutUrl: string | null = null;
+  let leaving = false;
+
+  function showKey(data: Checkout) {
+    const url = safeUrl(data.checkout_url);
+    if (!data.key || !url || !buyStates || !buyForm) {
+      if (buyNote) note(buyNote, SERVER);
+      return;
+    }
+    checkoutUrl = url;
+    if (keyValue) keyValue.textContent = data.key;
+    if (keyPlan) {
+      keyPlan.textContent = `${NAMES[data.plan] ?? data.plan} · ${data.days} days`;
+    }
+    const standard = STANDARD[data.plan];
+    const offer = standard !== undefined && data.amount_eur < standard;
+    if (keyAmount) keyAmount.textContent = euros(data.amount_eur);
+    if (keyOffer) keyOffer.hidden = !offer;
+    if (keyStandard) {
+      keyStandard.textContent =
+        offer && standard !== undefined ? `${euros(standard)} at the standard price` : "";
+    }
+    for (const radio of buyForm.querySelectorAll<HTMLInputElement>('input[name="plan"]')) {
+      radio.disabled = true;
+    }
+    setState(buyStates, "key");
+    keyHeading?.focus();
+  }
+
+  buyForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!buyButton || !buyStates) return;
+    const plan = (new FormData(buyForm).get("plan") as string | null) ?? "year";
+    if (buyNote) buyNote.hidden = true;
+    busy(buyButton, true);
+    const result = await checkout({ plan });
+    busy(buyButton, false);
+    if (result.ok) {
+      showKey(result.data);
+      return;
+    }
+    switch (result.kind) {
+      case "soon":
+        setState(buyStates, "soon");
+        break;
+      case "offline":
+        if (buyNote) note(buyNote, OFFLINE);
+        break;
+      case "busy":
+        if (buyNote) note(buyNote, BUSY);
+        break;
+      default:
+        if (buyNote) note(buyNote, SERVER);
+    }
   });
+
+  let copyTimer: ReturnType<typeof setTimeout> | undefined;
+  function flashCopy(text: string) {
+    if (keyCopyLabel) keyCopyLabel.textContent = text;
+    if (keyCopied) keyCopied.textContent = `${text}.`;
+    keyCopy?.setAttribute("data-done", "");
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(() => {
+      if (keyCopyLabel) keyCopyLabel.textContent = "Copy";
+      keyCopy?.removeAttribute("data-done");
+    }, 1500);
+  }
+
+  keyCopy?.addEventListener("click", async () => {
+    const key = keyValue?.textContent?.trim() ?? "";
+    if (!key) return;
+    try {
+      await navigator.clipboard.writeText(key);
+      flashCopy("Copied");
+    } catch {
+      // No clipboard access: select the key so a manual copy is one keystroke.
+      if (keyValue) {
+        const range = document.createRange();
+        range.selectNodeContents(keyValue);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+      flashCopy("Selected, press copy");
+    }
+  });
+
+  keySaved?.addEventListener("change", () => {
+    keyContinue?.setAttribute("aria-disabled", String(!keySaved.checked));
+  });
+
+  keyContinue?.addEventListener("click", () => {
+    if (!keySaved?.checked) {
+      keySaved?.focus();
+      return;
+    }
+    if (!checkoutUrl) return;
+    leaving = true;
+    window.location.assign(checkoutUrl);
+  });
+
+  // A minted key that was never saved is money on the floor: ask before
+  // the tab closes on it. Leaving for the checkout is the one exception.
+  window.addEventListener("beforeunload", (event) => {
+    if (checkoutUrl && !leaving) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+  });
+
+  // --- renewing: an existing key, straight to the checkout ---
+
+  const renewForm = document.getElementById("renew-form") as HTMLFormElement | null;
+  const renewStates = document.getElementById("renew-states");
+  const renewButton = document.getElementById("renew-button") as HTMLButtonElement | null;
+  const renewNote = document.getElementById("renew-note");
+  const keyInput = document.getElementById("renew-key") as HTMLInputElement | null;
+  const keyError = document.getElementById("renew-key-error");
+
+  // Lowercase, only letters and digits, a dash every four: what the user
+  // types or pastes, made canonical while the caret stays where it was.
+  function formatKeyInput(input: HTMLInputElement) {
+    const raw = input.value;
+    const caret = input.selectionStart ?? raw.length;
+    const typedBefore = raw.slice(0, caret).replace(/[^a-z0-9]/gi, "").length;
+    const compact = raw.replace(/[^a-z0-9]/gi, "").toLowerCase().slice(0, 16);
+    const formatted = compact.replace(/(.{4})(?=.)/g, "$1-");
+    const symbols = Math.min(typedBefore, compact.length);
+    const position = symbols + Math.floor(Math.max(symbols - 1, 0) / 4);
+    input.value = formatted;
+    input.setSelectionRange(position, position);
+  }
+
+  function fieldError(text: string | null) {
+    if (!keyInput || !keyError) return;
+    if (text) {
+      keyError.textContent = text;
+      keyError.hidden = false;
+      keyInput.setAttribute("aria-invalid", "true");
+      keyInput.setAttribute("aria-describedby", "renew-key-hint renew-key-error");
+      keyInput.focus();
+    } else {
+      keyError.hidden = true;
+      keyInput.removeAttribute("aria-invalid");
+      keyInput.setAttribute("aria-describedby", "renew-key-hint");
+    }
+  }
+
+  keyInput?.addEventListener("input", () => {
+    formatKeyInput(keyInput);
+    if (keyError && !keyError.hidden) fieldError(null);
+  });
+
+  renewForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!keyInput || !renewButton || !renewStates) return;
+    if (renewNote) renewNote.hidden = true;
+    const compact = keyInput.value.replace(/-/g, "");
+    if (!/^[a-z0-9]{16}$/.test(compact)) {
+      fieldError("Enter the 16 characters of your key.");
+      return;
+    }
+    if (!KEY_SHAPE.test(compact)) {
+      fieldError(
+        "This key contains a character keys never use (l, o, 0 or 1). Compare it with the one you saved.",
+      );
+      return;
+    }
+    const plan = (new FormData(renewForm).get("plan") as string | null) ?? "month";
+    busy(renewButton, true);
+    const result = await checkout({ plan, key: keyInput.value });
+    busy(renewButton, false);
+    if (result.ok) {
+      const url = safeUrl(result.data.checkout_url);
+      if (url) {
+        leaving = true;
+        window.location.assign(url);
+        return;
+      }
+      if (renewNote) note(renewNote, SERVER);
+      return;
+    }
+    switch (result.kind) {
+      case "soon":
+        setState(renewStates, "soon");
+        break;
+      case "unknown-key":
+        fieldError("We do not know this key. Check each character against the one you saved.");
+        break;
+      case "bad":
+        fieldError(
+          "That is not the shape of a key: 16 letters and digits, shown as xxxx-xxxx-xxxx-xxxx.",
+        );
+        break;
+      case "offline":
+        if (renewNote) note(renewNote, OFFLINE);
+        break;
+      case "busy":
+        if (renewNote) note(renewNote, BUSY);
+        break;
+      default:
+        if (renewNote) note(renewNote, SERVER);
+    }
+  });
+
+  // The apps open this page with the key in the address to renew. Take
+  // it, then drop it from the address so it does not linger in history.
+  const params = new URLSearchParams(window.location.search);
+  const presetKey = params.get("key");
+  if (presetKey && keyInput) {
+    keyInput.value = presetKey;
+    formatKeyInput(keyInput);
+    params.delete("key");
+    const query = params.toString();
+    history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${query ? `?${query}` : ""}#renew`,
+    );
+    document.getElementById("renew")?.scrollIntoView();
+    renewButton?.focus({ preventScroll: true });
+  }
 </script>

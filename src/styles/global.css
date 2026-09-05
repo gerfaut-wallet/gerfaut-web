@@ -46,6 +46,8 @@
   --color-confirmed-surface: #dcf5e6;
   --color-pending: #745400;
   --color-pending-surface: #fdf0cf;
+  --color-premium: #6d28d9;
+  --color-premium-surface: #f3eefc;
 
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-ui: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
@@ -107,6 +109,10 @@
   --color-confirmed-surface: #161e27;
   --color-pending: #c1983a;
   --color-pending-surface: #161e27;
+  --color-alert: #ff706d;
+  --color-alert-surface: #161e27;
+  --color-premium: #c4b5fd;
+  --color-premium-surface: #1f2933;
   color-scheme: dark;
 }
 
@@ -277,5 +283,212 @@ p {
   font-variant-numeric: tabular-nums;
   overflow-x: auto;
   white-space: pre;
+}
+}
+
+/* --- forms and notes (premium pages) --- */
+
+@layer components {
+/* Ghost button: transparent, muted text, sunken on hover. */
+.btn-ghost {
+  background: transparent;
+  color: var(--color-muted);
+}
+.btn-ghost:hover {
+  background: var(--color-sunken);
+  color: var(--color-text);
+}
+
+/* A button that waits, or is not allowed yet, keeps its place and its
+   colour and stops answering the pointer. */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.btn:disabled:active,
+.btn[aria-disabled="true"]:active {
+  transform: none;
+}
+
+/* Premium marker: gem + PREMIUM in Bruyère. Only ever a small mark,
+   never a background wash. */
+.pill-premium {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--color-premium-surface);
+  color: var(--color-premium);
+  border: 1px solid color-mix(in srgb, var(--color-premium) 25%, transparent);
+  font-family: var(--font-ui);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Warning note: its own panel, tinted surface, hairline in the text
+   colour at 25%, icon on the first line of text. Red only when funds
+   or privacy are at stake, amber for what is good to know, neutral for
+   plain context. */
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.note > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.note a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.note-alert {
+  background: var(--color-alert-surface);
+  color: var(--color-alert);
+  border-color: color-mix(in srgb, var(--color-alert) 25%, transparent);
+}
+.note-pending {
+  background: var(--color-pending-surface);
+  color: var(--color-pending);
+  border-color: color-mix(in srgb, var(--color-pending) 25%, transparent);
+}
+.note-neutral {
+  background: var(--color-sunken);
+  color: var(--color-muted);
+  border-color: var(--color-border);
+}
+
+/* Text field: sunken, radius 4px, 44px tall, 16px so phones do not zoom.
+   Focus is the 1px border turning Glacier with a 3px halo at 15%. */
+.field {
+  display: block;
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: var(--color-sunken);
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.5;
+  transition:
+    border-color 150ms var(--ease-out-toundra),
+    box-shadow 150ms var(--ease-out-toundra);
+}
+.field::placeholder {
+  color: var(--color-muted);
+  opacity: 1;
+}
+.field:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+.field[aria-invalid="true"] {
+  border-color: var(--color-muted);
+}
+
+/* Plan option: a card that is also a radio. The input stays real and
+   invisible; the card draws the selection and carries the focus ring. */
+.plan {
+  position: relative;
+  display: flex;
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  transition: border-color 150ms var(--ease-out-toundra);
+}
+.plan:hover {
+  border-color: var(--color-muted);
+}
+.plan:has(:checked) {
+  border-color: var(--color-primary);
+  box-shadow: inset 0 0 0 1px var(--color-primary);
+}
+.plan:has(:focus-visible) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.plan:has(:disabled) {
+  cursor: default;
+  opacity: 0.6;
+}
+.plan-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-on-primary);
+  transition:
+    background-color 150ms var(--ease-out-toundra),
+    border-color 150ms var(--ease-out-toundra);
+}
+.plan-dot > svg {
+  opacity: 0;
+}
+.plan:has(:checked) .plan-dot {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.plan:has(:checked) .plan-dot > svg {
+  opacity: 1;
+}
+
+/* Choice group: 44px rows, the current one in Glacier, the others sunken. */
+.choice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  background: var(--color-sunken);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 150ms var(--ease-out-toundra),
+    color 150ms var(--ease-out-toundra);
+}
+.choice:hover {
+  background: color-mix(in srgb, var(--color-sunken) 80%, var(--color-border));
+}
+.choice:has(:checked),
+.choice:has(:checked):hover {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.choice:has(:focus-visible) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Checkbox in the action colour, big enough to hit. */
+.checkbox {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin: 0;
+  accent-color: var(--color-primary);
+  cursor: pointer;
 }
 }
