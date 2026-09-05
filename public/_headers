@@ -1,0 +1,9 @@
+# Sent by Cloudflare Pages with every page and asset. The CSP allows no
+# inline script or style: astro.config.mjs keeps both in their own files.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.gerfaut-wallet.com https://api.github.com; frame-ancestors 'none'; base-uri 'none'; form-action 'self' https://pay.gerfaut-wallet.com

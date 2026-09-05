@@ -12,5 +12,10 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      // Every script and stylesheet stays in its own file: the CSP in
+      // public/_headers allows 'self' and nothing inline.
+      assetsInlineLimit: 0,
+    },
   },
 });
