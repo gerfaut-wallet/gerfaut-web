@@ -95,9 +95,14 @@ const linkClass =
           We store the descriptors you register, the addresses derived from
           them, the coins and movements seen on them, the channels you add,
           and the hash of your key. We store no name, no e-mail unless you add
-          one as a channel, no IP address and no request logs. Removing a
-          wallet in the app deletes its data on the server. To delete
-          everything, write to
+          one as a channel, no IP address and no request logs. Stopping the
+          watch on a wallet, or removing a watched wallet from the app,
+          deletes its data on the server. The server deletes everything it
+          holds under a key 90 days after the paid time on that key runs
+          out; a key that was never paid for is deleted 30 days after it was
+          created. To delete everything now, use "Forget this key" in the
+          app, which offers to delete your data on the server as well, or
+          write to
           <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>
           with your key. We operate the servers ourselves, in Canada and
           France. The data controller is Loïc Morel.

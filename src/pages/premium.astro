@@ -50,7 +50,7 @@ const faq = [
   },
   {
     q: "What exactly does the server see?",
-    a: "What a watch-only wallet sees: the descriptors you register, every address they derive, and the coins and transactions on those addresses. It also keeps the channels you add. It never sees a private key, and it keeps no name, no e-mail unless you add one as a channel, and no IP address. Remove a wallet in the app and its data leaves the server.",
+    a: "What a watch-only wallet sees: the descriptors you register, every address they derive, and the coins and transactions on those addresses. It also keeps the channels you add. It never sees a private key, and it keeps no name, no e-mail unless you add one as a channel, and no IP address. Stop watching a wallet, or remove a watched wallet from the app, and its data leaves the server.",
   },
   {
     q: "Can I cancel, or get a refund?",
@@ -189,7 +189,8 @@ const linkClass =
             }
           </ul>
           <p class="mt-5 border-t border-border pt-4 text-sm text-muted">
-            Remove a wallet in the app and its data leaves the server with it.
+            Stop watching a wallet, or remove a watched wallet from the app,
+            and its data leaves the server with it.
           </p>
         </div>
       </div>
