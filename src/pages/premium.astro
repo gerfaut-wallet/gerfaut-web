@@ -549,11 +549,14 @@ const linkClass =
     return { ok: false, kind: "server", message };
   }
 
-  // The page only ever leaves for an https address the API named.
+  // The page only ever leaves for the checkout of our own Bark Pay
+  // instance: the API names no other origin, so anything else is a fault
+  // and gets the server note instead of a redirect.
+  const CHECKOUT_ORIGIN = "https://pay.gerfaut-wallet.com";
   function safeUrl(url: string): string | null {
     try {
       const parsed = new URL(url);
-      return parsed.protocol === "https:" ? parsed.href : null;
+      return parsed.origin === CHECKOUT_ORIGIN ? parsed.href : null;
     } catch {
       return null;
     }
