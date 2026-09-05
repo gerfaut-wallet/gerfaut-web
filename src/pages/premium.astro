@@ -62,7 +62,7 @@ const faq = [
   },
   {
     q: "Does it work over Tor?",
-    a: "Yes. The app talks to api.gerfaut-wallet.com over HTTPS, and when Tor is on in the app, that traffic goes through Tor with the rest. Either way, the server keeps no IP address.",
+    a: "Yes, and it follows the backend you chose. The app talks to api.gerfaut-wallet.com over HTTPS. When the backend set in the app is a .onion address, those calls go through Tor too; with any other backend, they go out directly. Either way, the server keeps no IP address.",
   },
   {
     q: "Can I run the server myself?",
