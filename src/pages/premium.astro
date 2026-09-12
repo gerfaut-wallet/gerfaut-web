@@ -26,7 +26,7 @@ const watches = [
   {
     icon: "bell",
     title: "On the channels you choose",
-    body: "ntfy on your phone, Telegram, e-mail, or a webhook signed with HMAC-SHA256 that your own scripts can check. An alert names the wallet and says what happened; addresses, amounts and transaction ids stay out of it.",
+    body: "ntfy on your phone, Telegram, e-mail, or a webhook signed with HMAC-SHA256 that your own scripts can check. An ntfy, Telegram or e-mail alert names the wallet and says what happened; addresses, amounts and transaction ids stay out of it. A webhook posts to your own machine, so it carries the whole event, transaction id and amounts included, and its URL must be one the server can reach from the internet.",
   },
 ] as const;
 
@@ -63,6 +63,10 @@ const faq = [
   {
     q: "Are there limits?",
     a: "Two, and a person never meets them. One key watches up to 21 wallets and 10 channels, and may send 60 requests per minute to the server. The apps register a handful of wallets and call the server a few times an hour; the ceilings exist so that one runaway script cannot slow the alerts of everyone else. Past the ceiling the server answers with a clear error and nothing is lost.",
+  },
+  {
+    q: "Can a webhook point at a machine on my own network?",
+    a: "Only if the internet can reach it. The server refuses a URL whose host is, or resolves to, a loopback, private, link-local or carrier-NAT address: 192.168.1.10 and the 100.64 address of a Tailscale tailnet are both turned down, when you add the channel and again each time a message goes out. A webhook registered on one of those addresses before the check existed is switched off, and nothing is delivered to it. Give the receiver a public name, or take ntfy instead: there your machine subscribes to a topic rather than waiting to be called.",
   },
   {
     q: "Does it work over Tor?",
