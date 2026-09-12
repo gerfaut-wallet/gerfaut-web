@@ -34,11 +34,12 @@ const kept = [
   "The descriptors of the wallets you register, and the names you gave them",
   "The addresses derived from those descriptors, with the coins and movements seen on them",
   "The channels you add: an ntfy topic, a Telegram link, an e-mail address or a webhook URL",
+  "The name Telegram gives a chat you link, a first name or a group title, so you can see where the alerts land",
+  "An e-mail address you added and have not confirmed, until you type back the code it received",
   "A hash of your key. The key itself is never stored.",
 ] as const;
 
 const notKept = [
-  "Your name",
   "Your e-mail, unless you add one as a channel",
   "Your IP address, or any request log",
 ] as const;
@@ -50,7 +51,7 @@ const faq = [
   },
   {
     q: "What exactly does the server see?",
-    a: "What a watch-only wallet sees: the descriptors you register, every address they derive, and the coins and transactions on those addresses. It also keeps the channels you add. It never sees a private key, and it keeps no name, no e-mail unless you add one as a channel, and no IP address. Stop watching a wallet, or remove a watched wallet from the app, and its data leaves the server.",
+    a: "What a watch-only wallet sees: the descriptors you register, every address they derive, and the coins and transactions on those addresses. It also keeps the channels you add, with the name Telegram gives a chat you link. It never sees a private key, and it keeps no other name, no e-mail unless you add one as a channel, and no IP address. Stop watching a wallet, or remove a watched wallet from the app, and its data leaves the server.",
   },
   {
     q: "Can I cancel, or get a refund?",
