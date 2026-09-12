@@ -14,12 +14,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: npm
 
       - run: npm ci
       - run: npm run build
+
+  pins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      # Every `uses:` has to name a commit. A tag can be moved by whoever
+      # owns the action, and one of these jobs holds the token that
+      # publishes the site.
+      - name: actions are pinned to a commit
+        run: |
+          loose=$(grep -rhoE 'uses: [^@ ]+@[^ ]+' .github/workflows/ | grep -vE '@[0-9a-f]{40}$' || true)
+          if [ -n "$loose" ]; then
+            echo "these are not pinned to a commit:" >&2
+            echo "$loose" >&2
+            exit 1
+          fi
+          echo "every action is pinned to a commit"
