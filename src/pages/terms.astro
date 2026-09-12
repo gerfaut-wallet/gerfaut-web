@@ -126,9 +126,15 @@ const linkClass =
         <h2 class="mt-10 text-h2 font-display">10. Acceptable use</h2>
         <p class="mt-2 text-muted">
           Do not register wallets you have no right to monitor. One key
-          watches up to 21 wallets and may send 60 requests per minute; the
-          server refuses what goes past that with a clear error. We may stop
-          serving a key that abuses the service.
+          watches up to 21 wallets and 10 channels and may send 60 requests
+          per minute; the server refuses what goes past that with a clear
+          error. Messages sent on the spot, a channel test or the confirmation
+          e-mail of a new address, are limited to five an hour per account.
+          E-mail alerts are limited to 20 per account per UTC day, within the
+          budget the server holds with its mail provider; past either, e-mail
+          alerts are sent the next day rather than dropped, and the other
+          channels are unaffected. We may stop serving a key that abuses the
+          service.
         </p>
 
         <h2 class="mt-10 text-h2 font-display">11. Liability</h2>
