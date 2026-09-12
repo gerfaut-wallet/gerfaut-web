@@ -7,7 +7,7 @@ const linkClass =
 
 <Base
   title="Terms of Sale · Gerfaut Premium"
-  description="The terms of sale of Gerfaut Premium: seller, plans and prices, your key, payment in bitcoin, withdrawal, data, liability and applicable law."
+  description="The terms of sale of Gerfaut Premium: seller, plans and prices, your key, payment in bitcoin, no refund, data, liability and applicable law."
 >
   <section class="py-16 md:py-24">
     <div class="mx-auto max-w-[1200px] px-4 md:px-6">
@@ -24,8 +24,10 @@ const linkClass =
 
         <h2 class="mt-12 text-h2 font-display">1. Seller</h2>
         <p class="mt-2 text-muted">
-          Gerfaut Premium is sold by Loïc Morel, sole trader (entreprise
-          individuelle) registered in France and trading as Pandul. Contact:
+          Gerfaut Premium is sold by Monsieur Loïc Morel, sole trader
+          (entreprise individuelle) registered in France under SIRET
+          850&nbsp;401&nbsp;290&nbsp;00034 and trading as Pandul. Address: 61
+          rue de Lyon, 75012 Paris, France. Contact:
           <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>.
           VAT is not applicable under article 293 B of the French General Tax
           Code (CGI).
@@ -46,8 +48,7 @@ const linkClass =
         <h2 class="mt-10 text-h2 font-display">3. Plans and prices</h2>
         <p class="mt-2 text-muted">
           1 month: 5&nbsp;€. 6 months: 24&nbsp;€. 1 year: 36&nbsp;€. Prices
-          are in euro and paid in bitcoin at the rate shown at checkout. A
-          launch offer, when displayed, applies to the plan it names. Paid
+          are in euro and paid in bitcoin at the rate shown at checkout. Paid
           time adds to the end of the time you already have.
         </p>
 
@@ -68,13 +69,12 @@ const linkClass =
           treated as paid and the difference is not refunded.
         </p>
 
-        <h2 class="mt-10 text-h2 font-display">6. Withdrawal</h2>
+        <h2 class="mt-10 text-h2 font-display">6. No refund</h2>
         <p class="mt-2 text-muted">
-          Within 14 days of purchase you may withdraw by writing to
-          <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>
-          with your key: we refund the unused days pro rata, in bitcoin, to
-          the address you give us. After 14 days, prepaid time is not
-          refundable, except as stated in section 9.
+          Premium is a prepaid service that starts the moment your payment is
+          confirmed. By paying, you expressly agree that the service begins at
+          once and you waive your right of withdrawal. Payment is final and
+          not refundable, except as stated in section 9.
         </p>
 
         <h2 class="mt-10 text-h2 font-display">
@@ -126,7 +126,8 @@ const linkClass =
         <p class="mt-2 text-muted">
           Do not register wallets you have no right to monitor. One key
           watches up to 21 wallets and 10 channels and may send 60 requests
-          per minute; the server refuses what goes past that with a clear
+          per minute; requests are also limited per network address on every
+          route. The server refuses what goes past either limit with a clear
           error. Messages sent on the spot, a channel test or the confirmation
           e-mail of a new address, are limited to five an hour per account.
           E-mail alerts are limited to 20 per account per UTC day, within the
@@ -144,15 +145,11 @@ const linkClass =
           law.
         </p>
 
-        <h2 class="mt-10 text-h2 font-display">12. Law and disputes</h2>
+        <h2 class="mt-10 text-h2 font-display">12. Law and complaints</h2>
         <p class="mt-2 text-muted">
-          French law applies. You may bring a dispute to a consumer mediator;
-          the mediator's details are available on request at
-          <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>.
-          EU consumers may also use the
-          <a href="https://ec.europa.eu/consumers/odr" class={linkClass}
-            >European online dispute resolution platform</a
-          >.
+          French law applies. For any complaint, write to
+          <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>
+          with your key.
         </p>
 
         <h2 class="mt-10 text-h2 font-display">13. Changes to these terms</h2>
