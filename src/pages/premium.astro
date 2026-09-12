@@ -58,7 +58,11 @@ const faq = [
   },
   {
     q: "Which wallets can be watched?",
-    a: "Any wallet Gerfaut imports from a descriptor on mainnet: single-sig, multisig, and miniscript policies with timelocks. A wallet added from a single address cannot be watched yet. One key covers up to 50 wallets and 10 channels.",
+    a: "Any wallet Gerfaut imports from a descriptor on mainnet: single-sig, multisig, and miniscript policies with timelocks. A wallet added from a single address cannot be watched yet.",
+  },
+  {
+    q: "Are there limits?",
+    a: "Two, and a person never meets them. One key watches up to 21 wallets and 10 channels, and may send 60 requests per minute to the server. The apps register a handful of wallets and call the server a few times an hour; the ceilings exist so that one runaway script cannot slow the alerts of everyone else. Past the ceiling the server answers with a clear error and nothing is lost.",
   },
   {
     q: "Does it work over Tor?",
