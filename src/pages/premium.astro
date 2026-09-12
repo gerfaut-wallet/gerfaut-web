@@ -66,6 +66,10 @@ const faq = [
     a: "Several, and two of them a person can meet. One key watches up to 21 wallets and 10 channels, and may send 60 requests per minute to the server: the apps register a handful of wallets and call it a few times an hour, so those ceilings only stop a runaway script. The two within reach are about messages. A test you ask for and the confirmation e-mail a new address receives count together, five an hour per account. E-mail alerts stop at 20 a day per account, inside the budget the server holds with its mail provider; past that they leave the next day instead of being dropped, and the other channels are untouched.",
   },
   {
+    q: "My e-mail alerts stopped. What happened?",
+    a: "E-mail now goes only to an address that has answered a code, and the addresses added before that rule had never answered one. Each account kept its oldest address, which is waiting in the app again; the others were removed. Open the Premium settings, add the address, and type back the six digits it receives: alerts resume the moment it is confirmed. Your ntfy and Telegram channels never stopped.",
+  },
+  {
     q: "Can a webhook point at a machine on my own network?",
     a: "Only if the internet can reach it. The server refuses a URL whose host is, or resolves to, a loopback, private, link-local or carrier-NAT address: 192.168.1.10 and the 100.64 address of a Tailscale tailnet are both turned down, when you add the channel and again each time a message goes out. A webhook registered on one of those addresses before the check existed is switched off, and nothing is delivered to it. Give the receiver a public name, or take ntfy instead: there your machine subscribes to a topic rather than waiting to be called.",
   },
