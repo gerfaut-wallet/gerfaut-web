@@ -71,7 +71,7 @@ const faq = [
   },
   {
     q: "Can a webhook point at a machine on my own network?",
-    a: "Only if the internet can reach it. The server refuses a URL whose host is, or resolves to, a loopback, private, link-local or carrier-NAT address: 192.168.1.10 and the 100.64 address of a Tailscale tailnet are both turned down, when you add the channel and again each time a message goes out. A webhook registered on one of those addresses before the check existed is switched off, and nothing is delivered to it. Give the receiver a public name, or take ntfy instead: there your machine subscribes to a topic rather than waiting to be called.",
+    a: "Only if the internet can reach it. The server refuses a URL whose host is, or resolves to, a loopback, private, link-local or carrier-grade NAT address: a 192.168 address on your home network and the 100.64 address of a Tailscale tailnet are both turned down. That check runs when you add the channel, and again each time a message goes out. A webhook registered on one of those addresses before the check existed is switched off, and nothing is delivered to it. Give the receiver a public name, or take ntfy instead: there your machine subscribes to a topic rather than waiting to be called.",
   },
   {
     q: "Does it work over Tor?",
