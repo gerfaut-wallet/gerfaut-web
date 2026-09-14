@@ -12,30 +12,43 @@ const plans = [
   { id: "year", name: "1 year", days: 366, price: 36, perMonth: "3 € a month" },
 ] as const;
 
+const steps = [
+  {
+    title: "Hand over a descriptor",
+    body: "The same public data the app already holds. Never a key.",
+  },
+  {
+    title: "The server follows it",
+    body: "Every address, present and future, from its own Bitcoin node.",
+  },
+  {
+    title: "A message leaves in seconds",
+    body: "The moment a spend reaches the mempool, on the channels you chose.",
+  },
+] as const;
+
 const watches = [
   {
     icon: "shield-alert",
     title: "Coins move, you hear about it",
-    body: "A spend shows up in the node's mempool and the alert goes out. A second message follows when the transaction is in a block. Once a day, the server also rescans the UTXO set to catch anything the live watch could have missed.",
+    body: "One alert when a spend enters the mempool, a second when it is in a block. Once a day the server also rescans the UTXO set.",
   },
   {
     icon: "timer",
     title: "A timelock opens, you are warned first",
-    body: "If a wallet has a recovery path behind a timelock, an inheritance setup for instance, the server tells you 30 days, 7 days and 1 day before that path becomes spendable, then again the day it opens.",
+    body: "30 days, 7 days and 1 day before a recovery path becomes spendable, then again the day it opens.",
   },
   {
     icon: "bell",
     title: "On the channels you choose",
-    body: "ntfy on your phone, Telegram, e-mail, or a webhook signed with HMAC-SHA256 that your own scripts can check. An ntfy, Telegram or e-mail alert names the wallet and says what happened; addresses, amounts and transaction ids stay out of it. A webhook posts to your own machine, so it carries the whole event, transaction id and amounts included, and its URL must be one the server can reach from the internet.",
+    body: "ntfy, Telegram and e-mail name the wallet and say what happened, nothing more. A webhook, signed with HMAC-SHA256, carries the whole event to a machine the internet can reach.",
   },
 ] as const;
 
 const kept = [
-  "The descriptors of the wallets you register, and the names you gave them",
-  "The addresses derived from those descriptors, with the coins and movements seen on them",
-  "The channels you add: an ntfy topic, a Telegram link, an e-mail address or a webhook URL",
-  "The name Telegram gives a chat you link, a first name or a group title, so you can see where the alerts land",
-  "An e-mail address you added and have not confirmed, until you type back the code it received",
+  "The descriptors you register, and the names you gave them",
+  "The addresses they derive, with the coins and movements seen on them",
+  "The channels you add: an ntfy topic, a Telegram chat with the name Telegram gives it, an e-mail address, a webhook URL",
   "A hash of your key. The key itself is never stored.",
 ] as const;
 
@@ -47,15 +60,15 @@ const notKept = [
 const faq = [
   {
     q: "I lost my key. Can you find it?",
-    a: "No. The server stores a hash of your key, the way a website stores a password: the hash lets the server recognize the key when you type it, and lets nobody rebuild it, us included. When the key is gone, the time on it is gone with it. Treat it like a password and write it down the moment it appears, before you pay.",
+    a: "No. We store a hash of the key, the way a website stores a password, and nobody can rebuild the key from it, us included. When the key is gone, the time on it is gone with it. Write it down the moment it appears, before you pay.",
   },
   {
     q: "What exactly does the server see?",
-    a: "What a watch-only wallet sees: the descriptors you register, every address they derive, and the coins and transactions on those addresses. It also keeps the channels you add, with the name Telegram gives a chat you link. It never sees a private key, and it keeps no other name, no e-mail unless you add one as a channel, and no IP address. Stop watching a wallet, or remove a watched wallet from the app, and its data leaves the server.",
+    a: "What a watch-only wallet sees: the descriptors you register, the addresses they derive, and the coins and transactions on them. Plus the channels you add. Never a private key, no name, no IP address. Remove a wallet from the app and its data leaves the server.",
   },
   {
     q: "Can I cancel, or get a refund?",
-    a: "There is nothing to cancel: you prepay time, and it runs out on its own. The service starts the moment your payment is confirmed, so by paying you waive your right of withdrawal, and the payment is not refunded, unless we discontinue the service. The Terms of Sale say it in full.",
+    a: "There is nothing to cancel: you prepay time, and it runs out on its own. The service starts the moment your payment is confirmed, so the payment is final, unless we discontinue the service. The Terms of Sale say it in full.",
   },
   {
     q: "Which wallets can be watched?",
@@ -63,170 +76,158 @@ const faq = [
   },
   {
     q: "Are there limits?",
-    a: "Several, and two of them a person can meet. One key watches up to 21 wallets and 10 channels, and may send 60 requests per minute to the server, and every route also caps the requests coming from one network address: the apps register a handful of wallets and call it a few times an hour, so those ceilings only stop a runaway script. The two within reach are about messages. A test you ask for and the confirmation e-mail a new address receives count together, five an hour per account. E-mail alerts stop at 20 a day per account, inside the budget the server holds with its mail provider; past that they leave the next day instead of being dropped, and the other channels are untouched.",
-  },
-  {
-    q: "My e-mail alerts stopped. What happened?",
-    a: "E-mail now goes only to an address that has answered a code, and the addresses added before that rule had never answered one. Each account kept its oldest address, which is waiting in the app again; the others were removed. Open the Premium settings, add the address, and type back the six digits it receives: alerts resume the moment it is confirmed. Your ntfy and Telegram channels never stopped.",
+    a: "One key watches up to 21 wallets and 10 channels. Test messages and confirmation e-mails: five an hour. E-mail alerts: 20 a day, the rest leave the next day, and the other channels are untouched. The request limits only stop a runaway script.",
   },
   {
     q: "Can a webhook point at a machine on my own network?",
-    a: "Only if the internet can reach it. The server refuses a URL whose host is, or resolves to, a loopback, private, link-local or carrier-grade NAT address: a 192.168 address on your home network and the 100.64 address of a Tailscale tailnet are both turned down. That check runs when you add the channel, and again each time a message goes out. A webhook registered on one of those addresses before the check existed is switched off, and nothing is delivered to it. Give the receiver a public name, or take ntfy instead: there your machine subscribes to a topic rather than waiting to be called.",
+    a: "Only if the internet can reach it. A loopback, private, link-local or carrier-grade NAT address is refused, a 192.168 address and a Tailscale 100.64 address included, when you add the channel and again at each delivery. Give the receiver a public name, or take ntfy: there your machine subscribes to a topic instead of waiting to be called.",
   },
   {
     q: "Does it work over Tor?",
-    a: "Yes, and it follows the backend you chose. The app talks to api.gerfaut-wallet.com over HTTPS. When the backend set in the app is a .onion address, those calls go through Tor too; with any other backend, they go out directly. Either way, the server keeps no IP address.",
+    a: "Yes, and it follows the backend you chose in the app. With a .onion backend, the calls to the server go through Tor too; with any other backend, they go out directly. Either way, the server keeps no IP address.",
   },
   {
     q: "Can I run the server myself?",
-    a: "Not yet. A watcher you run on your own node, so that nothing leaves your home, is on the list for a later version. The idea is the one Bitwarden made familiar: whoever runs a server does not pay. Until then, the server that watches is ours, and this page says exactly what it keeps.",
+    a: "Not yet. A watcher on your own node, so that nothing leaves your home, is planned for a later version, the way Bitwarden does it: whoever runs a server does not pay.",
   },
 ] as const;
-
-const linkClass =
-  "text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover";
 ---
 
 <Base
   title="Gerfaut Premium · Alerts for your cold storage"
   description="Gerfaut Premium is a server that watches your Bitcoin wallets around the clock and tells you within seconds when coins move, over ntfy, Telegram, e-mail or webhook. From 5 € a month, paid in bitcoin, no account."
 >
-  <section class="dark-island bg-background pt-14 pb-14 text-text md:pt-20 md:pb-20">
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <span class="pill-premium">
-        <Icon name="gem" size={12} />
-        Premium
-      </span>
-      <h1
-        class="mt-5 max-w-2xl font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[2.5rem] lg:text-hero"
-      >
-        You do not pay to see a balance. You pay to be warned.
-      </h1>
-      <p class="mt-5 max-w-xl text-lg text-muted">
-        The apps are free, open source and complete on their own. Premium adds
-        what an app cannot do once your phone is in your pocket: a server that
-        watches the wallets you choose, around the clock, and tells you within
-        seconds when coins move.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a href="#buy" class="btn btn-primary">Get Premium</a>
-        <a href="#renew" class="btn btn-secondary">Add time to a key</a>
+  <section class="dark-island bg-background pt-16 pb-16 text-text md:pt-24 md:pb-24">
+    <div class="site-container">
+      <div class="mx-auto max-w-3xl text-center">
+        <span class="pill-premium">
+          <Icon name="gem" size={12} />
+          Premium
+        </span>
+        <h1
+          class="mt-5 font-display text-[2.25rem] leading-[1.05] font-semibold tracking-[-0.03em] sm:text-[2.75rem] lg:text-hero"
+        >
+          You do not pay to see a balance. You pay to be warned.
+        </h1>
+        <p class="mx-auto mt-6 max-w-xl text-lg text-muted">
+          The apps are free and complete on their own. Premium adds a server
+          that watches the wallets you choose, around the clock, and tells you
+          within seconds when coins move.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a href="#buy" class="btn btn-primary btn-wide">Get Premium</a>
+          <a href="#renew" class="btn btn-secondary">Add time to a key</a>
+        </div>
+        <p class="mt-5 text-sm text-muted">
+          From 5&nbsp;€ a month &middot; Paid in bitcoin &middot; No account
+        </p>
       </div>
-      <p class="mt-6 text-sm text-muted">
-        From 5&nbsp;€ a month &middot; Paid in bitcoin &middot; No account to
-        create
-      </p>
     </div>
   </section>
 
-  <section class="py-16 md:py-24" aria-labelledby="what-heading">
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <h2
-        id="what-heading"
-        class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
-      >
-        What the server does
+  <section class="section" aria-labelledby="how-heading">
+    <div class="site-container">
+      <h2 id="how-heading" class="section-title mx-auto max-w-2xl text-center">
+        How it works
       </h2>
-      <p class="mt-4 max-w-2xl text-muted">
-        Say your savings sit on a hardware wallet in a drawer. The app on your
-        desk shows the balance when you open it, and nothing happens in
-        between. With Premium, you hand the server the descriptor of that
-        wallet, the same public data the app already holds. From then on the
-        server follows every address of that wallet, present and future, from
-        its own Bitcoin node. The moment a transaction spending one of your
-        coins reaches the node's mempool, a message leaves for the channels you
-        chose. Usually that is a matter of seconds.
-      </p>
+      <ol class="mt-12 grid list-none gap-6 p-0 md:grid-cols-3 md:gap-8">
+        {
+          steps.map((step, index) => (
+            <li class="border-t border-border pt-5">
+              <span class="step-number">0{index + 1}</span>
+              <h3 class="mt-3 font-display text-[1.125rem] font-semibold">
+                {step.title}
+              </h3>
+              <p class="mt-1.5 text-sm text-muted">{step.body}</p>
+            </li>
+          ))
+        }
+      </ol>
 
-      <div class="mt-10 grid gap-4 md:grid-cols-3 lg:gap-5">
+      <ul class="mt-16 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-5">
         {
           watches.map((item) => (
-            <div class="card p-5">
+            <li class="card p-5 md:p-6">
               <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken text-primary">
                 <Icon name={item.icon} size={18} />
               </span>
-              <h3 class="mt-4 font-display text-[1rem] font-semibold">
+              <h3 class="mt-4 font-display text-[1.0625rem] font-semibold">
                 {item.title}
               </h3>
               <p class="mt-1.5 text-sm text-muted">{item.body}</p>
-            </div>
+            </li>
           ))
         }
-      </div>
+      </ul>
+    </div>
+  </section>
 
-      <div class="mt-14 grid gap-10 md:grid-cols-2 md:gap-16">
-        <div>
-          <span
-            class="flex h-10 w-10 items-center justify-center rounded-md bg-sunken text-primary"
-          >
-            <Icon name="lock" />
-          </span>
-          <h3 class="mt-4 text-h1 font-display">Watch-only stays watch-only</h3>
-          <p class="mt-3 text-muted">
-            The server holds no key: not yours, and none of its own for your
-            wallets. It can see coins move and cannot move them. There is no
-            signing code anywhere in Gerfaut, app or server, and Premium does
-            not change that.
-          </p>
-          <p class="mt-3 text-muted">
-            Every service in Premium comes with the same plan, including the
-            ones added later; paid time covers them from the day they ship.
-          </p>
-        </div>
-        <div class="card p-6">
-          <h3 class="text-h2 font-display">What the server learns</h3>
-          <p class="mt-3 text-label tracking-[0.04em] text-muted uppercase">
-            Kept on the server
-          </p>
-          <ul class="mt-2 space-y-2 text-sm">
-            {
-              kept.map((line) => (
-                <li class="flex items-start gap-2.5">
-                  <Icon name="check" size={16} class="mt-0.5 shrink-0 text-primary" />
-                  <span>{line}</span>
-                </li>
-              ))
-            }
-          </ul>
-          <p class="mt-5 text-label tracking-[0.04em] text-muted uppercase">
-            Never kept
-          </p>
-          <ul class="mt-2 space-y-2 text-sm text-muted">
-            {
-              notKept.map((line) => (
-                <li class="flex items-start gap-2.5">
-                  <span class="mt-2.5 h-px w-4 shrink-0 bg-border" aria-hidden="true" />
-                  <span>{line}</span>
-                </li>
-              ))
-            }
-          </ul>
-          <p class="mt-5 border-t border-border pt-4 text-sm text-muted">
-            Stop watching a wallet, or remove a watched wallet from the app,
-            and its data leaves the server with it.
-          </p>
-        </div>
+  <section class="section border-t border-border" aria-labelledby="data-heading">
+    <div class="site-container grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div class="max-w-lg">
+        <span
+          class="flex h-10 w-10 items-center justify-center rounded-md bg-sunken text-primary"
+        >
+          <Icon name="lock" />
+        </span>
+        <h2 id="data-heading" class="section-title mt-5">
+          Watch-only stays watch-only.
+        </h2>
+        <p class="mt-4 text-lg text-muted">
+          The server holds no key, not yours and none of its own. It can see
+          coins move and cannot move them.
+        </p>
+        <p class="mt-3 text-muted">
+          Every Premium service comes with the same plan, the ones added later
+          included.
+        </p>
+      </div>
+      <div class="card p-5 md:p-6">
+        <h3 class="text-h2 font-display">What the server learns</h3>
+        <p class="mt-4 text-label tracking-[0.04em] text-muted uppercase">
+          Kept on the server
+        </p>
+        <ul class="mt-2 space-y-2 text-sm">
+          {
+            kept.map((line) => (
+              <li class="flex items-start gap-2.5">
+                <Icon name="check" size={16} class="mt-0.5 shrink-0 text-primary" />
+                <span>{line}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-5 text-label tracking-[0.04em] text-muted uppercase">
+          Never kept
+        </p>
+        <ul class="mt-2 space-y-2 text-sm text-muted">
+          {
+            notKept.map((line) => (
+              <li class="flex items-start gap-2.5">
+                <span class="mt-2.5 h-px w-4 shrink-0 bg-border" aria-hidden="true" />
+                <span>{line}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-5 border-t border-border pt-4 text-sm text-muted">
+          Remove a wallet from the app, or stop watching it, and its data
+          leaves the server with it.
+        </p>
       </div>
     </div>
   </section>
 
   <section
     id="buy"
-    class="scroll-mt-20 border-t border-border py-16 md:py-24"
+    class="section scroll-mt-20 border-t border-border"
     aria-labelledby="buy-heading"
   >
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <h2
-        id="buy-heading"
-        class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
-      >
-        Get Premium
-      </h2>
-      <p class="mt-4 max-w-2xl text-muted">
-        One plan and every service. Choose how long the server watches for
-        you. Prices are in euro; you pay in bitcoin, through Ark, Lightning or
-        on-chain, on our own Bark Pay instance. The bitcoin amount is set at
-        the moment you pay, at the rate the checkout page shows.
+    <div class="site-container">
+      <h2 id="buy-heading" class="section-title">Get Premium</h2>
+      <p class="mt-4 max-w-2xl text-lg text-muted">
+        One plan, every service. Prices in euro, paid in bitcoin through Ark,
+        Lightning or on-chain, at the rate the checkout shows.
       </p>
 
       <form id="buy-form" novalidate class="mt-10">
@@ -274,7 +275,7 @@ const linkClass =
               <button
                 type="submit"
                 id="buy-button"
-                class="btn btn-primary"
+                class="btn btn-primary btn-wide"
                 data-label="Get Premium"
                 data-busy="Creating your key…"
               >
@@ -282,7 +283,7 @@ const linkClass =
               </button>
               <p class="text-sm text-muted">
                 By paying you accept the
-                <a href="/terms" class={linkClass}>Terms of Sale</a>.
+                <a href="/terms" class="link">Terms of Sale</a>.
               </p>
             </div>
             <div id="buy-note" class="note note-pending mt-5 max-w-xl" hidden>
@@ -315,9 +316,9 @@ const linkClass =
               <Icon name="triangle-alert" size={16} />
               <p>
                 This key is the only proof of your purchase. We keep a hash of
-                it, never the key itself, so nobody can recover, reset or
-                re-issue it, us included. Write it down or put it in your
-                password manager before you pay.
+                it, never the key, so nobody can recover or re-issue it, us
+                included. Write it down or put it in your password manager
+                before you pay.
               </p>
             </div>
             <dl class="mt-5 grid gap-x-8 gap-y-2 text-sm sm:grid-cols-[auto_1fr]">
@@ -326,11 +327,7 @@ const linkClass =
               <dt class="text-muted">Price</dt>
               <dd class="m-0 flex flex-wrap items-center gap-2 font-medium">
                 <span id="key-amount" class="tabular-nums"></span>
-                <span
-                  id="key-offer"
-                  class="pill border border-border bg-sunken text-text"
-                  hidden
-                >
+                <span id="key-offer" class="pill pill-neutral text-text" hidden>
                   Launch offer
                 </span>
                 <span id="key-standard" class="font-normal text-muted"></span>
@@ -355,9 +352,9 @@ const linkClass =
                 I saved my key, continue to payment
               </button>
               <p id="key-gate" class="mt-3 text-sm text-muted">
-                The button opens once the box is ticked. The checkout page
-                opens in this tab. By paying you accept the
-                <a href="/terms" class={linkClass}>Terms of Sale</a>.
+                The button opens once the box is ticked. The checkout opens in
+                this tab. By paying you accept the
+                <a href="/terms" class="link">Terms of Sale</a>.
               </p>
             </div>
           </div>
@@ -368,7 +365,7 @@ const linkClass =
               Payments are not open yet: Premium opens with the first public
               release of the apps. Nothing was created and nothing was
               charged. Follow the
-              <a href="https://github.com/gerfaut-wallet" class={linkClass}
+              <a href="https://github.com/gerfaut-wallet" class="link"
                 >GitHub repositories</a
               >
               to catch the opening.
@@ -384,15 +381,14 @@ const linkClass =
     class="scroll-mt-20 pb-16 md:pb-24"
     aria-labelledby="renew-heading"
   >
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+    <div class="site-container">
       <form id="renew-form" novalidate class="card max-w-2xl p-5 sm:p-6">
         <h2 id="renew-heading" class="text-h1 font-display">
           Already have a key? Add time
         </h2>
         <p class="mt-2 text-sm text-muted">
-          Enter your key, pick how much time to add, and the checkout opens
-          right away. Your key is not shown again, and the new time goes to
-          the end of what you already have.
+          Enter your key and pick how much time to add. The checkout opens
+          right away, and the new time goes to the end of what you have.
         </p>
         <div id="renew-paste" class="note note-neutral mt-5" hidden>
           <Icon name="copy" size={16} />
@@ -455,7 +451,7 @@ const linkClass =
             </button>
             <p class="mt-3 text-sm text-muted">
               The checkout opens in this tab. By paying you accept the
-              <a href="/terms" class={linkClass}>Terms of Sale</a>.
+              <a href="/terms" class="link">Terms of Sale</a>.
             </p>
             <div id="renew-note" class="note note-pending mt-4" hidden>
               <Icon name="info" size={16} />
@@ -474,18 +470,10 @@ const linkClass =
     </div>
   </section>
 
-  <section
-    class="border-t border-border py-16 md:py-24"
-    aria-labelledby="faq-heading"
-  >
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <h2
-        id="faq-heading"
-        class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
-      >
-        Questions
-      </h2>
-      <dl class="mt-10 grid gap-x-12 gap-y-10 md:grid-cols-2">
+  <section class="section border-t border-border" aria-labelledby="faq-heading">
+    <div class="site-container">
+      <h2 id="faq-heading" class="section-title">Questions</h2>
+      <dl class="mt-10 grid gap-x-12 gap-y-8 md:grid-cols-2">
         {
           faq.map((item) => (
             <div>
@@ -497,9 +485,9 @@ const linkClass =
       </dl>
       <p class="mt-10 text-sm text-muted">
         Another question? Write to
-        <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>.
+        <a href="mailto:info@pandul.fr" class="link">info@pandul.fr</a>.
         The full conditions are in the
-        <a href="/terms" class={linkClass}>Terms of Sale</a>.
+        <a href="/terms" class="link">Terms of Sale</a>.
       </p>
     </div>
   </section>
