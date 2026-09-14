@@ -19,7 +19,7 @@ const platforms = [
     slot: "linux",
     name: "Linux",
     icon: "monitor",
-    formats: ".AppImage, .deb, and .rpm packages",
+    formats: ".AppImage, .deb and .rpm packages",
   },
   {
     slot: "android",
@@ -34,24 +34,30 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
 
 <Base
   title="Download Gerfaut · Bitcoin watch-only wallet"
-  description="Download Gerfaut for Windows, macOS, Linux, and Android. Free and open source, with checksums signed by the author's minisign key."
+  description="Download Gerfaut for Windows, macOS, Linux and Android. Free and open source, with checksums signed by the author's minisign key."
 >
-  <section class="pt-14 pb-12 md:pt-20">
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <h1
-        class="font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em] sm:text-[2.5rem]"
-      >
-        Download Gerfaut
-      </h1>
-      <p class="mt-4 max-w-xl text-lg text-muted">
-        Binaries ship with each GitHub release, along with checksums signed by
-        the author's minisign key.
-      </p>
+  <section class="pt-16 pb-12 md:pt-24">
+    <div class="site-container">
+      <div class="mx-auto max-w-2xl text-center">
+        <h1
+          class="font-display text-[2.25rem] leading-[1.05] font-semibold tracking-[-0.03em] sm:text-[2.75rem] lg:text-hero"
+        >
+          Download Gerfaut
+        </h1>
+        <p class="mt-5 text-lg text-muted">
+          Free and open source. Every release ships with checksums signed by
+          the author's minisign key.
+        </p>
+      </div>
 
-      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:gap-5">
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:gap-5">
         {
           platforms.map((platform) => (
-            <div class="card flex min-w-0 flex-col p-6">
+            <div
+              id={platform.slot}
+              class="card flex min-w-0 scroll-mt-24 flex-col p-6"
+              data-platform={platform.slot}
+            >
               <div class="flex items-center gap-3">
                 <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sunken text-primary">
                   <Icon name={platform.icon} />
@@ -60,6 +66,9 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
                   <h2 class="text-h2 font-display">{platform.name}</h2>
                   <p class="text-sm text-muted">{platform.formats}</p>
                 </div>
+                <span class="pill pill-neutral hidden" data-platform-current>
+                  Your system
+                </span>
                 <span
                   class="font-data hidden rounded-sm bg-sunken px-2 py-1 text-data text-muted"
                   data-release-version={platform.slot}
@@ -82,10 +91,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
                   <p class="mt-1 text-sm text-muted">
                     Builds appear here the moment the first release is tagged.
                     Until then, follow the project on
-                    <a
-                      href="https://github.com/gerfaut-wallet"
-                      class="text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover"
-                    >
+                    <a href="https://github.com/gerfaut-wallet" class="link">
                       GitHub</a
                     >.
                   </p>
@@ -97,20 +103,22 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         }
       </div>
 
-      <p class="mt-8 text-sm text-muted">
+      <p class="mt-8 text-center text-sm text-muted">
         All builds and release notes live on
-        <a
-          href="https://github.com/gerfaut-wallet"
-          class="text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover"
+        <a href="https://github.com/gerfaut-wallet" class="link"
           >github.com/gerfaut-wallet</a
         >.
       </p>
     </div>
   </section>
 
-  <section class="pt-12 pb-16 md:pb-24" aria-labelledby="verify-heading">
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <div class="card max-w-3xl p-6 md:p-8">
+  <section
+    id="verify"
+    class="section scroll-mt-20"
+    aria-labelledby="verify-heading"
+  >
+    <div class="site-container">
+      <div class="card mx-auto max-w-3xl p-6 md:p-8">
         <div class="flex items-center gap-3">
           <span
             class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sunken text-primary"
@@ -122,32 +130,26 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
           </h2>
         </div>
         <p class="mt-4 text-sm text-muted">
-          Each release ships a <span class="font-data">SHA256SUMS</span> file
-          and its minisign signature. Two commands prove that the files were
-          signed by the author and arrived unchanged.
-        </p>
-        <p class="mt-3 text-sm text-muted">
-          Both files sit next to the installers on the release page:
+          Two commands prove that the files were signed by the author and
+          arrived unchanged. The
+          <span class="font-data">SHA256SUMS</span> file and its signature sit
+          next to the installers on the release page,
           <a
             href="https://github.com/gerfaut-wallet/gerfaut-desktop/releases/latest"
-            class="text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover"
-            >desktop</a
+            class="link">desktop</a
           >
-          and
+          or
           <a
             href="https://github.com/gerfaut-wallet/gerfaut-mobile/releases/latest"
-            class="text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover"
-            >Android</a
-          >. Download them into the same folder as the file you are checking.
+            class="link">Android</a
+          >. Download them into the folder of the file you are checking.
         </p>
         <h3 class="mt-6 text-sm font-medium">
           1. Check the signature of the checksum file
         </h3>
         <pre
           class="code-block mt-2"><code>minisign -Vm SHA256SUMS -P {minisignKey}</code></pre>
-        <h3 class="mt-5 text-sm font-medium">
-          2. Check the file you downloaded
-        </h3>
+        <h3 class="mt-5 text-sm font-medium">2. Check the file you downloaded</h3>
         <pre
           class="code-block mt-2"><code>sha256sum --check SHA256SUMS --ignore-missing</code></pre>
         <h3 class="mt-6 text-sm font-medium">Author's minisign public key</h3>
@@ -158,6 +160,8 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
 </Base>
 
 <script>
+  import { detectPlatform } from "../lib/platform";
+
   type Asset = { name: string; browser_download_url: string; size: number };
   type Release = { tag_name: string; assets: Asset[] };
 
@@ -311,6 +315,22 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     render("macos", desktop);
     render("linux", desktop);
     render("android", mobile);
+  }
+
+  // The card of the visitor's system stands out: a Glacier border and a
+  // pill. The address names a platform when the home page sent the
+  // visitor here; otherwise the system is read from the browser.
+  function highlight(slot: string) {
+    const card = document.querySelector<HTMLElement>(`[data-platform="${slot}"]`);
+    if (!card) return;
+    card.classList.add("card-current");
+    card.querySelector<HTMLElement>("[data-platform-current]")?.classList.remove("hidden");
+  }
+  const named = window.location.hash.slice(1);
+  if (named in matchers) highlight(named);
+  else {
+    const detected = detectPlatform();
+    if (detected) highlight(detected.slot);
   }
 
   load();
