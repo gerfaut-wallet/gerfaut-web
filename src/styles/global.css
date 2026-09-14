@@ -526,6 +526,49 @@ p {
   border: 1px solid var(--color-border);
 }
 
+/* A code block with its copy button in the top right corner. The
+   button swaps its icon for a check for a moment once the text is on
+   the clipboard. */
+.code-copy {
+  position: relative;
+  margin-top: 8px;
+}
+.code-copy .code-block {
+  padding-right: 52px;
+}
+.code-copy-button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition:
+    background-color 150ms var(--ease-out-toundra),
+    color 150ms var(--ease-out-toundra);
+}
+.code-copy-button:hover {
+  background: color-mix(in srgb, var(--color-sunken) 60%, var(--color-border));
+  color: var(--color-text);
+}
+.code-copy-button .code-copy-done {
+  display: none;
+}
+.code-copy-button[data-done] .code-copy-idle {
+  display: none;
+}
+.code-copy-button[data-done] .code-copy-done {
+  display: block;
+  color: var(--color-primary);
+}
+
 /* Inline code and command blocks: data font on the sunken surface. */
 .code-block {
   background: var(--color-sunken);

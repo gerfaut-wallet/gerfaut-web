@@ -1,0 +1,26 @@
+---
+import Icon from "./Icon.astro";
+
+/** A command or a value in the data font, with a button that copies it
+    to the clipboard. The text is passed as a prop so the button copies
+    exactly what the block shows. */
+interface Props {
+  text: string;
+  label: string;
+}
+
+const { text, label } = Astro.props;
+---
+
+<div class="code-copy">
+  <pre class="code-block"><code>{text}</code></pre>
+  <button
+    type="button"
+    class="code-copy-button"
+    data-copy={text}
+    aria-label={`Copy: ${label}`}
+  >
+    <Icon name="copy" size={16} class="code-copy-idle" />
+    <Icon name="check" size={16} class="code-copy-done" />
+  </button>
+</div>
