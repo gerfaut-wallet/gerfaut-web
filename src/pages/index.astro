@@ -1,131 +1,35 @@
 ---
-import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
-import AppShell from "../components/AppShell.astro";
+import Feature from "../components/Feature.astro";
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
+import androidWallet from "../assets/android-wallet.webp";
+import androidWidget from "../assets/android-widget.webp";
+import hero from "../assets/hero.png";
+import node from "../assets/node.webp";
+import policy from "../assets/policy.webp";
+import transaction from "../assets/transaction.webp";
 
-// The hero shows a screenshot of the desktop app as soon as one sits at
-// src/assets/hero.png (or .webp). Until then, the drawn miniature stands in.
-const shots = import.meta.glob<{ default: ImageMetadata }>(
-  "../assets/hero.{png,webp}",
-  { eager: true },
-);
-const heroShot = Object.values(shots)[0]?.default;
+const inputs = [
+  { icon: "braces", name: "Descriptor", note: "Output descriptors, BIP‑380" },
+  { icon: "key-round", name: "xpub", note: "xpub, ypub, zpub and their testnet twins" },
+  { icon: "hash", name: "Address", note: "One address, watched on its own" },
+  { icon: "users", name: "Multisig", note: "Any m‑of‑n, sorted or not" },
+  { icon: "route", name: "Miniscript", note: "Timelocks and recovery paths" },
+  { icon: "file-text", name: "BSMS", note: "Coordinator exports, BIP‑129" },
+] as const;
 
-const features = [
-  {
-    icon: "wallet",
-    title: "Any wallet you already have",
-    body: "A descriptor, an xpub, an address, a multisig setup, a BSMS record or another wallet's export.",
-  },
-  {
-    icon: "scan-line",
-    title: "Paste, file or QR",
-    body: "Paste it, open a file or scan a QR code, static or animated.",
-  },
-  {
-    icon: "layers",
-    title: "Several wallets at once",
-    body: "Rename them, give them an icon, reorder the list.",
-  },
-  {
-    icon: "history",
-    title: "Balances and history",
-    body: "Every wallet with its balance, its transactions and the last sync time.",
-  },
-  {
-    icon: "waypoints",
-    title: "Transactions as diagrams",
-    body: "Inputs on the left, outputs on the right, the fee on its own branch, sized by amount.",
-  },
-  {
-    icon: "boxes",
-    title: "UTXO view",
-    body: "The exact coins behind a balance, each with its amount and address.",
-  },
-  {
-    icon: "inbox",
-    title: "Receive addresses",
-    body: "The next addresses with their QR code, the used ones marked.",
-  },
-  {
-    icon: "route",
-    title: "Miniscript policies",
-    body: "Every spending path of a descriptor, each timelock counted down.",
-  },
-  {
-    icon: "send",
-    title: "Broadcast",
-    body: "Push a signed transaction or a PSBT, read back in plain words first.",
-  },
-  {
-    icon: "server",
-    title: "Your own node",
-    body: "Electrum or Esplora, yours or a public one. A self-signed certificate is trusted by its fingerprint.",
-  },
-  {
-    icon: "globe-lock",
-    title: "Tor built in",
-    body: "An .onion backend works with nothing else to install.",
-  },
-  {
-    icon: "refresh-cw",
-    title: "Sync on a schedule",
-    body: "Every 5, 15 or 60 minutes while the desktop app is open.",
-  },
-  {
-    icon: "network",
-    title: "Four networks",
-    body: "Mainnet, signet, testnet4 and regtest.",
-  },
-  {
-    icon: "lock",
-    title: "Encrypted storage",
-    body: "Wallet data is stored encrypted on the device.",
-  },
-  {
-    icon: "fingerprint",
-    title: "App lock",
-    body: "A PIN or a password, and biometrics on Android.",
-  },
-  {
-    icon: "file-lock",
-    title: "Encrypted backup",
-    body: "A password-sealed file, or an animated QR, to sync two devices.",
-  },
-  {
-    icon: "file-spreadsheet",
-    title: "CSV export",
-    body: "A wallet's history as a CSV file.",
-  },
-  {
-    icon: "coins",
-    title: "BTC or sats, with fiat",
-    body: "One unit everywhere, and an optional fiat value from CoinGecko, Kraken or mempool.space.",
-  },
-  {
-    icon: "sun-moon",
-    title: "Light and dark",
-    body: "The Toundra palette in both themes.",
-  },
-  {
-    icon: "layout-grid",
-    title: "Widgets and notifications",
-    body: "Android home screen widgets, and a local notification when a sync finds something new.",
-  },
+const inputFacts = [
+  "Mainnet, signet, testnet4 and regtest",
+  "Several wallets at once, named, iconed, reordered",
+  "Exports from other wallets read as they are",
 ] as const;
 
 const premium = [
   {
     icon: "shield-alert",
     title: "Coins move, you know",
-    body: "An alert when a spend enters the mempool, a second one when it confirms.",
-  },
-  {
-    icon: "radar",
-    title: "Daily rescan",
-    body: "Once a day the server rescans the UTXO set to catch what the live watch could have missed.",
+    body: "An alert when a spend enters the mempool, another when it confirms. A daily rescan catches what the live watch could have missed.",
   },
   {
     icon: "timer",
@@ -137,110 +41,98 @@ const premium = [
     title: "Your channels",
     body: "ntfy, Telegram, e-mail, or a webhook signed with HMAC-SHA256.",
   },
-  {
-    icon: "key-round",
-    title: "No account",
-    body: "A key you buy once. No name, no password, no sign-up.",
-  },
-  {
-    icon: "bitcoin",
-    title: "Paid in bitcoin",
-    body: "Ark, Lightning or on-chain, from 5 € a month.",
-  },
-  {
-    icon: "wallet-cards",
-    title: "Up to 21 wallets",
-    body: "One key watches up to 21 wallets.",
-  },
-  {
-    icon: "trash-2",
-    title: "Gone when you say so",
-    body: "Remove a wallet from the app and its data leaves the server.",
-  },
-  {
-    icon: "globe-lock",
-    title: "Over Tor",
-    body: "When your backend is a .onion, the calls to the server go through Tor too.",
-  },
+] as const;
+
+const premiumFacts = [
+  "From 5 € a month",
+  "Paid in bitcoin",
+  "No account",
+  "Up to 21 wallets",
+  "Through Tor with an .onion backend",
+] as const;
+
+const sourceFacts = [
+  "AGPL-3.0, the apps and the core alike",
+  "Every release signed with minisign",
+  "Three repositories: core, desktop, mobile",
 ] as const;
 ---
 
 <Base
-  title="Gerfaut · Bitcoin watch-only wallet"
-  description="Gerfaut is a Bitcoin watch-only wallet for desktop and Android. It observes your wallets from descriptors and public keys, holds no private keys, and cannot spend."
+  title="Gerfaut · The ultimate Bitcoin watch-only wallet"
+  description="Gerfaut is a Bitcoin watch-only wallet for desktop and Android. It follows your wallets from descriptors and public keys, holds no private keys, and cannot spend."
 >
-  <section class="pt-14 pb-12 md:pt-20">
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <div
-        class="grid items-center gap-12 lg:grid-cols-[minmax(0,10fr)_minmax(0,11fr)] lg:gap-16"
-      >
-        <div>
-          <p class="text-label tracking-[0.04em] text-primary uppercase">
-            Bitcoin watch-only wallet
-          </p>
-          <h1
-            class="mt-4 font-display text-[2.375rem] leading-[1.08] font-semibold tracking-[-0.02em] text-text sm:text-[3rem] lg:text-hero"
-          >
-            Watch your bitcoin. Leave your keys offline.
-          </h1>
-          <p class="mt-5 max-w-xl text-lg text-muted">
-            Gerfaut observes your wallets from descriptors and public keys
-            alone. It holds no private keys and cannot spend.
-          </p>
-          <div class="mt-8 flex flex-wrap items-center gap-3">
-            <a href="/download" class="btn btn-primary">
-              <Icon name="download" size={16} />
-              Download Gerfaut
-            </a>
-            <a href="https://github.com/gerfaut-wallet" class="btn btn-secondary">
-              View the source
-            </a>
-          </div>
-          <p class="mt-6 text-sm text-muted">Free and open source, AGPL-3.0</p>
+  <section class="pt-16 pb-12 md:pt-24 md:pb-16">
+    <div class="site-container">
+      <div class="mx-auto max-w-3xl text-center">
+        <h1
+          class="rise font-display text-[2.375rem] leading-[1.05] font-semibold tracking-[-0.03em] sm:text-[3rem] lg:text-hero"
+        >
+          The ultimate Bitcoin watch-only wallet.
+        </h1>
+        <p class="rise rise-2 mx-auto mt-6 max-w-xl text-lg text-muted">
+          Follow every wallet you own from its descriptor or public key.
+          Gerfaut holds no private keys and cannot spend.
+        </p>
+        <div class="rise rise-3 mt-8 flex flex-col items-center gap-3">
+          <a href="/download" class="btn btn-primary btn-wide" data-os-download>
+            <Icon name="download" size={16} />
+            <span>Download Gerfaut</span>
+          </a>
+          <a href="https://github.com/gerfaut-wallet" class="link-quiet">
+            <Icon name="github" size={16} />
+            Read the source on GitHub
+            <Icon name="arrow-up-right" size={14} />
+          </a>
         </div>
-        <div class="min-w-0">
-          {
-            heroShot ? (
-              <figure class="card overflow-hidden">
-                <Image
-                  src={heroShot}
-                  alt="The Gerfaut desktop app: a sidebar with the watched wallets next to a wallet view showing the balance and the transaction history"
-                  widths={[480, 720, 960, 1280]}
-                  sizes="(min-width: 1024px) 620px, calc(100vw - 32px)"
-                  loading="eager"
-                  class="block h-auto w-full max-w-full"
-                />
-              </figure>
-            ) : (
-              <AppShell />
-            )
-          }
-        </div>
+        <p class="rise rise-4 mt-4 text-sm text-muted">
+          Free and open source &middot; Windows, macOS, Linux and Android
+        </p>
       </div>
+      <figure class="rise rise-5 shot shot-hero mt-12 md:mt-16">
+        <Image
+          src={hero}
+          alt="The Gerfaut desktop app on a wallet named Cold storage: a total balance of 0.676 BTC, a balance history chart over three months, the bitcoin price, the watch status and the latest received transactions"
+          widths={[640, 960, 1280, 1600, 2400]}
+          sizes="(min-width: 1248px) 1200px, calc(100vw - 32px)"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </figure>
     </div>
   </section>
 
-  <section class="py-12 md:py-16" aria-labelledby="features-heading">
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <h2
-        id="features-heading"
-        class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
-      >
-        What Gerfaut does
-      </h2>
-      <ul
-        class="mt-10 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5"
-      >
+  <section class="section border-t border-border" aria-labelledby="inputs-heading">
+    <div class="site-container">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 id="inputs-heading" class="section-title">
+          Watch any wallet you already have.
+        </h2>
+        <p class="mt-4 text-lg text-muted">
+          Paste it, open a file or scan a QR code, static or animated.
+        </p>
+      </div>
+      <ul class="tile-row mt-10">
         {
-          features.map((feature) => (
-            <li class="card p-5">
-              <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken text-primary">
-                <Icon name={feature.icon} size={18} />
+          inputs.map((input) => (
+            <li>
+              <span class="text-primary">
+                <Icon name={input.icon} size={20} />
               </span>
-              <h3 class="mt-4 font-display text-[1rem] font-semibold">
-                {feature.title}
-              </h3>
-              <p class="mt-1.5 text-sm text-muted">{feature.body}</p>
+              <span>
+                <span class="tile-name block">{input.name}</span>
+                <span class="tile-note mt-1 block">{input.note}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="check-line mt-8 justify-center">
+        {
+          inputFacts.map((fact) => (
+            <li>
+              <Icon name="check" size={16} />
+              {fact}
             </li>
           ))
         }
@@ -248,46 +140,130 @@ const premium = [
     </div>
   </section>
 
+  <Feature
+    id="feature-transactions"
+    title="Every transaction, drawn."
+    lead="Inputs on the left, outputs on the right, the fee on its own branch, each sized by amount."
+    facts={[
+      "Balance, history and last sync time for every wallet",
+      "The exact coins behind a balance, with amount and address",
+      "Receive addresses with their QR code, the used ones marked",
+      "The history of a wallet as a CSV file",
+    ]}
+  >
+    <figure class="shot">
+      <Image
+        src={transaction}
+        alt="A transaction opened in the desktop app: the amount received, its confirmation, a diagram with the input on the left, the output on the right and the fee below, then the technical details"
+        widths={[640, 960, 1280, 1600]}
+        sizes="(min-width: 1248px) 660px, (min-width: 1024px) 55vw, calc(100vw - 32px)"
+        loading="lazy"
+      />
+    </figure>
+  </Feature>
+
+  <Feature
+    id="feature-policy"
+    title="Miniscript, read in plain words."
+    lead="Every spending path of a descriptor, each timelock counted down to the block it opens."
+    facts={[
+      "Multisig, BSMS and miniscript policies",
+      "Broadcast a signed transaction or a PSBT, read back before it leaves",
+      "BTC or sats, with a fiat value from CoinGecko, Kraken or mempool.space",
+    ]}
+    reverse
+  >
+    <figure class="shot">
+      <Image
+        src={policy}
+        alt="The Policy page of the desktop app: the primary key can spend now, a recovery key can spend after a wait of three blocks, and the two keys are listed with their fingerprints"
+        widths={[640, 960, 1280, 1600]}
+        sizes="(min-width: 1248px) 660px, (min-width: 1024px) 55vw, calc(100vw - 32px)"
+        loading="lazy"
+      />
+    </figure>
+  </Feature>
+
+  <Feature
+    id="feature-node"
+    title="Your node. Tor built in."
+    lead="Electrum or Esplora, yours or a public one. An .onion backend needs nothing else installed."
+    facts={[
+      "Self-signed certificates trusted by their fingerprint",
+      "Sync every 5, 15 or 60 minutes while the app is open",
+      "Encrypted storage, and a PIN or a password to open the app",
+      "An encrypted backup file, or an animated QR, to move wallets between devices",
+    ]}
+  >
+    <figure class="shot">
+      <Image
+        src={node}
+        alt="The Network settings of the desktop app: the backend choice between a public API, an Esplora or an Electrum server you run, and the Tor section with its SOCKS address"
+        widths={[640, 960, 1280, 1600]}
+        sizes="(min-width: 1248px) 660px, (min-width: 1024px) 55vw, calc(100vw - 32px)"
+        loading="lazy"
+      />
+    </figure>
+  </Feature>
+
+  <Feature
+    id="feature-android"
+    title="Also in your pocket."
+    lead="The same wallets on Android, carried over with an encrypted backup or an animated QR code."
+    facts={[
+      "Biometric unlock",
+      "Home screen widgets, amounts hidden if you say so",
+      "A notification when a sync finds something new",
+      "Light and dark, the same palette in both",
+    ]}
+    reverse
+  >
+    <div class="mx-auto flex max-w-md items-start justify-center gap-4 sm:gap-6 lg:max-w-none">
+      <Image
+        src={androidWallet}
+        alt="The Android app on a wallet named Cold storage: the balance, then the list of transactions with their dates and signed amounts"
+        widths={[300, 400, 600, 800]}
+        sizes="(min-width: 1024px) 300px, 45vw"
+        loading="lazy"
+        class="block h-auto w-1/2 max-w-[320px]"
+      />
+      <Image
+        src={androidWidget}
+        alt="An Android home screen with three Gerfaut widgets: the bitcoin price, the balance of each wallet with the amounts hidden, and the block height"
+        widths={[300, 400, 600, 800]}
+        sizes="(min-width: 1024px) 300px, 45vw"
+        loading="lazy"
+        class="mt-10 block h-auto w-1/2 max-w-[320px] sm:mt-16"
+      />
+    </div>
+  </Feature>
+
   <section
-    class="dark-island bg-background py-16 text-text md:py-24"
+    class="dark-island section bg-background text-text"
     aria-labelledby="premium-heading"
   >
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <div
-        class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between"
-      >
-        <div class="max-w-2xl">
-          <span class="pill-premium">
-            <Icon name="gem" size={12} />
-            Premium
-          </span>
-          <h2
-            id="premium-heading"
-            class="mt-5 font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
-          >
-            The apps watch. Premium wakes you up.
-          </h2>
-          <p class="mt-4 text-muted">
-            The apps are free and stay free. Premium adds a server that watches
-            your wallets around the clock and tells you when something moves,
-            with no account and paid in bitcoin.
-          </p>
-        </div>
-        <a href="/premium" class="btn btn-primary shrink-0">
-          Explore Premium
-          <Icon name="arrow-up-right" size={16} />
-        </a>
+    <div class="site-container">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="pill-premium">
+          <Icon name="gem" size={12} />
+          Premium
+        </span>
+        <h2 id="premium-heading" class="section-title mt-5">
+          The apps watch. Premium wakes you up.
+        </h2>
+        <p class="mt-4 text-lg text-muted">
+          A server that follows your wallets around the clock and tells you
+          when coins move.
+        </p>
       </div>
-      <ul
-        class="mt-12 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5"
-      >
+      <ul class="mt-12 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-5">
         {
           premium.map((item) => (
-            <li class="card p-5 sm:last:col-span-2 lg:last:col-span-1">
+            <li class="card p-5 md:p-6">
               <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken text-primary">
                 <Icon name={item.icon} size={18} />
               </span>
-              <h3 class="mt-4 font-display text-[1rem] font-semibold">
+              <h3 class="mt-4 font-display text-[1.0625rem] font-semibold">
                 {item.title}
               </h3>
               <p class="mt-1.5 text-sm text-muted">{item.body}</p>
@@ -295,56 +271,96 @@ const premium = [
           ))
         }
       </ul>
+      <ul class="check-line mt-8 justify-center">
+        {
+          premiumFacts.map((fact) => (
+            <li>
+              <Icon name="check" size={16} />
+              {fact}
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mt-10 text-center">
+        <a href="/premium" class="btn btn-primary btn-wide">
+          Explore Premium
+          <Icon name="arrow-up-right" size={16} />
+        </a>
+      </div>
     </div>
   </section>
 
-  <section class="py-16 md:py-24" aria-labelledby="platforms-heading">
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
-      <h2
-        id="platforms-heading"
-        class="font-display text-[1.75rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-display"
-      >
-        Runs where you are
-      </h2>
-      <div class="mt-10 grid gap-4 md:grid-cols-2 lg:gap-5">
-        <div class="card flex items-start gap-4 p-6">
-          <span
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sunken text-primary"
-          >
-            <Icon name="monitor" />
-          </span>
-          <div>
-            <h3 class="text-h2 font-display">Desktop</h3>
-            <p class="mt-1.5 text-sm text-muted">
-              Windows, macOS, and Linux. A light native app built with Tauri,
-              with keyboard-first navigation.
-            </p>
-          </div>
-        </div>
-        <div class="card flex items-start gap-4 p-6">
-          <span
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sunken text-primary"
-          >
-            <Icon name="smartphone" />
-          </span>
-          <div>
-            <h3 class="text-h2 font-display">Android</h3>
-            <p class="mt-1.5 text-sm text-muted">
-              A Flutter app, distributed as a direct APK. iOS is planned for a
-              later stage.
-            </p>
-          </div>
+  <section class="section" aria-labelledby="source-heading">
+    <div
+      class="site-container grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
+    >
+      <div class="max-w-lg">
+        <p class="eyebrow">Open source</p>
+        <h2 id="source-heading" class="section-title mt-3">
+          Read the code. Build it yourself.
+        </h2>
+        <ul class="fact-list mt-6">
+          {
+            sourceFacts.map((fact) => (
+              <li>
+                <Icon name="check" size={16} />
+                <span>{fact}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
+          <a href="https://github.com/gerfaut-wallet" class="btn btn-secondary">
+            <Icon name="github" size={16} />
+            Fork on GitHub
+          </a>
+          <a href="/download#verify" class="link-quiet">
+            Verify a download
+            <Icon name="arrow-up-right" size={14} />
+          </a>
         </div>
       </div>
-      <p class="mt-8">
-        <a
-          href="/download"
-          class="inline-flex min-h-11 cursor-pointer items-center gap-1.5 text-sm font-medium text-primary transition-colors duration-150 hover:text-primary-hover"
-        >
-          Go to downloads
-          <Icon name="arrow-up-right" size={16} />
-        </a>
+      <pre class="dark-island terminal"><code><span class="prompt">$</span> git clone https://github.com/gerfaut-wallet/gerfaut-core
+<span class="prompt">$</span> git clone https://github.com/gerfaut-wallet/gerfaut-desktop
+<span class="prompt">$</span> cd gerfaut-desktop && npm install
+<span class="prompt">$</span> npm run tauri build
+<span class="out">installers under src-tauri/target/release/bundle</span></code></pre>
+    </div>
+  </section>
+
+  <section class="section border-t border-border" aria-labelledby="cta-heading">
+    <div class="site-container text-center">
+      <h2 id="cta-heading" class="section-title mx-auto max-w-2xl">
+        Your cold storage deserves a watcher.
+      </h2>
+      <p class="mt-4 text-lg text-muted">
+        It is free, it is open source, and it cannot spend.
       </p>
+      <div class="mt-8 flex flex-col items-center gap-3">
+        <a href="/download" class="btn btn-primary btn-wide" data-os-download>
+          <Icon name="download" size={16} />
+          <span>Download Gerfaut</span>
+        </a>
+        <a href="/download" class="link-quiet">
+          Windows &middot; macOS &middot; Linux &middot; Android
+        </a>
+      </div>
     </div>
   </section>
 </Base>
+
+<script>
+  import { detectPlatform } from "../lib/platform";
+
+  // The download buttons name the visitor's system when it is one the
+  // apps run on, and point at its card on the download page. Anything
+  // else keeps the generic label.
+  const detected = detectPlatform();
+  if (detected) {
+    for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-os-download]")) {
+      link.href = `/download#${detected.slot}`;
+      const label = link.querySelector("span");
+      if (label) label.textContent = `Download for ${detected.name}`;
+    }
+  }
+</script>

@@ -7,7 +7,7 @@ import Base from "../../layouts/Base.astro";
 // and stops on its own after 10 minutes.
 
 const linkClass =
-  "text-primary underline decoration-border underline-offset-2 transition-colors duration-150 hover:text-primary-hover";
+  "link";
 ---
 
 <Base
@@ -15,7 +15,7 @@ const linkClass =
   description="The return page after a Gerfaut Premium payment: it checks the charge and tells you when your key is active."
 >
   <section class="py-16 md:py-24">
-    <div class="mx-auto max-w-[1200px] px-4 md:px-6">
+    <div class="site-container">
       <div class="max-w-2xl">
         <span class="pill-premium">
           <Icon name="gem" size={12} />

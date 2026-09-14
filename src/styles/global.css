@@ -1,5 +1,5 @@
 /* Toundra design tokens. The site is light only; .dark-island paints a
-   section at the night end of the ramp (premium, footer, app mock rail). */
+   section at the night end of the ramp (premium, the terminal card). */
 
 @import "tailwindcss";
 
@@ -94,7 +94,7 @@
 }
 
 /* A self-contained dark island on the light page: the premium section
-   and the footer sit at the night end of the ramp. */
+   and the terminal card sit at the night end of the ramp. */
 .dark-island {
   --color-background: #0b0f14;
   --color-surface: #161e27;
@@ -114,25 +114,6 @@
   --color-premium: #c4b5fd;
   --color-premium-surface: #1f2933;
   color-scheme: dark;
-}
-
-/* The app screenshot in the hero always shows the light theme, framed
-   like a card; its sidebar stays a dark island via .dark-island. */
-.light-island {
-  --color-background: #f4f7f9;
-  --color-surface: #ffffff;
-  --color-sunken: #ebf0f4;
-  --color-border: #c7d2db;
-  --color-text: #0d1317;
-  --color-muted: #55636f;
-  --color-primary: #0e7490;
-  --color-primary-hover: #0a5d75;
-  --color-on-primary: #ffffff;
-  --color-confirmed: #116b41;
-  --color-confirmed-surface: #dcf5e6;
-  --color-pending: #745400;
-  --color-pending-surface: #fdf0cf;
-  color-scheme: light;
 }
 
 /* --- base --- */
@@ -183,6 +164,19 @@ p {
   background: color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
 
+/* The hero settles in on load: opacity and a short rise, one element
+   after the other. Under reduced motion the end state applies at once. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -194,6 +188,81 @@ p {
   html {
     scroll-behavior: auto;
   }
+}
+
+/* --- layout --- */
+
+@layer components {
+/* The one page width, 1200px with 16px gutters on phones and 24px above. */
+.site-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+@media (min-width: 768px) {
+  .site-container {
+    padding-inline: 24px;
+  }
+}
+
+/* Marketing rhythm: two paddings of 40px meet across a hairline on
+   phones, two of 56px on desktop, so sections sit 80 to 112px apart. */
+.section {
+  padding-block: 40px;
+}
+@media (min-width: 768px) {
+  .section {
+    padding-block: 56px;
+  }
+}
+
+/* Section titles sit between display and hero: 28px on phones, 40px on
+   desktop, always Bricolage 600 with the tight tracking of the scale. */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 2.25rem;
+  }
+}
+@media (min-width: 1024px) {
+  .section-title {
+    font-size: 2.5rem;
+    letter-spacing: -0.025em;
+  }
+}
+
+/* Small caps label above a title. */
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.rise {
+  animation: rise 250ms var(--ease-out-toundra) both;
+}
+.rise-2 {
+  animation-delay: 60ms;
+}
+.rise-3 {
+  animation-delay: 120ms;
+}
+.rise-4 {
+  animation-delay: 180ms;
+}
+.rise-5 {
+  animation-delay: 240ms;
+}
 }
 
 /* --- shared component classes --- */
@@ -214,6 +283,7 @@ p {
   font-weight: 500;
   line-height: 1;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
   transition:
     background-color 150ms var(--ease-out-toundra),
@@ -237,12 +307,191 @@ p {
 .btn-secondary:hover {
   background: color-mix(in srgb, var(--color-sunken) 80%, var(--color-border));
 }
+.btn-wide {
+  padding: 0 28px;
+}
+
+/* A quiet text link: muted, turns to the text colour, arrow icon inline. */
+.link-quiet {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 150ms var(--ease-out-toundra);
+}
+.link-quiet:hover {
+  color: var(--color-text);
+}
+
+/* Inline link in running text. */
+.link {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--color-border);
+  text-underline-offset: 2px;
+  transition: color 150ms var(--ease-out-toundra);
+}
+.link:hover {
+  color: var(--color-primary-hover);
+}
 
 /* Card: surface, hairline border, radius 12px, never a shadow. */
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
+}
+
+/* A screenshot of the app, framed like a card: radius 12px, hairline
+   border, no shadow. The image fills the frame edge to edge. */
+.shot {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* On a phone the whole desktop window would shrink to a thumbnail, so
+   the hero frame keeps a 4:3 window onto the top left of the app: the
+   sidebar, the balance and the start of the chart, at a readable size. */
+@media (max-width: 639px) {
+  .shot-hero {
+    aspect-ratio: 4 / 3;
+  }
+  .shot-hero img {
+    width: 240%;
+    max-width: none;
+  }
+}
+
+/* A row of tiles separated by hairlines: one hairline of background
+   shows through the 1px gap between surfaces. */
+.tile-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-border);
+}
+@media (min-width: 640px) {
+  .tile-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .tile-row {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+.tile-row > li {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: var(--color-surface);
+}
+.tile-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.tile-note {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+/* A line of short facts, each led by a check. */
+.check-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+.check-line > li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.check-line svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+/* Bulleted facts under a section title, one check per line. */
+.fact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.fact-list > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.fact-list svg {
+  flex-shrink: 0;
+  margin-top: 4px;
+  color: var(--color-primary);
+}
+
+/* The terminal card: a dark island on the light page, mono text, the
+   prompt in the island's action colour. */
+.terminal {
+  margin: 0;
+  padding: 20px 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-data);
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  font-variant-numeric: tabular-nums;
+  overflow-x: auto;
+  white-space: pre;
+}
+.terminal .prompt {
+  color: var(--color-primary);
+  user-select: none;
+}
+.terminal .out {
+  color: var(--color-muted);
+}
+
+/* Numbered step: the figure in Bricolage, the text below. */
+.step-number {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-primary);
 }
 
 /* Status pill, light theme rule: tinted surface + dark text + 25% border.
@@ -270,6 +519,11 @@ p {
   background: var(--color-pending-surface);
   color: var(--color-pending);
   border: 1px solid color-mix(in srgb, var(--color-pending) 25%, transparent);
+}
+.pill-neutral {
+  background: var(--color-sunken);
+  color: var(--color-muted);
+  border: 1px solid var(--color-border);
 }
 
 /* Inline code and command blocks: data font on the sunken surface. */
@@ -490,5 +744,12 @@ p {
   margin: 0;
   accent-color: var(--color-primary);
   cursor: pointer;
+}
+
+/* The platform card that matches the visitor's system: a Glacier
+   border, the same drawing as a selected plan. */
+.card-current {
+  border-color: var(--color-primary);
+  box-shadow: inset 0 0 0 1px var(--color-primary);
 }
 }

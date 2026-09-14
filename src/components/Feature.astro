@@ -1,0 +1,40 @@
+---
+import Icon from "./Icon.astro";
+
+/** One feature of the apps: a real screenshot on one side, a title, one
+    line and a few facts on the other. `reverse` puts the picture on the
+    right on wide screens; on phones the picture always comes first. */
+interface Props {
+  id: string;
+  title: string;
+  lead: string;
+  facts: readonly string[];
+  reverse?: boolean;
+}
+
+const { id, title, lead, facts, reverse = false } = Astro.props;
+---
+
+<section class="section border-t border-border" aria-labelledby={id}>
+  <div
+    class="site-container grid items-center gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-16"
+  >
+    <div class:list={["min-w-0", reverse && "lg:order-2"]}>
+      <slot />
+    </div>
+    <div class="max-w-lg">
+      <h2 id={id} class="section-title">{title}</h2>
+      <p class="mt-4 text-lg text-muted">{lead}</p>
+      <ul class="fact-list mt-6">
+        {
+          facts.map((fact) => (
+            <li>
+              <Icon name="check" size={16} />
+              <span>{fact}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
