@@ -4,10 +4,13 @@ import Feature from "../components/Feature.astro";
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
 import androidWallet from "../assets/android-wallet.webp";
-import androidWidget from "../assets/android-widget.webp";
+import androidWallets from "../assets/android-wallets.webp";
+import backup from "../assets/backup.webp";
+import broadcast from "../assets/broadcast.webp";
 import hero from "../assets/hero.png";
 import node from "../assets/node.webp";
 import policy from "../assets/policy.webp";
+import security from "../assets/security.webp";
 import transaction from "../assets/transaction.webp";
 
 const inputs = [
@@ -25,11 +28,16 @@ const inputFacts = [
   "Exports from other wallets read as they are",
 ] as const;
 
+const desktopSizes =
+  "(min-width: 1248px) 660px, (min-width: 1024px) 55vw, calc(100vw - 32px)";
+const desktopWidths = [640, 960, 1280, 1600];
+const phoneWidths = [300, 400, 600, 800];
+
 const premium = [
   {
     icon: "shield-alert",
     title: "Coins move, you know",
-    body: "An alert when a spend enters the mempool, another when it confirms. A daily rescan catches what the live watch could have missed.",
+    body: "A notification when coins arrive or leave: one when the transaction enters the mempool, another when it confirms.",
   },
   {
     icon: "timer",
@@ -44,7 +52,7 @@ const premium = [
 ] as const;
 
 const premiumFacts = [
-  "From 5 € a month",
+  "From 3 € a month",
   "Paid in bitcoin",
   "No account",
   "Up to 21 wallets",
@@ -53,8 +61,8 @@ const premiumFacts = [
 
 const sourceFacts = [
   "AGPL-3.0, the apps and the core alike",
+  "Reproducible builds: build it yourself and get the same bytes as the release",
   "Every release signed with minisign",
-  "Three repositories: core, desktop, mobile",
 ] as const;
 ---
 
@@ -142,24 +150,56 @@ const sourceFacts = [
 
   <Feature
     id="feature-transactions"
-    title="Every transaction, drawn."
-    lead="Inputs on the left, outputs on the right, the fee on its own branch, each sized by amount."
+    title="Every transaction, in full."
+    lead="Open any transaction and see where the coins come from, where they go, and what the fee cost."
     facts={[
-      "Balance, history and last sync time for every wallet",
-      "The exact coins behind a balance, with amount and address",
-      "Receive addresses with their QR code, the used ones marked",
-      "The history of a wallet as a CSV file",
+      "Inputs on the left, outputs on the right, the fee on its own branch",
+      "The amount in bitcoin and in fiat, the confirmations and the block",
+      "Size, weight, version and locktime, for the curious",
+      "One click to mempool.space, after a word on what the explorer learns",
     ]}
   >
     <figure class="shot">
       <Image
         src={transaction}
         alt="A transaction opened in the desktop app: the amount received, its confirmation, a diagram with the input on the left, the output on the right and the fee below, then the technical details"
-        widths={[640, 960, 1280, 1600]}
-        sizes="(min-width: 1248px) 660px, (min-width: 1024px) 55vw, calc(100vw - 32px)"
+        widths={desktopWidths}
+        sizes={desktopSizes}
         loading="lazy"
       />
     </figure>
+  </Feature>
+
+  <Feature
+    id="feature-android"
+    title="Also in your pocket."
+    lead="The same wallets on Android, carried over from the desktop by scanning an animated QR code."
+    facts={[
+      "Every wallet on one screen, with its icon and its balance",
+      "Home screen widgets, amounts hidden if you say so",
+      "A notification when a sync finds something new",
+      "Light and dark, the same palette in both",
+    ]}
+    reverse
+  >
+    <div class="mx-auto flex max-w-md items-start justify-center gap-4 sm:gap-6 lg:max-w-none">
+      <Image
+        src={androidWallets}
+        alt="The Android home screen of Gerfaut: four wallets, each with its icon and balance, from cold storage to a family vault"
+        widths={phoneWidths}
+        sizes="(min-width: 1024px) 300px, 45vw"
+        loading="lazy"
+        class="block h-auto w-1/2 max-w-[320px]"
+      />
+      <Image
+        src={androidWallet}
+        alt="A wallet opened in the Android app: the balance, then the list of transactions with their dates and signed amounts"
+        widths={phoneWidths}
+        sizes="(min-width: 1024px) 300px, 45vw"
+        loading="lazy"
+        class="mt-10 block h-auto w-1/2 max-w-[320px] sm:mt-16"
+      />
+    </div>
   </Feature>
 
   <Feature
@@ -167,18 +207,41 @@ const sourceFacts = [
     title="Miniscript, read in plain words."
     lead="Every spending path of a descriptor, each timelock counted down to the block it opens."
     facts={[
-      "Multisig, BSMS and miniscript policies",
-      "Broadcast a signed transaction or a PSBT, read back before it leaves",
-      "BTC or sats, with a fiat value from CoinGecko, Kraken or mempool.space",
+      "Multisig m‑of‑n, sorted or not, and BSMS imports",
+      "Recovery paths and inheritance setups, with the wait left on each coin",
+      "Every key with its fingerprint and derivation path",
+      "The raw descriptor, one click away",
     ]}
-    reverse
   >
     <figure class="shot">
       <Image
         src={policy}
         alt="The Policy page of the desktop app: the primary key can spend now, a recovery key can spend after a wait of three blocks, and the two keys are listed with their fingerprints"
-        widths={[640, 960, 1280, 1600]}
-        sizes="(min-width: 1248px) 660px, (min-width: 1024px) 55vw, calc(100vw - 32px)"
+        widths={desktopWidths}
+        sizes={desktopSizes}
+        loading="lazy"
+      />
+    </figure>
+  </Feature>
+
+  <Feature
+    id="feature-broadcast"
+    title="Broadcast, read back first."
+    lead="Send a transaction signed elsewhere and follow it until it confirms. Gerfaut never signs."
+    facts={[
+      "Paste a PSBT or a raw transaction, open a file, or scan an animated QR code",
+      "Inputs, outputs and fee drawn before anything leaves",
+      "A warning for anything odd: a missing signature, a high fee, dust",
+      "Sent through your own backend, Tor included",
+    ]}
+    reverse
+  >
+    <figure class="shot">
+      <Image
+        src={broadcast}
+        alt="The Broadcast page of the desktop app with a transaction ready to send: its inputs on the left, its outputs on the right, the fee below, and the pill Ready to broadcast"
+        widths={desktopWidths}
+        sizes={desktopSizes}
         loading="lazy"
       />
     </figure>
@@ -189,53 +252,67 @@ const sourceFacts = [
     title="Your node. Tor built in."
     lead="Electrum or Esplora, yours or a public one. An .onion backend needs nothing else installed."
     facts={[
+      "electrs or Fulcrum over TLS or plain TCP, Esplora over HTTPS",
       "Self-signed certificates trusted by their fingerprint",
       "Sync every 5, 15 or 60 minutes while the app is open",
-      "Encrypted storage, and a PIN or a password to open the app",
-      "An encrypted backup file, or an animated QR, to move wallets between devices",
+      "Mainnet, signet, testnet4 and regtest, each with its own backend",
     ]}
   >
     <figure class="shot">
       <Image
         src={node}
         alt="The Network settings of the desktop app: the backend choice between a public API, an Esplora or an Electrum server you run, and the Tor section with its SOCKS address"
-        widths={[640, 960, 1280, 1600]}
-        sizes="(min-width: 1248px) 660px, (min-width: 1024px) 55vw, calc(100vw - 32px)"
+        widths={desktopWidths}
+        sizes={desktopSizes}
         loading="lazy"
       />
     </figure>
   </Feature>
 
   <Feature
-    id="feature-android"
-    title="Also in your pocket."
-    lead="The same wallets on Android, carried over with an encrypted backup or an animated QR code."
+    id="feature-security"
+    title="Locked, encrypted, disguised."
+    lead="The vault is encrypted on disk. The lock is what stops someone holding your unlocked device."
     facts={[
-      "Biometric unlock",
-      "Home screen widgets, amounts hidden if you say so",
-      "A notification when a sync finds something new",
-      "Light and dark, the same palette in both",
+      "A PIN or a password to open the app, biometrics on Android",
+      "On Android, a real calculator can hide the app: type your PIN, press equals",
+      "Nothing of a wallet on screen, in a screenshot or in the task switcher while locked",
+      "Wrong guesses slow down: three tries, then a growing delay",
     ]}
     reverse
   >
-    <div class="mx-auto flex max-w-md items-start justify-center gap-4 sm:gap-6 lg:max-w-none">
+    <div class="mx-auto flex max-w-md justify-center lg:max-w-none">
       <Image
-        src={androidWallet}
-        alt="The Android app on a wallet named Cold storage: the balance, then the list of transactions with their dates and signed amounts"
-        widths={[300, 400, 600, 800]}
-        sizes="(min-width: 1024px) 300px, 45vw"
+        src={security}
+        alt="An Android phone showing a plain calculator: the disguise of the Gerfaut app, which opens when the PIN is typed and equals is pressed"
+        widths={phoneWidths}
+        sizes="(min-width: 1024px) 320px, 60vw"
         loading="lazy"
-        class="block h-auto w-1/2 max-w-[320px]"
-      />
-      <Image
-        src={androidWidget}
-        alt="An Android home screen with three Gerfaut widgets: the bitcoin price, the balance of each wallet with the amounts hidden, and the block height"
-        widths={[300, 400, 600, 800]}
-        sizes="(min-width: 1024px) 300px, 45vw"
-        loading="lazy"
-        class="mt-10 block h-auto w-1/2 max-w-[320px] sm:mt-16"
+        class="block h-auto w-full max-w-[320px]"
       />
     </div>
+  </Feature>
+
+  <Feature
+    id="feature-backup"
+    title="One backup, both devices."
+    lead="Every wallet you watch, encrypted with a password you choose, restored on any device."
+    facts={[
+      "A file, or an animated QR code the phone scans from the desktop screen",
+      "Holds descriptors and addresses, never a key",
+      "The history of a wallet as a CSV file, filtered by date and direction",
+      "Everything stays on your machines",
+    ]}
+  >
+    <figure class="shot">
+      <Image
+        src={backup}
+        alt="The Backup and sync settings of the desktop app: every wallet encrypted with a password, with the Export and Restore actions"
+        widths={desktopWidths}
+        sizes={desktopSizes}
+        loading="lazy"
+      />
+    </figure>
   </Feature>
 
   <section
@@ -324,7 +401,9 @@ const sourceFacts = [
 <span class="prompt">$</span> git clone https://github.com/gerfaut-wallet/gerfaut-desktop
 <span class="prompt">$</span> cd gerfaut-desktop && npm install
 <span class="prompt">$</span> npm run tauri build
-<span class="out">installers under src-tauri/target/release/bundle</span></code></pre>
+<span class="out">installers under src-tauri/target/release/bundle</span>
+<span class="prompt">$</span> sha256sum src-tauri/target/release/bundle/*/*
+<span class="out">same bytes, same sums as SHA256SUMS on the release page</span></code></pre>
     </div>
   </section>
 
