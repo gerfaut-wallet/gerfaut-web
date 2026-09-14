@@ -15,7 +15,7 @@ const plans = [
 const steps = [
   {
     title: "Hand over a descriptor",
-    body: "The same public data the app already holds. Never a key.",
+    body: "The same public data the app already holds. Never a private key.",
   },
   {
     title: "The server follows it",
@@ -31,7 +31,7 @@ const watches = [
   {
     icon: "shield-alert",
     title: "Coins move, you hear about it",
-    body: "One alert when a spend enters the mempool, a second when it is in a block. Once a day the server also rescans the UTXO set.",
+    body: "One alert when coins arrive or leave and the transaction enters the mempool, a second one when it is in a block.",
   },
   {
     icon: "timer",
@@ -49,17 +49,18 @@ const kept = [
   "The descriptors you register, and the names you gave them",
   "The addresses they derive, with the coins and movements seen on them",
   "The channels you add: an ntfy topic, a Telegram chat with the name Telegram gives it, an e-mail address, a webhook URL",
-  "A hash of your key. The key itself is never stored.",
+  "A hash of your Premium key. The key itself is never stored.",
 ] as const;
 
 const notKept = [
+  "A login or a password: there is no account, so there is nothing to steal",
   "Your e-mail, unless you add one as a channel",
   "Your IP address, or any request log",
 ] as const;
 
 const faq = [
   {
-    q: "I lost my key. Can you find it?",
+    q: "I lost my Premium key. Can you find it?",
     a: "No. We store a hash of the key, the way a website stores a password, and nobody can rebuild the key from it, us included. When the key is gone, the time on it is gone with it. Write it down the moment it appears, before you pay.",
   },
   {
@@ -107,7 +108,7 @@ const faq = [
         <h1
           class="mt-5 font-display text-[2.25rem] leading-[1.05] font-semibold tracking-[-0.03em] sm:text-[2.75rem] lg:text-hero"
         >
-          You do not pay to see a balance. You pay to be warned.
+          The apps watch. Premium wakes you up.
         </h1>
         <p class="mx-auto mt-6 max-w-xl text-lg text-muted">
           The apps are free and complete on their own. Premium adds a server
@@ -116,10 +117,10 @@ const faq = [
         </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
           <a href="#buy" class="btn btn-primary btn-wide">Get Premium</a>
-          <a href="#renew" class="btn btn-secondary">Add time to a key</a>
+          <a href="#renew" class="btn btn-secondary">Add time to a Premium key</a>
         </div>
         <p class="mt-5 text-sm text-muted">
-          From 5&nbsp;€ a month &middot; Paid in bitcoin &middot; No account
+          From 3&nbsp;€ a month &middot; Paid in bitcoin &middot; No account
         </p>
       </div>
     </div>
@@ -177,10 +178,6 @@ const faq = [
           The server holds no key, not yours and none of its own. It can see
           coins move and cannot move them.
         </p>
-        <p class="mt-3 text-muted">
-          Every Premium service comes with the same plan, the ones added later
-          included.
-        </p>
       </div>
       <div class="card p-5 md:p-6">
         <h3 class="text-h2 font-display">What the server learns</h3>
@@ -224,11 +221,13 @@ const faq = [
     aria-labelledby="buy-heading"
   >
     <div class="site-container">
-      <h2 id="buy-heading" class="section-title">Get Premium</h2>
-      <p class="mt-4 max-w-2xl text-lg text-muted">
-        One plan, every service. Prices in euro, paid in bitcoin through Ark,
-        Lightning or on-chain, at the rate the checkout shows.
-      </p>
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 id="buy-heading" class="section-title">Get Premium</h2>
+        <p class="mt-4 text-lg text-muted">
+          One plan, every service. Prices in euro, paid in bitcoin through
+          Ark, Lightning or on-chain, at the rate the checkout shows.
+        </p>
+      </div>
 
       <form id="buy-form" novalidate class="mt-10">
         <fieldset>
@@ -265,13 +264,13 @@ const faq = [
             }
           </div>
         </fieldset>
-        <p class="mt-4 text-sm text-muted">
+        <p class="mt-4 text-center text-sm text-muted">
           Paid time adds to the end of the time you already have.
         </p>
 
         <div id="buy-states" class="mt-8" aria-live="polite">
           <div data-state="idle">
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div class="flex flex-col items-center gap-3">
               <button
                 type="submit"
                 id="buy-button"
@@ -281,20 +280,20 @@ const faq = [
               >
                 Get Premium
               </button>
-              <p class="text-sm text-muted">
+              <p class="text-center text-sm text-muted">
                 By paying you accept the
                 <a href="/terms" class="link">Terms of Sale</a>.
               </p>
             </div>
-            <div id="buy-note" class="note note-pending mt-5 max-w-xl" hidden>
+            <div id="buy-note" class="note note-pending mx-auto mt-5 max-w-xl" hidden>
               <Icon name="info" size={16} />
               <p></p>
             </div>
           </div>
 
-          <div data-state="key" hidden class="card max-w-2xl p-5 sm:p-6">
+          <div data-state="key" hidden class="card mx-auto max-w-2xl p-5 sm:p-6">
             <h3 id="key-heading" tabindex="-1" class="text-h2 font-display">
-              Your account key
+              Your Premium key
             </h3>
             <p class="mt-1 text-sm text-muted">
               Shown once, before you pay. Save it now.
@@ -359,7 +358,7 @@ const faq = [
             </div>
           </div>
 
-          <div data-state="soon" hidden class="card max-w-xl p-5">
+          <div data-state="soon" hidden class="card mx-auto max-w-xl p-5">
             <p class="font-medium">Premium opens soon</p>
             <p class="mt-1 text-sm text-muted">
               Payments are not open yet: Premium opens with the first public
@@ -382,13 +381,12 @@ const faq = [
     aria-labelledby="renew-heading"
   >
     <div class="site-container">
-      <form id="renew-form" novalidate class="card max-w-2xl p-5 sm:p-6">
+      <form id="renew-form" novalidate class="card p-5 sm:p-6 md:p-8">
         <h2 id="renew-heading" class="text-h1 font-display">
-          Already have a key? Add time
+          Already have a Premium key? Add time
         </h2>
         <p class="mt-2 text-sm text-muted">
-          Enter your key and pick how much time to add. The checkout opens
-          right away, and the new time goes to the end of what you have.
+          The new time goes to the end of what you already have.
         </p>
         <div id="renew-paste" class="note note-neutral mt-5" hidden>
           <Icon name="copy" size={16} />
@@ -398,7 +396,7 @@ const faq = [
           </p>
         </div>
         <div class="mt-5">
-          <label for="renew-key" class="text-sm font-medium">Account key</label>
+          <label for="renew-key" class="text-sm font-medium">Premium key</label>
           <input
             id="renew-key"
             name="key"
@@ -409,12 +407,7 @@ const faq = [
             autocapitalize="off"
             spellcheck="false"
             placeholder="xxxx-xxxx-xxxx-xxxx"
-            aria-describedby="renew-key-hint"
           />
-          <p id="renew-key-hint" class="mt-1.5 text-sm text-muted">
-            16 characters. Case and dashes do not matter, and keys never
-            contain l, o, 0 or 1.
-          </p>
           <p id="renew-key-error" class="mt-1.5 text-sm font-medium" hidden></p>
         </div>
         <fieldset class="mt-5">
@@ -450,7 +443,7 @@ const faq = [
               Add time
             </button>
             <p class="mt-3 text-sm text-muted">
-              The checkout opens in this tab. By paying you accept the
+              By paying you accept the
               <a href="/terms" class="link">Terms of Sale</a>.
             </p>
             <div id="renew-note" class="note note-pending mt-4" hidden>
@@ -757,12 +750,12 @@ const faq = [
       keyError.textContent = text;
       keyError.hidden = false;
       keyInput.setAttribute("aria-invalid", "true");
-      keyInput.setAttribute("aria-describedby", "renew-key-hint renew-key-error");
+      keyInput.setAttribute("aria-describedby", "renew-key-error");
       keyInput.focus();
     } else {
       keyError.hidden = true;
       keyInput.removeAttribute("aria-invalid");
-      keyInput.setAttribute("aria-describedby", "renew-key-hint");
+      keyInput.removeAttribute("aria-describedby");
     }
   }
 
