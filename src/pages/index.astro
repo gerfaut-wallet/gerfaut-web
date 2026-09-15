@@ -3,11 +3,13 @@ import { Image } from "astro:assets";
 import Feature from "../components/Feature.astro";
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
+import { offer } from "../lib/offer";
 import androidWallet from "../assets/android-wallet.webp";
 import androidWallets from "../assets/android-wallets.webp";
 import backup from "../assets/backup.webp";
 import broadcast from "../assets/broadcast.webp";
-import hero from "../assets/hero.png";
+import hero from "../assets/hero.webp";
+import lock from "../assets/lock.webp";
 import node from "../assets/node.webp";
 import policy from "../assets/policy.webp";
 import security from "../assets/security.webp";
@@ -28,10 +30,14 @@ const inputFacts = [
   "Exports from other wallets read as they are",
 ] as const;
 
+// The hero is 1150 logical pixels wide, the content width of the page
+// inside its frame; the feature crops are 640, shown at 640px from
+// 1280px up. All taken at 2x: nothing is resampled on a 1x or 2x screen.
 const desktopSizes =
-  "(min-width: 1248px) 660px, (min-width: 1024px) 55vw, calc(100vw - 32px)";
-const desktopWidths = [640, 960, 1280, 1600];
+  "(min-width: 1280px) 640px, (min-width: 1024px) 55vw, calc(100vw - 32px)";
+const desktopWidths = [640, 960, 1280];
 const phoneWidths = [300, 400, 600, 800];
+const phoneSizes = "(min-width: 1024px) 300px, 45vw";
 
 const premium = [
   {
@@ -56,7 +62,6 @@ const premiumFacts = [
   "Paid in bitcoin",
   "No account",
   "Up to 21 wallets",
-  "Through Tor with an .onion backend",
 ] as const;
 
 const sourceFacts = [
@@ -68,7 +73,7 @@ const sourceFacts = [
 
 <Base
   title="Gerfaut · The ultimate Bitcoin watch-only wallet"
-  description="Gerfaut is a Bitcoin watch-only wallet for desktop and Android. It follows your wallets from descriptors and public keys, holds no private keys, and cannot spend."
+  description="Gerfaut is a Bitcoin watch-only wallet for desktop and Android. It follows every wallet you own from its descriptor or public key and holds no private keys."
 >
   <section class="pt-16 pb-12 md:pt-24 md:pb-16">
     <div class="site-container">
@@ -79,8 +84,8 @@ const sourceFacts = [
           The ultimate Bitcoin watch-only wallet.
         </h1>
         <p class="rise rise-2 mx-auto mt-6 max-w-xl text-lg text-muted">
-          Follow every wallet you own from its descriptor or public key.
-          Gerfaut holds no private keys and cannot spend.
+          Follow every wallet you own from its descriptor or public key, on
+          your desktop and in your pocket.
         </p>
         <div class="rise rise-3 mt-8 flex flex-col items-center gap-3">
           <a href="/download" class="btn btn-primary btn-wide" data-os-download>
@@ -94,15 +99,16 @@ const sourceFacts = [
           </a>
         </div>
         <p class="rise rise-4 mt-4 text-sm text-muted">
-          Free and open source &middot; Windows, macOS, Linux and Android
+          Free and open source &middot; Linux, Windows, macOS and Android
         </p>
       </div>
-      <figure class="rise rise-5 shot shot-hero mt-12 md:mt-16">
+      <figure class="rise rise-5 shot mt-12 md:mt-16">
         <Image
           src={hero}
           alt="The Gerfaut desktop app on a wallet named Cold storage: a total balance of 0.676 BTC, a balance history chart over three months, the bitcoin price, the watch status and the latest received transactions"
-          widths={[640, 960, 1280, 1600, 2400]}
-          sizes="(min-width: 1248px) 1200px, calc(100vw - 32px)"
+          widths={[800, 1150, 1600, 2300]}
+          sizes="(min-width: 1248px) 1150px, calc(100vw - 34px)"
+          quality={90}
           loading="eager"
           fetchpriority="high"
         />
@@ -149,28 +155,6 @@ const sourceFacts = [
   </section>
 
   <Feature
-    id="feature-transactions"
-    title="Every transaction, in full."
-    lead="Open any transaction and see where the coins come from, where they go, and what the fee cost."
-    facts={[
-      "Inputs on the left, outputs on the right, the fee on its own branch",
-      "The amount in bitcoin and in fiat, the confirmations and the block",
-      "Size, weight, version and locktime, for the curious",
-      "One click to mempool.space, after a word on what the explorer learns",
-    ]}
-  >
-    <figure class="shot">
-      <Image
-        src={transaction}
-        alt="A transaction opened in the desktop app: the amount received, its confirmation, a diagram with the input on the left, the output on the right and the fee below, then the technical details"
-        widths={desktopWidths}
-        sizes={desktopSizes}
-        loading="lazy"
-      />
-    </figure>
-  </Feature>
-
-  <Feature
     id="feature-android"
     title="Also in your pocket."
     lead="The same wallets on Android, carried over from the desktop by scanning an animated QR code."
@@ -178,24 +162,119 @@ const sourceFacts = [
       "Every wallet on one screen, with its icon and its balance",
       "Home screen widgets, amounts hidden if you say so",
       "A notification when a sync finds something new",
-      "Light and dark, the same palette in both",
+      "Light and dark mode",
     ]}
-    reverse
   >
     <div class="mx-auto flex max-w-md items-start justify-center gap-4 sm:gap-6 lg:max-w-none">
       <Image
         src={androidWallets}
-        alt="The Android home screen of Gerfaut: four wallets, each with its icon and balance, from cold storage to a family vault"
+        alt="The Android home screen of Gerfaut in the light theme: four wallets, each with its icon and balance, from cold storage to a family vault"
         widths={phoneWidths}
-        sizes="(min-width: 1024px) 300px, 45vw"
+        sizes={phoneSizes}
         loading="lazy"
         class="block h-auto w-1/2 max-w-[320px]"
       />
       <Image
         src={androidWallet}
-        alt="A wallet opened in the Android app: the balance, then the list of transactions with their dates and signed amounts"
+        alt="A wallet opened in the Android app in the dark theme: the balance, then the list of transactions with their dates and signed amounts"
         widths={phoneWidths}
-        sizes="(min-width: 1024px) 300px, 45vw"
+        sizes={phoneSizes}
+        loading="lazy"
+        class="mt-10 block h-auto w-1/2 max-w-[320px] sm:mt-16"
+      />
+    </div>
+  </Feature>
+
+  <Feature
+    id="feature-transactions"
+    title="Every transaction, in full."
+    lead="Open any transaction and see where the coins come from, where they go, and what the fee cost."
+    reverse
+  >
+    <figure class="shot">
+      <Image
+        src={transaction}
+        alt="A transaction opened in the desktop app: the amount received, its confirmation and block, then a diagram with the input on the left, the two outputs on the right and the fee below"
+        widths={desktopWidths}
+        sizes={desktopSizes}
+        quality={90}
+        loading="lazy"
+      />
+    </figure>
+  </Feature>
+
+  <Feature
+    id="feature-backup"
+    title="One backup, both devices."
+    lead="Every wallet you watch, encrypted with a password you choose, restored on any device."
+    facts={[
+      "A file, or an animated QR code the phone scans from the desktop screen",
+      "Holds descriptors and addresses, never a private key",
+      "The history of a wallet as a CSV file, filtered by date and direction",
+      "Everything stays on your machines",
+    ]}
+  >
+    <figure class="shot">
+      <Image
+        src={backup}
+        alt="The Export a backup dialog of the desktop app: the wallets to include, a switch for the node settings, and the password typed twice"
+        widths={desktopWidths}
+        sizes={desktopSizes}
+        quality={90}
+        loading="lazy"
+      />
+    </figure>
+  </Feature>
+
+  <Feature
+    id="feature-node"
+    title="Your node. Tor built in."
+    lead="Electrum or Esplora, yours or a public one. An .onion backend needs nothing else installed."
+    facts={[
+      "electrs or Fulcrum over TLS or plain TCP, Esplora over HTTPS",
+      "Test the connection before you save it",
+      "Sync every 5, 15 or 60 minutes while the app is open",
+      "Mainnet, signet, testnet4 and regtest, each with its own backend",
+    ]}
+    reverse
+  >
+    <figure class="shot">
+      <Image
+        src={node}
+        alt="The Backend card of the desktop settings: the choice between a public API, an Esplora or an Electrum server you run, the server URL, and a Save backend button"
+        widths={desktopWidths}
+        sizes={desktopSizes}
+        quality={90}
+        loading="lazy"
+      />
+    </figure>
+  </Feature>
+
+  <Feature
+    id="feature-security"
+    title="Locked, encrypted, disguised."
+    lead="The vault is encrypted on disk. The lock is what stops someone holding your unlocked device."
+    facts={[
+      "A PIN or a password to open the app, biometrics on Android",
+      "Stealth mode on Android: a real calculator hides the app, type your PIN and press equals",
+      "Locked, Gerfaut shows no wallet, allows no screenshot and stays blank in the recent apps",
+      "Wrong guesses slow down: three tries, then a growing delay",
+    ]}
+  >
+    <div class="mx-auto flex max-w-md items-start justify-center gap-4 sm:gap-6 lg:max-w-none">
+      <Image
+        src={security}
+        alt="An Android phone showing a plain calculator: the stealth mode of the Gerfaut app, which opens when the PIN is typed and equals is pressed"
+        widths={phoneWidths}
+        sizes={phoneSizes}
+        loading="lazy"
+        class="block h-auto w-1/2 max-w-[320px]"
+      />
+      <Image
+        src={lock}
+        alt="The lock screen of the Android app: the Gerfaut mark, the word Locked, an empty PIN field and an Unlock button"
+        widths={phoneWidths}
+        sizes={phoneSizes}
         loading="lazy"
         class="mt-10 block h-auto w-1/2 max-w-[320px] sm:mt-16"
       />
@@ -209,16 +288,18 @@ const sourceFacts = [
     facts={[
       "Multisig m‑of‑n, sorted or not, and BSMS imports",
       "Recovery paths and inheritance setups, with the wait left on each coin",
-      "Every key with its fingerprint and derivation path",
+      "Every signing key with its fingerprint and derivation path",
       "The raw descriptor, one click away",
     ]}
+    reverse
   >
     <figure class="shot">
       <Image
         src={policy}
-        alt="The Policy page of the desktop app: the primary key can spend now, a recovery key can spend after a wait of three blocks, and the two keys are listed with their fingerprints"
+        alt="The Policy page of the desktop app: the primary key can spend now, a recovery key can spend after a wait of three blocks, about 30 minutes"
         widths={desktopWidths}
         sizes={desktopSizes}
+        quality={90}
         loading="lazy"
       />
     </figure>
@@ -226,90 +307,22 @@ const sourceFacts = [
 
   <Feature
     id="feature-broadcast"
-    title="Broadcast, read back first."
+    title="Broadcast raw transactions."
     lead="Send a transaction signed elsewhere and follow it until it confirms. Gerfaut never signs."
     facts={[
       "Paste a PSBT or a raw transaction, open a file, or scan an animated QR code",
       "Inputs, outputs and fee drawn before anything leaves",
       "A warning for anything odd: a missing signature, a high fee, dust",
-      "Sent through your own backend, Tor included",
+      "Sent through the backend you chose, over Tor when that backend is an .onion",
     ]}
-    reverse
   >
     <figure class="shot">
       <Image
         src={broadcast}
-        alt="The Broadcast page of the desktop app with a transaction ready to send: its inputs on the left, its outputs on the right, the fee below, and the pill Ready to broadcast"
+        alt="The Broadcast page of the desktop app with a transaction ready to send: its input on the left, its two outputs on the right, the fee below, and the pill Ready to broadcast"
         widths={desktopWidths}
         sizes={desktopSizes}
-        loading="lazy"
-      />
-    </figure>
-  </Feature>
-
-  <Feature
-    id="feature-node"
-    title="Your node. Tor built in."
-    lead="Electrum or Esplora, yours or a public one. An .onion backend needs nothing else installed."
-    facts={[
-      "electrs or Fulcrum over TLS or plain TCP, Esplora over HTTPS",
-      "Self-signed certificates trusted by their fingerprint",
-      "Sync every 5, 15 or 60 minutes while the app is open",
-      "Mainnet, signet, testnet4 and regtest, each with its own backend",
-    ]}
-  >
-    <figure class="shot">
-      <Image
-        src={node}
-        alt="The Network settings of the desktop app: the backend choice between a public API, an Esplora or an Electrum server you run, and the Tor section with its SOCKS address"
-        widths={desktopWidths}
-        sizes={desktopSizes}
-        loading="lazy"
-      />
-    </figure>
-  </Feature>
-
-  <Feature
-    id="feature-security"
-    title="Locked, encrypted, disguised."
-    lead="The vault is encrypted on disk. The lock is what stops someone holding your unlocked device."
-    facts={[
-      "A PIN or a password to open the app, biometrics on Android",
-      "On Android, a real calculator can hide the app: type your PIN, press equals",
-      "Nothing of a wallet on screen, in a screenshot or in the task switcher while locked",
-      "Wrong guesses slow down: three tries, then a growing delay",
-    ]}
-    reverse
-  >
-    <div class="mx-auto flex max-w-md justify-center lg:max-w-none">
-      <Image
-        src={security}
-        alt="An Android phone showing a plain calculator: the disguise of the Gerfaut app, which opens when the PIN is typed and equals is pressed"
-        widths={phoneWidths}
-        sizes="(min-width: 1024px) 320px, 60vw"
-        loading="lazy"
-        class="block h-auto w-full max-w-[320px]"
-      />
-    </div>
-  </Feature>
-
-  <Feature
-    id="feature-backup"
-    title="One backup, both devices."
-    lead="Every wallet you watch, encrypted with a password you choose, restored on any device."
-    facts={[
-      "A file, or an animated QR code the phone scans from the desktop screen",
-      "Holds descriptors and addresses, never a key",
-      "The history of a wallet as a CSV file, filtered by date and direction",
-      "Everything stays on your machines",
-    ]}
-  >
-    <figure class="shot">
-      <Image
-        src={backup}
-        alt="The Backup and sync settings of the desktop app: every wallet encrypted with a password, with the Export and Restore actions"
-        widths={desktopWidths}
-        sizes={desktopSizes}
+        quality={90}
         loading="lazy"
       />
     </figure>
@@ -358,7 +371,15 @@ const sourceFacts = [
           ))
         }
       </ul>
-      <div class="mt-10 text-center">
+      <p class="mx-auto mt-8 flex max-w-xl flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center">
+        <span class="pill pill-neutral text-text">Launch offer</span>
+        <span>
+          &minus;{offer.percent}&nbsp;% on the first year until {offer.until}:
+          <span class="price-old">{offer.standard}&nbsp;€</span>
+          <strong class="font-semibold">{offer.price}&nbsp;€</strong>
+        </span>
+      </p>
+      <div class="mt-8 text-center">
         <a href="/premium" class="btn btn-primary btn-wide">
           Explore Premium
           <Icon name="arrow-up-right" size={16} />
@@ -387,7 +408,7 @@ const sourceFacts = [
           }
         </ul>
         <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
-          <a href="https://github.com/gerfaut-wallet" class="btn btn-secondary">
+          <a href="https://github.com/gerfaut-wallet" class="btn btn-primary">
             <Icon name="github" size={16} />
             Fork on GitHub
           </a>
@@ -412,16 +433,13 @@ const sourceFacts = [
       <h2 id="cta-heading" class="section-title mx-auto max-w-2xl">
         Your cold storage deserves a watcher.
       </h2>
-      <p class="mt-4 text-lg text-muted">
-        It is free, it is open source, and it cannot spend.
-      </p>
       <div class="mt-8 flex flex-col items-center gap-3">
         <a href="/download" class="btn btn-primary btn-wide" data-os-download>
           <Icon name="download" size={16} />
           <span>Download Gerfaut</span>
         </a>
         <a href="/download" class="link-quiet">
-          Windows &middot; macOS &middot; Linux &middot; Android
+          Linux &middot; Windows &middot; macOS &middot; Android
         </a>
       </div>
     </div>
