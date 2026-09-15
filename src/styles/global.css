@@ -300,15 +300,105 @@ p {
 .btn-primary:hover {
   background: var(--color-primary-hover);
 }
-.btn-secondary {
+.btn-wide {
+  padding: 0 28px;
+}
+
+/* The wordmark next to the mark: Bricolage ExtraBold, the lockup's
+   tracking, 16px on phones and 18px above. */
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+@media (min-width: 640px) {
+  .wordmark {
+    font-size: 1.125rem;
+  }
+}
+
+/* A header entry: 40px tall, quiet until hovered, the current page in
+   the action colour. */
+.nav-item {
+  display: inline-flex;
+  height: 40px;
+  cursor: pointer;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-md);
+  padding: 0 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition:
+    background-color 150ms var(--ease-out-toundra),
+    color 150ms var(--ease-out-toundra);
+}
+.nav-item:hover {
   background: var(--color-sunken);
   color: var(--color-text);
 }
-.btn-secondary:hover {
-  background: color-mix(in srgb, var(--color-sunken) 80%, var(--color-border));
+.nav-item[aria-current="page"] {
+  color: var(--color-primary);
 }
-.btn-wide {
-  padding: 0 28px;
+
+/* The phone menu: a 44px button, and a panel that drops under the
+   header with one 44px row per entry. Closed, the panel is not there. */
+.menu-button {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  transition: background-color 150ms var(--ease-out-toundra);
+}
+.menu-button:hover {
+  background: var(--color-sunken);
+}
+.menu-button .menu-close {
+  display: none;
+}
+.menu-button[aria-expanded="true"] .menu-open {
+  display: none;
+}
+.menu-button[aria-expanded="true"] .menu-close {
+  display: block;
+}
+.menu-panel {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-background);
+}
+.menu-panel[hidden] {
+  display: none;
+}
+.menu-panel a {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+}
+.menu-panel a:hover {
+  background: var(--color-sunken);
+}
+.menu-panel a[aria-current="page"] {
+  color: var(--color-primary);
 }
 
 /* A quiet text link: muted, turns to the text colour, arrow icon inline. */
@@ -360,19 +450,6 @@ p {
   display: block;
   width: 100%;
   height: auto;
-}
-
-/* On a phone the whole desktop window would shrink to a thumbnail, so
-   the hero frame keeps a 4:3 window onto the top left of the app: the
-   sidebar, the balance and the start of the chart, at a readable size. */
-@media (max-width: 639px) {
-  .shot-hero {
-    aspect-ratio: 4 / 3;
-  }
-  .shot-hero img {
-    width: 240%;
-    max-width: none;
-  }
 }
 
 /* A row of tiles separated by hairlines: one hairline of background
@@ -492,6 +569,16 @@ p {
   letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums;
   color: var(--color-primary);
+}
+
+/* A price replaced by the launch offer: the standard figure struck
+   through in the muted colour, the real one in full. */
+.price-old {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--color-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
 }
 
 /* Status pill, light theme rule: tinted surface + dark text + 25% border.

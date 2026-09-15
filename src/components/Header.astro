@@ -2,60 +2,107 @@
 import Icon from "./Icon.astro";
 import Mark from "./Mark.astro";
 
+/** The header: the mark and the wordmark, Download always in reach,
+    and the other entries inline from 768px or behind a menu button on
+    phones. The panel is plain markup toggled by the script below; with
+    no script it stays closed and the entries remain in the footer. */
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const links = [
-  { href: "/download", label: "Download" },
-  { href: "/premium", label: "Premium" },
-  { href: "https://gerfaut-wallet.com/docs", label: "Docs" },
-];
-const itemClass =
-  "inline-flex h-10 cursor-pointer items-center gap-1.5 rounded-md px-2.5 text-sm font-medium transition-colors duration-150 sm:px-3";
+  { href: "/premium", label: "Premium", icon: "gem" },
+  { href: "https://gerfaut-wallet.com/docs", label: "Docs", icon: "book-open" },
+  { href: "https://github.com/gerfaut-wallet", label: "GitHub", icon: "github" },
+] as const;
 ---
 
 <header class="sticky top-0 z-30 border-b border-border bg-background">
-  <div class="site-container flex h-16 items-center justify-between gap-4">
+  <div class="site-container relative flex h-16 items-center justify-between gap-3">
     <a
       href="/"
-      class="flex items-center gap-2.5 text-primary transition-colors duration-150 hover:text-primary-hover"
+      class="flex min-h-11 items-center gap-2.5 text-primary transition-colors duration-150 hover:text-primary-hover"
       aria-label="Gerfaut home"
     >
-      <Mark class="h-5 w-auto" />
-      <span
-        class="hidden font-display text-sm font-extrabold tracking-[0.08em] uppercase sm:inline"
-        >Gerfaut</span
-      >
+      <Mark class="h-7 w-auto sm:h-8" />
+      <span class="wordmark">Gerfaut</span>
     </a>
-    <nav aria-label="Main">
-      <ul class="flex items-center gap-0.5 sm:gap-1">
+    <nav aria-label="Main" class="flex items-center gap-1">
+      <a
+        href="/download"
+        class="nav-item"
+        aria-current={path === "/download" ? "page" : undefined}
+      >
+        <Icon name="download" size={16} />
+        Download
+      </a>
+      <ul class="hidden items-center gap-1 md:flex">
         {
           links.map((link) => (
             <li>
               <a
                 href={link.href}
+                class="nav-item"
                 aria-current={path === link.href ? "page" : undefined}
-                class:list={[
-                  itemClass,
-                  path === link.href
-                    ? "text-primary"
-                    : "text-muted hover:bg-sunken hover:text-text",
-                ]}
               >
+                {link.label === "GitHub" && <Icon name="github" size={16} />}
                 {link.label}
               </a>
             </li>
           ))
         }
-        <li>
-          <a
-            href="https://github.com/gerfaut-wallet"
-            class:list={[itemClass, "text-muted hover:bg-sunken hover:text-text"]}
-            aria-label="Gerfaut on GitHub"
-          >
-            <Icon name="github" size={16} />
-            <span class="hidden md:inline">GitHub</span>
-          </a>
-        </li>
       </ul>
+      <button
+        type="button"
+        class="menu-button md:hidden"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        aria-label="Menu"
+        data-menu-button
+      >
+        <Icon name="menu" size={22} class="menu-open" />
+        <Icon name="x" size={22} class="menu-close" />
+      </button>
     </nav>
+    <div id="site-menu" class="menu-panel md:hidden" hidden data-menu-panel>
+      <ul class="site-container py-2">
+        {
+          links.map((link) => (
+            <li>
+              <a href={link.href} aria-current={path === link.href ? "page" : undefined}>
+                <Icon name={link.icon} size={18} class="text-muted" />
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 </header>
+
+<script>
+  // The phone menu: the button toggles the panel, Escape and a tap
+  // outside close it, and the panel goes away on its own when the
+  // window grows past the phone breakpoint.
+  const button = document.querySelector<HTMLButtonElement>("[data-menu-button]");
+  const panel = document.querySelector<HTMLElement>("[data-menu-panel]");
+  if (button && panel) {
+    const set = (open: boolean) => {
+      button.setAttribute("aria-expanded", String(open));
+      panel.hidden = !open;
+    };
+    button.addEventListener("click", () => set(panel.hidden));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !panel.hidden) {
+        set(false);
+        button.focus();
+      }
+    });
+    document.addEventListener("click", (event) => {
+      if (panel.hidden) return;
+      const target = event.target as Node;
+      if (!panel.contains(target) && !button.contains(target)) set(false);
+    });
+    window.matchMedia("(min-width: 768px)").addEventListener("change", (event) => {
+      if (event.matches) set(false);
+    });
+  }
+</script>
