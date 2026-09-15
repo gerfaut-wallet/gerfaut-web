@@ -30,12 +30,12 @@ const inputFacts = [
   "Exports from other wallets read as they are",
 ] as const;
 
-// The hero is 1150 logical pixels wide, the content width of the page
-// inside its frame; the feature crops are 640, shown at 640px from
-// 1280px up. All taken at 2x: nothing is resampled on a 1x or 2x screen.
+// Every desktop picture is the whole window, 1150 logical pixels wide
+// at 2x: the hero is shown at that width, the feature shots at 640px
+// from 1280px up, each on the page where the feature lives.
 const desktopSizes =
   "(min-width: 1280px) 640px, (min-width: 1024px) 55vw, calc(100vw - 32px)";
-const desktopWidths = [640, 960, 1280];
+const desktopWidths = [640, 960, 1280, 1600, 2300];
 const phoneWidths = [300, 400, 600, 800];
 const phoneSizes = "(min-width: 1024px) 300px, 45vw";
 
@@ -194,7 +194,7 @@ const sourceFacts = [
     <figure class="shot">
       <Image
         src={transaction}
-        alt="A transaction opened in the desktop app: the amount received, its confirmation and block, then a diagram with the input on the left, the two outputs on the right and the fee below"
+        alt="The Transactions page of the desktop app with a transaction opened over it: the amount received, its confirmation and block, then a diagram with the input on the left, the two outputs on the right and the fee below"
         widths={desktopWidths}
         sizes={desktopSizes}
         quality={90}
@@ -217,7 +217,7 @@ const sourceFacts = [
     <figure class="shot">
       <Image
         src={backup}
-        alt="The Export a backup dialog of the desktop app: the wallets to include, a switch for the node settings, and the password typed twice"
+        alt="The Backup and sync settings of the desktop app with the Export a backup dialog open: the wallets to include, a switch for the node settings, and the password typed twice"
         widths={desktopWidths}
         sizes={desktopSizes}
         quality={90}
@@ -241,7 +241,7 @@ const sourceFacts = [
     <figure class="shot">
       <Image
         src={node}
-        alt="The Backend card of the desktop settings: the choice between a public API, an Esplora or an Electrum server you run, the server URL, and a Save backend button"
+        alt="The Network settings of the desktop app: the Backend card with the choice between a public API, an Esplora or an Electrum server you run, then the Tor card"
         widths={desktopWidths}
         sizes={desktopSizes}
         quality={90}
@@ -371,16 +371,20 @@ const sourceFacts = [
           ))
         }
       </ul>
-      <p class="mx-auto mt-8 flex max-w-xl flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center">
-        <span class="pill pill-neutral text-text">Launch offer</span>
-        <span>
-          &minus;{offer.percent}&nbsp;% on the first year until {offer.until}:
-          <span class="price-old">{offer.standard}&nbsp;€</span>
-          <strong class="font-semibold">{offer.price}&nbsp;€</strong>
-        </span>
-      </p>
+      {
+        offer.active && (
+          <p class="mt-8 flex justify-center">
+            <span class="offer-badge">
+              <Icon name="gem" size={16} />
+              <span>
+                Launch offer: <strong>&minus;{offer.percent}&nbsp;%</strong> on the first year, until {offer.until}
+              </span>
+            </span>
+          </p>
+        )
+      }
       <div class="mt-8 text-center">
-        <a href="/premium" class="btn btn-primary btn-wide">
+        <a href="/premium" class="btn btn-premium btn-wide">
           Explore Premium
           <Icon name="arrow-up-right" size={16} />
         </a>
