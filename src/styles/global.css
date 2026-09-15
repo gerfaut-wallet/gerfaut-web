@@ -47,7 +47,9 @@
   --color-pending: #745400;
   --color-pending-surface: #fdf0cf;
   --color-premium: #6d28d9;
+  --color-premium-hover: #5b21b6;
   --color-premium-surface: #f3eefc;
+  --color-on-premium: #ffffff;
 
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-ui: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
@@ -112,7 +114,9 @@
   --color-alert: #ff706d;
   --color-alert-surface: #161e27;
   --color-premium: #c4b5fd;
+  --color-premium-hover: #ddd6fe;
   --color-premium-surface: #1f2933;
+  --color-on-premium: #0b0f14;
   color-scheme: dark;
 }
 
@@ -302,6 +306,40 @@ p {
 }
 .btn-wide {
   padding: 0 28px;
+}
+
+/* The Premium action: Bruyère instead of Glacier, so that what leads to
+   the paid service reads as such. Light page: #6D28D9 with white text
+   (7.5:1); dark island: #C4B5FD with Night text (13:1). Hover darkens
+   on the light page and lightens in the island, like the primary. */
+.btn-premium {
+  background: var(--color-premium);
+  color: var(--color-on-premium);
+}
+.btn-premium:hover {
+  background: var(--color-premium-hover);
+}
+
+/* The launch offer: one violet-framed line, the percentage in bold. */
+.offer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-premium);
+  border-radius: var(--radius-md);
+  background: var(--color-premium-surface);
+  color: var(--color-premium);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
+}
+.offer-badge > svg {
+  flex-shrink: 0;
+}
+.offer-badge strong {
+  font-weight: 700;
 }
 
 /* The wordmark next to the mark: Bricolage ExtraBold, the lockup's
@@ -864,6 +902,20 @@ p {
 .choice:has(:focus-visible) {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* A plan card of the Premium checkout: the chosen one in Bruyère. */
+.plan-premium:has(:checked) {
+  border-color: var(--color-premium);
+  box-shadow: inset 0 0 0 1px var(--color-premium);
+}
+.plan-premium:has(:checked) .plan-dot {
+  background: var(--color-premium);
+  border-color: var(--color-premium);
+  color: var(--color-on-premium);
+}
+.plan-premium:has(:focus-visible) {
+  outline-color: var(--color-premium);
 }
 
 /* Checkbox in the action colour, big enough to hit. */
