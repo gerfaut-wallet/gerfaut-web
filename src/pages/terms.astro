@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import { offer } from "../lib/offer";
 
 const linkClass =
   "link";
@@ -47,8 +48,10 @@ const linkClass =
 
         <h2 class="mt-10 border-t border-border pt-6 text-h2 font-display">3. Plans and prices</h2>
         <p class="mt-2 text-muted">
-          1 month: 5&nbsp;€. 6 months: 24&nbsp;€. 1 year: 36&nbsp;€. Prices
-          are in euro and paid in bitcoin at the rate shown at checkout. Paid
+          1 month: 5&nbsp;€. 6 months: 24&nbsp;€. 1 year: 36&nbsp;€. Launch
+          offer: 1 year for {offer.price}&nbsp;€ instead of {offer.standard}&nbsp;€
+          for every purchase made until {offer.until} inclusive. Prices are
+          in euro and paid in bitcoin at the rate shown at checkout. Paid
           time adds to the end of the time you already have.
         </p>
 

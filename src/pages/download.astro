@@ -3,7 +3,15 @@ import CodeBlock from "../components/CodeBlock.astro";
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
 
+// Listed in this order whenever the list is written out by hand: Linux,
+// Windows, macOS, Android. The visitor's own system is only marked.
 const platforms = [
+  {
+    slot: "linux",
+    name: "Linux",
+    icon: "monitor",
+    formats: ".AppImage, .deb and .rpm packages",
+  },
   {
     slot: "windows",
     name: "Windows",
@@ -15,12 +23,6 @@ const platforms = [
     name: "macOS",
     icon: "monitor",
     formats: ".dmg disk image",
-  },
-  {
-    slot: "linux",
-    name: "Linux",
-    icon: "monitor",
-    formats: ".AppImage, .deb and .rpm packages",
   },
   {
     slot: "android",
@@ -35,7 +37,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
 
 <Base
   title="Download Gerfaut · Bitcoin watch-only wallet"
-  description="Download Gerfaut for Windows, macOS, Linux and Android. Free and open source, with checksums signed by the author's minisign key."
+  description="Download Gerfaut for Linux, Windows, macOS and Android. Free and open source, with checksums signed by the author's minisign key."
 >
   <section class="pt-16 pb-12 md:pt-24">
     <div class="site-container">
@@ -162,13 +164,13 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border pt-5">
           <a
             href="https://gerfaut-wallet.com/docs/getting-started/verify-your-download"
-            class="btn btn-secondary"
+            class="btn btn-primary"
           >
             Every system, step by step
             <Icon name="arrow-up-right" size={16} />
           </a>
           <p class="text-sm text-muted">
-            Windows, macOS, Linux and Android, in the documentation.
+            Linux, Windows, macOS and Android, in the documentation.
           </p>
         </div>
       </div>
@@ -328,9 +330,9 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       latest("gerfaut-desktop"),
       latest("gerfaut-mobile"),
     ]);
+    render("linux", desktop);
     render("windows", desktop);
     render("macos", desktop);
-    render("linux", desktop);
     render("android", mobile);
   }
 

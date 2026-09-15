@@ -1,71 +1,59 @@
 ---
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
+import { offer } from "../lib/offer";
 
-// Prices of the API contract, the standard ones. If the server runs a
-// launch offer, the checkout answer carries the real amount and the page
-// shows it before anyone pays; the cards never claim a discount the API
-// has not confirmed.
+// Prices of the API contract, the standard ones, and the launch offer on
+// the yearly plan. The checkout answer carries the amount really charged
+// and the key panel shows it before anyone pays.
 const plans = [
   { id: "month", name: "1 month", days: 31, price: 5, perMonth: "5 € a month" },
   { id: "half_year", name: "6 months", days: 183, price: 24, perMonth: "4 € a month" },
-  { id: "year", name: "1 year", days: 366, price: 36, perMonth: "3 € a month" },
+  { id: "year", name: "1 year", days: 366, price: 36, perMonth: "3 € a month", offer: offer.price },
 ] as const;
 
-const steps = [
-  {
-    title: "Hand over a descriptor",
-    body: "The same public data the app already holds. Never a private key.",
-  },
-  {
-    title: "The server follows it",
-    body: "Every address, present and future, from its own Bitcoin node.",
-  },
-  {
-    title: "A message leaves in seconds",
-    body: "The moment a spend reaches the mempool, on the channels you chose.",
-  },
-] as const;
-
-const watches = [
+// What the server does, in the order a buyer meets it.
+const does = [
   {
     icon: "shield-alert",
-    title: "Coins move, you hear about it",
+    title: "Tells you when coins move",
     body: "One alert when coins arrive or leave and the transaction enters the mempool, a second one when it is in a block.",
   },
   {
     icon: "timer",
-    title: "A timelock opens, you are warned first",
+    title: "Warns you before a timelock opens",
     body: "30 days, 7 days and 1 day before a recovery path becomes spendable, then again the day it opens.",
   },
   {
     icon: "bell",
-    title: "On the channels you choose",
-    body: "ntfy, Telegram and e-mail name the wallet and say what happened, nothing more. A webhook, signed with HMAC-SHA256, carries the whole event to a machine the internet can reach.",
+    title: "Reaches you where you are",
+    body: "ntfy, Telegram and e-mail name the wallet and say what happened. A webhook, signed with HMAC-SHA256, carries the whole event to a machine of yours.",
   },
-] as const;
-
-const kept = [
-  "The descriptors you register, and the names you gave them",
-  "The addresses they derive, with the coins and movements seen on them",
-  "The channels you add: an ntfy topic, a Telegram chat with the name Telegram gives it, an e-mail address, a webhook URL",
-  "A hash of your Premium key. The key itself is never stored.",
-] as const;
-
-const notKept = [
-  "A login or a password: there is no account, so there is nothing to steal",
-  "Your e-mail, unless you add one as a channel",
-  "Your IP address, or any request log",
+  {
+    icon: "eye",
+    title: "Watches around the clock",
+    body: "From its own Bitcoin node, every address of the wallets you registered, present and future, whether your apps are open or not.",
+  },
+  {
+    icon: "layers",
+    title: "Covers all your wallets",
+    body: "Up to 21 wallets on one Premium key, single-sig, multisig and miniscript alike, and every device where you type that key.",
+  },
+  {
+    icon: "lock",
+    title: "Never a private key",
+    body: "The server takes the descriptors the app already holds, and nothing else. It can see coins move and cannot move them.",
+  },
 ] as const;
 
 const faq = [
   {
     q: "I lost my Premium key. Can you find it?",
-    a: "No. We store a hash of the key, the way a website stores a password, and nobody can rebuild the key from it, us included. When the key is gone, the time on it is gone with it. Write it down the moment it appears, before you pay.",
+    a: "No. We store a hash of the Premium key, the way a website stores a password, and nobody can rebuild the key from it, us included. When the key is gone, the time on it is gone with it. Write it down the moment it appears, before you pay, and keep it in your password manager. Anyone who has the key can use the time you paid for.",
   },
   {
     q: "What exactly does the server see?",
-    a: "What a watch-only wallet sees: the descriptors you register, the addresses they derive, and the coins and transactions on them. Plus the channels you add. Never a private key, no name, no IP address. Remove a wallet from the app and its data leaves the server.",
+    a: "What a watch-only wallet sees: the descriptors you register, the addresses they derive, and the coins and transactions on them. Plus the channels you add. Never a private key, no name, no IP address. Remove a wallet from the app and the server deletes its descriptor, its addresses and its alerts.",
   },
   {
     q: "Can I cancel, or get a refund?",
@@ -73,11 +61,11 @@ const faq = [
   },
   {
     q: "Which wallets can be watched?",
-    a: "Any wallet Gerfaut imports from a descriptor on mainnet: single-sig, multisig, and miniscript policies with timelocks. A wallet added from a single address cannot be watched yet.",
+    a: "Any mainnet wallet in Gerfaut: single-sig, multisig, miniscript policies with timelocks, and a wallet added from a single address.",
   },
   {
     q: "Are there limits?",
-    a: "One key watches up to 21 wallets and 10 channels. Test messages and confirmation e-mails: five an hour. E-mail alerts: 20 a day, the rest leave the next day, and the other channels are untouched. The request limits only stop a runaway script.",
+    a: "One Premium key watches up to 21 wallets and reaches up to 10 channels. Test messages and channel confirmation codes: five an hour. E-mail alerts: 20 a day; past that, the remaining e-mails go out the next day, and ntfy, Telegram and webhooks are not affected.",
   },
   {
     q: "Can a webhook point at a machine on my own network?",
@@ -85,18 +73,18 @@ const faq = [
   },
   {
     q: "Does it work over Tor?",
-    a: "Yes, and it follows the backend you chose in the app. With a .onion backend, the calls to the server go through Tor too; with any other backend, they go out directly. Either way, the server keeps no IP address.",
+    a: "The calls to the Premium server follow the backend you chose in the app: with an .onion backend, they go through Tor too; with any other backend, they go out directly over HTTPS. The server itself has no .onion address yet, and it keeps no IP address either way.",
   },
   {
     q: "Can I run the server myself?",
-    a: "Not yet. A watcher on your own node, so that nothing leaves your home, is planned for a later version, the way Bitwarden does it: whoever runs a server does not pay.",
+    a: "Not yet. A watcher on your own node, so that nothing leaves your home, is planned for a later version.",
   },
 ] as const;
 ---
 
 <Base
   title="Gerfaut Premium · Alerts for your cold storage"
-  description="Gerfaut Premium is a server that watches your Bitcoin wallets around the clock and tells you within seconds when coins move, over ntfy, Telegram, e-mail or webhook. From 5 € a month, paid in bitcoin, no account."
+  description="Gerfaut Premium is a server that watches your Bitcoin wallets around the clock and tells you within seconds when coins move, over ntfy, Telegram, e-mail or webhook. From 3 € a month, paid in bitcoin, no account."
 >
   <section class="dark-island bg-background pt-16 pb-16 text-text md:pt-24 md:pb-24">
     <div class="site-container">
@@ -117,37 +105,35 @@ const faq = [
         </p>
         <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
           <a href="#buy" class="btn btn-primary btn-wide">Get Premium</a>
-          <a href="#renew" class="btn btn-secondary">Add time to a Premium key</a>
+          <a href="#renew" class="btn btn-primary">Add time to a Premium key</a>
         </div>
         <p class="mt-5 text-sm text-muted">
           From 3&nbsp;€ a month &middot; Paid in bitcoin &middot; No account
+        </p>
+        <p class="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm">
+          <span class="pill pill-neutral text-text">Launch offer</span>
+          <span>
+            &minus;{offer.percent}&nbsp;% on the first year until {offer.until}:
+            <span class="price-old">{offer.standard}&nbsp;€</span>
+            <strong class="font-semibold">{offer.price}&nbsp;€</strong>
+          </span>
         </p>
       </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="how-heading">
+  <section class="section" aria-labelledby="does-heading">
     <div class="site-container">
-      <h2 id="how-heading" class="section-title mx-auto max-w-2xl text-center">
-        How it works
-      </h2>
-      <ol class="mt-12 grid list-none gap-6 p-0 md:grid-cols-3 md:gap-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <h2 id="does-heading" class="section-title">What Premium does</h2>
+        <p class="mt-4 text-lg text-muted">
+          Hand the server a descriptor, pick your channels, and it takes it
+          from there.
+        </p>
+      </div>
+      <ul class="mt-12 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
         {
-          steps.map((step, index) => (
-            <li class="border-t border-border pt-5">
-              <span class="step-number">0{index + 1}</span>
-              <h3 class="mt-3 font-display text-[1.125rem] font-semibold">
-                {step.title}
-              </h3>
-              <p class="mt-1.5 text-sm text-muted">{step.body}</p>
-            </li>
-          ))
-        }
-      </ol>
-
-      <ul class="mt-16 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-5">
-        {
-          watches.map((item) => (
+          does.map((item) => (
             <li class="card p-5 md:p-6">
               <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken text-primary">
                 <Icon name={item.icon} size={18} />
@@ -163,58 +149,6 @@ const faq = [
     </div>
   </section>
 
-  <section class="section border-t border-border" aria-labelledby="data-heading">
-    <div class="site-container grid gap-10 lg:grid-cols-2 lg:gap-16">
-      <div class="max-w-lg">
-        <span
-          class="flex h-10 w-10 items-center justify-center rounded-md bg-sunken text-primary"
-        >
-          <Icon name="lock" />
-        </span>
-        <h2 id="data-heading" class="section-title mt-5">
-          Watch-only stays watch-only.
-        </h2>
-        <p class="mt-4 text-lg text-muted">
-          The server holds no key, not yours and none of its own. It can see
-          coins move and cannot move them.
-        </p>
-      </div>
-      <div class="card p-5 md:p-6">
-        <h3 class="text-h2 font-display">What the server learns</h3>
-        <p class="mt-4 text-label tracking-[0.04em] text-muted uppercase">
-          Kept on the server
-        </p>
-        <ul class="mt-2 space-y-2 text-sm">
-          {
-            kept.map((line) => (
-              <li class="flex items-start gap-2.5">
-                <Icon name="check" size={16} class="mt-0.5 shrink-0 text-primary" />
-                <span>{line}</span>
-              </li>
-            ))
-          }
-        </ul>
-        <p class="mt-5 text-label tracking-[0.04em] text-muted uppercase">
-          Never kept
-        </p>
-        <ul class="mt-2 space-y-2 text-sm text-muted">
-          {
-            notKept.map((line) => (
-              <li class="flex items-start gap-2.5">
-                <span class="mt-2.5 h-px w-4 shrink-0 bg-border" aria-hidden="true" />
-                <span>{line}</span>
-              </li>
-            ))
-          }
-        </ul>
-        <p class="mt-5 border-t border-border pt-4 text-sm text-muted">
-          Remove a wallet from the app, or stop watching it, and its data
-          leaves the server with it.
-        </p>
-      </div>
-    </div>
-  </section>
-
   <section
     id="buy"
     class="section scroll-mt-20 border-t border-border"
@@ -225,7 +159,9 @@ const faq = [
         <h2 id="buy-heading" class="section-title">Get Premium</h2>
         <p class="mt-4 text-lg text-muted">
           One plan, every service. Prices in euro, paid in bitcoin through
-          Ark, Lightning or on-chain, at the rate the checkout shows.
+          Ark, Lightning or on-chain, at the rate the checkout shows. Until
+          {offer.until}, the first year is {offer.price}&nbsp;€ instead of
+          {offer.standard}&nbsp;€.
         </p>
       </div>
 
@@ -248,8 +184,15 @@ const faq = [
                       <span class="block text-label tracking-[0.04em] text-muted uppercase">
                         {plan.name}
                       </span>
-                      <span class="mt-3 block text-amount tabular-nums">
-                        {plan.price}&nbsp;€
+                      <span class="mt-3 flex flex-wrap items-baseline gap-x-2 text-amount tabular-nums">
+                        {"offer" in plan ? (
+                          <>
+                            <span class="price-old">{plan.price}&nbsp;€</span>
+                            <span>{plan.offer}&nbsp;€</span>
+                          </>
+                        ) : (
+                          <span>{plan.price}&nbsp;€</span>
+                        )}
                       </span>
                       <span class="mt-1 block text-sm text-muted">
                         {plan.days} days &middot; {plan.perMonth}
@@ -304,7 +247,7 @@ const faq = [
                 class="font-data m-0 min-w-0 flex-1 rounded-sm bg-sunken px-4 py-3 text-[1.375rem] leading-tight tracking-[0.04em] break-words select-all sm:text-[1.75rem]"
               >
               </p>
-              <button type="button" id="key-copy" class="btn btn-secondary shrink-0">
+              <button type="button" id="key-copy" class="btn btn-primary shrink-0">
                 <Icon name="copy" size={16} class="key-copy-idle" />
                 <Icon name="check" size={16} class="key-copy-done" />
                 <span id="key-copy-label">Copy</span>
@@ -424,7 +367,7 @@ const faq = [
                     checked={plan.id === "month"}
                   />
                   <span class="tabular-nums">
-                    {plan.name} &middot; {plan.price}&nbsp;€
+                    {plan.name} &middot; {"offer" in plan ? plan.offer : plan.price}&nbsp;€
                   </span>
                 </label>
               ))
