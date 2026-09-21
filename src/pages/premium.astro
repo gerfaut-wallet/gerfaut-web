@@ -73,7 +73,7 @@ const faq = [
   },
   {
     q: "What does the server keep about me?",
-    a: "A hash of your Premium key, the descriptors and addresses you register with the names you gave them, and the channels you add. No IP address, no request log, no e-mail unless you add one as a channel, no name: there is no account.",
+    a: "A hash of your Premium key, the descriptors and addresses you register with the names you gave them, and the channels you add. When it refuses a wallet for holding more than 5,000 coins, it also keeps a hash of that wallet, which cannot be turned back into its addresses, so that sending it again within the hour is refused without a new scan; the hash is deleted two hours later at most. No IP address, no request log, no e-mail unless you add one as a channel, no name: there is no account.",
   },
   {
     q: "Can I run the server myself?",

@@ -111,8 +111,13 @@ const linkClass =
           waits beside its channel until you type its code back. We store no
           other name, no e-mail unless you add one as a channel, no IP address
           and no request logs. Stopping the watch on a wallet, or removing a
-          watched wallet from the app, deletes its data on the server. The
-          server deletes everything it holds under a key 90 days after the
+          watched wallet from the app, deletes its data on the server. One
+          exception: a wallet refused for holding more than 5,000 unspent
+          coins leaves, for one hour, a hash of its descriptor and your
+          account, made with a secret of the server and never the descriptor
+          itself, so that sending it again is refused without a new scan; that
+          hash is deleted within the following hour, and at once with your
+          account. The server deletes everything it holds under a key 90 days after the
           paid time on that key runs out; a key that was never paid for is
           deleted 30 days after it was created. To delete everything now, use
           "Forget this key" in the app, which offers to delete your data on
@@ -138,7 +143,9 @@ const linkClass =
           per minute; requests are also limited per network address on every
           route. The server refuses what goes past either limit with a clear
           error. A wallet that holds more than 5,000 unspent coins is refused:
-          the server stops watching it and says why. Wallets added or changed
+          the server stops watching it and says why. Sent again by the same
+          key within the hour, it gets the same refusal without a new scan.
+          Wallets added or changed
           are limited to 30 an hour per key; a rename does not count. Messages
           sent on the spot, a channel test or the confirmation
           e-mail of a new address, are limited to five an hour per account.
