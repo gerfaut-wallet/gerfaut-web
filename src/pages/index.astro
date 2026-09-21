@@ -66,7 +66,7 @@ const premiumFacts = [
 
 const sourceFacts = [
   "AGPL-3.0, the apps and the core alike",
-  "Reproducible builds: build it yourself and get the same bytes as the release",
+  "Reproducible builds: rebuild any release on Linux and get the same bytes",
   "Every release signed with minisign",
 ] as const;
 ---
@@ -422,13 +422,12 @@ const sourceFacts = [
           </a>
         </div>
       </div>
-      <pre class="dark-island terminal"><code><span class="prompt">$</span> git clone https://github.com/gerfaut-wallet/gerfaut-core
-<span class="prompt">$</span> git clone https://github.com/gerfaut-wallet/gerfaut-desktop
-<span class="prompt">$</span> cd gerfaut-desktop && npm install
-<span class="prompt">$</span> npm run tauri build
-<span class="out">installers under src-tauri/target/release/bundle</span>
-<span class="prompt">$</span> sha256sum src-tauri/target/release/bundle/*/*
-<span class="out">same bytes, same sums as SHA256SUMS on the release page</span></code></pre>
+      <pre class="dark-island terminal"><code><span class="prompt">$</span> git clone https://github.com/gerfaut-wallet/gerfaut-desktop
+<span class="prompt">$</span> cd gerfaut-desktop
+<span class="prompt">$</span> reproducible/verify.sh v0.1.0
+<span class="out">rebuilt from the tag in a pinned container</span>
+<span class="out">compared byte for byte with the release page</span>
+<span class="out">==&gt; VERIFIED</span></code></pre>
     </div>
   </section>
 
