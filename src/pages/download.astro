@@ -11,24 +11,28 @@ const platforms = [
     name: "Linux",
     icon: "monitor",
     formats: ".AppImage, .deb and .rpm packages",
+    repo: "gerfaut-desktop",
   },
   {
     slot: "windows",
     name: "Windows",
     icon: "monitor",
     formats: ".exe installer",
+    repo: "gerfaut-desktop",
   },
   {
     slot: "macos",
     name: "macOS",
     icon: "monitor",
     formats: ".app in a .zip archive",
+    repo: "gerfaut-desktop",
   },
   {
     slot: "android",
     name: "Android",
     icon: "smartphone",
     formats: "one .apk per processor",
+    repo: "gerfaut-mobile",
   },
 ] as const;
 
@@ -87,7 +91,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
                     Checking the latest release&hellip;
                   </p>
                 </div>
-                <div data-state="empty">
+                <div data-state="empty" hidden>
                   <p class="text-sm font-medium">
                     The first public release is coming.
                   </p>
@@ -96,6 +100,30 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
                     Until then, follow the project on
                     <a href="https://github.com/gerfaut-wallet" class="link">
                       GitHub</a
+                    >.
+                  </p>
+                </div>
+                <div data-state="missing" hidden>
+                  <p class="text-sm font-medium">
+                    <span data-missing-version>This release</span> has no
+                    {platform.name} build.
+                  </p>
+                  <p class="mt-1 text-sm text-muted">
+                    Its notes and the earlier builds are on the
+                    <a
+                      href={`https://github.com/gerfaut-wallet/${platform.repo}/releases`}
+                      class="link">releases page</a
+                    >.
+                  </p>
+                </div>
+                <div data-state="elsewhere">
+                  <p class="text-sm font-medium">The files are on GitHub.</p>
+                  <p class="mt-1 text-sm text-muted">
+                    This page could not read the latest release. Every file is
+                    on the
+                    <a
+                      href={`https://github.com/gerfaut-wallet/${platform.repo}/releases/latest`}
+                      class="link">release page</a
                     >.
                   </p>
                 </div>
@@ -251,17 +279,23 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     return mb >= 100 ? `${Math.round(mb)} MB` : `${mb.toFixed(1)} MB`;
   }
 
-  async function latest(repo: string): Promise<Release | null> {
+  // What GitHub said about the latest release: the release itself,
+  // "none" when there is no release yet (a 404), or "error" when the
+  // answer never came or made no sense: offline, rate limited, down.
+  type Latest = Release | "none" | "error";
+
+  async function latest(repo: string): Promise<Latest> {
     try {
       const res = await fetch(
         `https://api.github.com/repos/gerfaut-wallet/${repo}/releases/latest`,
         { headers: { Accept: "application/vnd.github+json" } },
       );
-      if (!res.ok) return null;
+      if (res.status === 404) return "none";
+      if (!res.ok) return "error";
       const release = (await res.json()) as Release;
-      return Array.isArray(release.assets) ? release : null;
+      return Array.isArray(release.assets) ? release : "error";
     } catch {
-      return null;
+      return "error";
     }
   }
 
@@ -308,15 +342,22 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       .map((asset) => ({ asset, note: variants[rank(asset)]?.note }));
   }
 
-  function render(name: string, release: Release | null) {
+  // Every state but the list ends on a link to GitHub: no release yet,
+  // a release without a file for this system, or no answer at all.
+  function render(name: string, release: Latest) {
     const slot = document.querySelector(`[data-release="${name}"]`);
     if (!slot) return;
-    const assets =
-      release?.assets.filter((asset) =>
-        matchers[name]?.pattern.test(asset.name),
-      ) ?? [];
-    if (!release || assets.length === 0) {
-      setState(slot, "empty");
+    if (release === "none" || release === "error") {
+      setState(slot, release === "none" ? "empty" : "elsewhere");
+      return;
+    }
+    const assets = release.assets.filter((asset) =>
+      matchers[name]?.pattern.test(asset.name),
+    );
+    if (assets.length === 0) {
+      const named = slot.querySelector<HTMLElement>("[data-missing-version]");
+      if (named) named.textContent = release.tag_name;
+      setState(slot, "missing");
       return;
     }
     const version = document.querySelector<HTMLElement>(
