@@ -69,21 +69,26 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
               class="card flex min-w-0 scroll-mt-24 flex-col p-6"
               data-platform={platform.slot}
             >
-              <div class="flex items-center gap-3">
+              {/* The pills keep the name and formats on one line each: on
+                  a phone, when the text would drop under 9rem, they
+                  move to a line of their own. */}
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
                 <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sunken text-primary">
                   <Icon name={platform.icon} />
                 </span>
-                <div class="min-w-0 flex-1">
+                <div class="min-w-0 flex-1 basis-36">
                   <h2 class="text-h2 font-display">{platform.name}</h2>
                   <p class="text-sm text-muted">{platform.formats}</p>
                 </div>
-                <span class="pill pill-neutral hidden" data-platform-current>
-                  Your system
-                </span>
-                <span
-                  class="font-data hidden rounded-sm bg-sunken px-2 py-1 text-data text-muted"
-                  data-release-version={platform.slot}
-                />
+                <div class="ml-auto flex items-center gap-2">
+                  <span class="pill pill-neutral hidden" data-platform-current>
+                    Your system
+                  </span>
+                  <span
+                    class="font-data hidden rounded-sm bg-sunken px-2 py-1 text-data text-muted"
+                    data-release-version={platform.slot}
+                  />
+                </div>
               </div>
               <div
                 class="mt-5 border-t border-border pt-4"
