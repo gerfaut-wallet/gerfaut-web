@@ -16,13 +16,13 @@ const platforms = [
     slot: "windows",
     name: "Windows",
     icon: "monitor",
-    formats: ".msi and .exe installers",
+    formats: ".exe installer",
   },
   {
     slot: "macos",
     name: "macOS",
     icon: "monitor",
-    formats: ".dmg disk image",
+    formats: ".app in a .zip archive",
   },
   {
     slot: "android",
@@ -136,7 +136,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
           Two commands prove that the files were signed by the author and
           arrived unchanged. Shown here for Linux: the
           <span class="font-data">SHA256SUMS</span> file and its signature sit
-          next to the installers on the release page,
+          next to the builds on the release page,
           <a
             href="https://github.com/gerfaut-wallet/gerfaut-desktop/releases/latest"
             class="link">desktop</a
@@ -185,19 +185,53 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
   type Release = { tag_name: string; assets: Asset[] };
 
   // A slot lists every asset its pattern matches. `variants` puts them in
-  // order and says what each one is for: Android ships one build per
-  // processor, and a name like armeabi-v7a answers nobody's question. The
-  // first variant is the one almost everyone wants; the rest fold away.
+  // order and says what each one is for, since a name like
+  // Gerfaut-0.1.0-1.x86_64.rpm or armeabi-v7a answers nobody's question.
+  // With `fold`, the first variant is the one almost everyone wants and
+  // the rest fold away: Android ships one build per processor.
+  //
+  // The files of a release, as the recipes under reproducible/ in
+  // gerfaut-desktop name them: Gerfaut_<version>_amd64.AppImage,
+  // Gerfaut_<version>_amd64.deb, Gerfaut-<version>-1.x86_64.rpm,
+  // Gerfaut_<version>_x64-setup.exe and Gerfaut_<version>_universal.zip,
+  // which holds Gerfaut.app. Android: one .apk per processor.
   type Variant = { pattern: RegExp; note: string };
-  type Matcher = { repo: string; pattern: RegExp; variants?: Variant[] };
+  type Matcher = {
+    repo: string;
+    pattern: RegExp;
+    variants?: Variant[];
+    fold?: boolean;
+  };
 
   const matchers: Record<string, Matcher> = {
-    windows: { repo: "gerfaut-desktop", pattern: /\.(msi|exe)$/i },
-    macos: { repo: "gerfaut-desktop", pattern: /\.dmg$/i },
-    linux: { repo: "gerfaut-desktop", pattern: /\.(appimage|deb|rpm)$/i },
+    linux: {
+      repo: "gerfaut-desktop",
+      pattern: /\.(appimage|deb|rpm)$/i,
+      variants: [
+        { pattern: /\.appimage$/i, note: "Any distribution: make it executable, then run it" },
+        { pattern: /\.deb$/i, note: "Debian, Ubuntu and their derivatives" },
+        { pattern: /\.rpm$/i, note: "Fedora and other RPM-based systems" },
+      ],
+    },
+    windows: {
+      repo: "gerfaut-desktop",
+      pattern: /\.exe$/i,
+      variants: [{ pattern: /\.exe$/i, note: "Installer for 64-bit Windows" }],
+    },
+    macos: {
+      repo: "gerfaut-desktop",
+      pattern: /\.zip$/i,
+      variants: [
+        {
+          pattern: /\.zip$/i,
+          note: "Apple Silicon and Intel: unzip it, then move Gerfaut to Applications",
+        },
+      ],
+    },
     android: {
       repo: "gerfaut-mobile",
       pattern: /\.apk$/i,
+      fold: true,
       variants: [
         { pattern: /arm64-v8a/i, note: "Almost every phone sold since 2017" },
         { pattern: /armeabi-v7a/i, note: "Older 32-bit phones" },
@@ -297,12 +331,13 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     if (!list) return;
     list.textContent = "";
     const variants = matchers[name]?.variants;
+    const fold = matchers[name]?.fold ?? false;
     const entries = ordered(assets, variants);
-    // Without variants every file is equal and they all stay in view. With
-    // them, only the first is offered outright: three processor names side
-    // by side turn a download into a quiz.
-    const shown = variants ? entries.slice(0, 1) : entries;
-    const folded = variants ? entries.slice(1) : [];
+    // Files for different systems all stay in view. Files for different
+    // processors fold: only the first is offered outright, since three
+    // processor names side by side turn a download into a quiz.
+    const shown = fold ? entries.slice(0, 1) : entries;
+    const folded = fold ? entries.slice(1) : [];
     for (const { asset, note } of shown) list.append(row(asset, note));
     if (folded.length > 0) {
       const details = document.createElement("details");
