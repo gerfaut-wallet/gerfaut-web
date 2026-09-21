@@ -37,12 +37,12 @@ const does = [
   {
     icon: "layers",
     title: "Covers all your wallets",
-    body: "Up to 21 wallets on one Premium key, single-sig, multisig and miniscript alike, and every device where you type that key.",
+    body: "Up to 21 wallets on one Premium key, single-sig, multisig, miniscript and single addresses alike, and every device where you type that key.",
   },
   {
     icon: "lock",
     title: "Never a private key",
-    body: "The server takes the descriptors the app already holds, and nothing else. It can see coins move and cannot move them.",
+    body: "The server takes the descriptors and single addresses the app already holds, and nothing else. It can see coins move and cannot move them.",
   },
 ] as const;
 
@@ -53,7 +53,7 @@ const faq = [
   },
   {
     q: "What exactly does the server see?",
-    a: "What a watch-only wallet sees: the descriptors you register, the addresses they derive, and the coins and transactions on them. Plus the channels you add. Never a private key, no name, no IP address. Remove a wallet from the app and the server deletes its descriptor, its addresses and its alerts.",
+    a: "What a watch-only wallet sees: the descriptors and single addresses you register, the addresses the descriptors derive, and the coins and transactions on them. Plus the channels you add. Never a private key, no name, no IP address. Remove a wallet from the app and the server deletes its descriptor, its addresses and its alerts.",
   },
   {
     q: "Can I cancel, or get a refund?",
@@ -73,7 +73,7 @@ const faq = [
   },
   {
     q: "What does the server keep about me?",
-    a: "A hash of your Premium key, the descriptors you register with the names you gave them, and the channels you add. No IP address, no request log, no e-mail unless you add one as a channel, no name: there is no account.",
+    a: "A hash of your Premium key, the descriptors and addresses you register with the names you gave them, and the channels you add. No IP address, no request log, no e-mail unless you add one as a channel, no name: there is no account.",
   },
   {
     q: "Can I run the server myself?",
