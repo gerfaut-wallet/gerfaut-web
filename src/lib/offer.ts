@@ -7,7 +7,7 @@
 
     `active` is decided at build time: a site built after the last day
     stops showing the offer on its own, and the flag on the server is
-    turned off the same day (see gerfaut-meta, B-111). */
+    turned off the same day. */
 export const offer = {
   /** The plan the offer applies to. */
   plan: "year",
