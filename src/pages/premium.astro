@@ -37,7 +37,7 @@ const does = [
   {
     icon: "layers",
     title: "Covers all your wallets",
-    body: "Up to 21 wallets on one Premium key, single-sig, multisig, miniscript and single addresses alike, and every device where you type that key.",
+    body: "Up to 21 wallets on one Premium key, single-sig, multisig, miniscript and single addresses alike, and every device you connect with that key.",
   },
   {
     icon: "lock",
@@ -49,7 +49,11 @@ const does = [
 const faq = [
   {
     q: "I lost my Premium key. Can you find it?",
-    a: "No. We store a hash of the Premium key, the way a website stores a password, and nobody can rebuild the key from it, us included. When the key is gone, the time on it is gone with it. Write it down the moment it appears, before you pay, and keep it in your password manager. Anyone who has the key can use the time you paid for.",
+    a: "No. We store a hash of the Premium key, the way a website stores a password, and nobody can rebuild the key from it, us included. The devices you already connected keep working, and one with full access gives you a new key with \"Change key\". With no device left, the time on the key is lost with it. Write the key down the moment it appears, before you pay, and keep it in your password manager.",
+  },
+  {
+    q: "What if someone steals my Premium key?",
+    a: "They can connect a device, and Gerfaut warns you at once on every channel and in the apps. For 10 days, that device sees nothing and can change nothing. Refuse it from one of your devices, then change your key: the stolen key stops working and every other device is disconnected. The docs say what this cannot cover, such as a key stolen before you ever entered it in Gerfaut.",
   },
   {
     q: "What exactly does the server see?",
@@ -65,7 +69,7 @@ const faq = [
   },
   {
     q: "Are there limits?",
-    a: "One Premium key watches up to 21 wallets and reaches up to 10 channels. A wallet that holds more than 5,000 coins is refused, and the app says why. Wallets registered or changed: 30 an hour per key; a rename does not count. Test messages and channel confirmation codes: five an hour. E-mail alerts: 20 a day; past that, the remaining e-mails go out the next day, and ntfy, Telegram and webhooks are not affected.",
+    a: "One Premium key watches up to 21 wallets, reaches up to 10 channels and connects up to 10 devices. A wallet that holds more than 5,000 coins is refused, and the app says why. Wallets registered or changed: 30 an hour per key; a rename does not count. New devices: five an hour. Test messages and channel confirmation codes: five an hour. E-mail alerts: 50 a day; past that, the remaining e-mails go out the next day, and ntfy, Telegram and webhooks are not affected.",
   },
   {
     q: "Can a webhook point at a machine on my own network?",
@@ -73,7 +77,7 @@ const faq = [
   },
   {
     q: "What does the server keep about me?",
-    a: "A hash of your Premium key, the descriptors and addresses you register with the names you gave them, and the channels you add. When it refuses a wallet for holding more than 5,000 coins, it also keeps a hash of that wallet, which cannot be turned back into its addresses, so that sending it again within the hour is refused without a new scan; the hash is deleted two hours later at most. No IP address, no request log, no e-mail unless you add one as a channel, no name: there is no account.",
+    a: "A hash of your Premium key, the descriptors and addresses you register with the names you gave them, and the channels you add. For each device you connect, its kind, such as Android phone or Mac, the day it connected and a hash of its own access token. When it refuses a wallet for holding more than 5,000 coins, it also keeps a hash of that wallet, which cannot be turned back into its addresses, so that sending it again within the hour is refused without a new scan; the hash is deleted two hours later at most. No IP address, no request log, no e-mail unless you add one as a channel, no name: there is no account.",
   },
   {
     q: "Can I run the server myself?",
@@ -286,6 +290,10 @@ const faq = [
             <p class="mt-3 text-sm text-muted">
               You pay in bitcoin at the rate the checkout page shows. The
               checkout stays open for one hour.
+            </p>
+            <p class="mt-3 text-sm text-muted">
+              Once you have paid, enter the key in Gerfaut right away, then
+              connect a second device and turn on the app lock.
             </p>
             <div class="mt-5 border-t border-border pt-5">
               <label class="flex min-h-11 cursor-pointer items-center gap-3 text-sm">
