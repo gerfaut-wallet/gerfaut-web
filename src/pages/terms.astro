@@ -170,14 +170,17 @@ const linkClass =
           the server stops watching it and says why. Sent again by the same
           key within the hour, it gets the same refusal without a new scan.
           Wallets registered or changed
-          are limited to 30 an hour per key; a rename does not count. New
-          devices are limited to five connections an hour per key. Messages
+          are limited to 30 an hour per key; a rename does not count. One key
+          may connect five new devices an hour and 10 a day. Messages
           sent on the spot, a channel test or the confirmation
           e-mail of a new address, are limited to five an hour per account.
           E-mail alerts are limited to 50 per account per UTC day, within the
           budget the server holds with its mail provider; past either, e-mail
           alerts are sent the next day rather than dropped, and the other
-          channels are unaffected. We may stop serving a key that abuses the
+          channels are unaffected. Alerts about your devices and your key (a
+          new device, a device approved, a key changed) use at most five of
+          those e-mails per account per UTC day; past that, they reach the
+          other channels only. We may stop serving a key that abuses the
           service.
         </p>
 
