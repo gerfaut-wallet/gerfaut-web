@@ -124,6 +124,9 @@
 
 :root {
   color-scheme: light;
+  /* The page's action color, kept as it is at the root: a dark island
+     redefines --color-primary but not this. */
+  --color-page-ring: var(--color-primary);
 }
 
 html {
@@ -162,6 +165,12 @@ p {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+/* The terminal card is a dark island whose ring is drawn on the light
+   page: the island's pale action color would all but vanish there. */
+.terminal:focus-visible {
+  outline-color: var(--color-page-ring);
 }
 
 ::selection {
