@@ -6,9 +6,11 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description: string;
+  /** Keeps the page out of search results. */
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 // The address as the links write it: no .html, no final slash.
 const canonical = new URL(
   Astro.url.pathname.replace(/(\.html|\/)$/, "") || "/",
@@ -24,6 +26,7 @@ const ogImage = new URL("/og.png", Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
