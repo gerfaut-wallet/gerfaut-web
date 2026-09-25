@@ -314,7 +314,12 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         `https://api.github.com/repos/gerfaut-wallet/${repo}/releases/latest`,
         {
           headers: { Accept: "application/vnd.github+json" },
-          signal: AbortSignal.timeout(PATIENCE),
+          // Safari before 16 has no AbortSignal.timeout: there the card
+          // waits as long as the browser does, rather than never listing.
+          signal:
+            typeof AbortSignal.timeout === "function"
+              ? AbortSignal.timeout(PATIENCE)
+              : undefined,
         },
       );
       if (res.status === 404) return "none";
