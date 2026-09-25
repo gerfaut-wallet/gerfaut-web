@@ -6,6 +6,10 @@ import { defineConfig } from "astro/config";
 export default defineConfig({
   site: "https://gerfaut-wallet.com",
   trailingSlash: "never",
+  // download.html rather than download/index.html: Cloudflare Pages serves
+  // the first at /download, the address every link and the sitemap use,
+  // and moves the second to /download/.
+  build: { format: "file" },
   integrations: [
     // The return page after a payment means nothing without its reference.
     sitemap({ filter: (page) => !page.includes("/premium/paid") }),

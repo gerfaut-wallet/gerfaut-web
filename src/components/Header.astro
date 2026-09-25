@@ -6,7 +6,8 @@ import Mark from "./Mark.astro";
     and the other entries inline from 768px or behind a menu button on
     phones. The panel is plain markup toggled by the script below; with
     no script it stays closed and the entries remain in the footer. */
-const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+// The address as the links write it: no .html, no final slash.
+const path = Astro.url.pathname.replace(/(\.html|\/)$/, "") || "/";
 const links = [
   { href: "/premium", label: "Premium", icon: "gem" },
   { href: "https://gerfaut-wallet.com/docs", label: "Docs", icon: "book-open" },
