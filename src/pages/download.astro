@@ -303,11 +303,19 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
   // answer never came or made no sense: offline, rate limited, down.
   type Latest = Release | "none" | "error";
 
+  // GitHub answers in well under a second. A request still open after
+  // ten is not going to answer, and the card points at the release page
+  // instead of reading "Checking" for as long as the browser waits.
+  const PATIENCE = 10_000;
+
   async function latest(repo: string): Promise<Latest> {
     try {
       const res = await fetch(
         `https://api.github.com/repos/gerfaut-wallet/${repo}/releases/latest`,
-        { headers: { Accept: "application/vnd.github+json" } },
+        {
+          headers: { Accept: "application/vnd.github+json" },
+          signal: AbortSignal.timeout(PATIENCE),
+        },
       );
       if (res.status === 404) return "none";
       if (!res.ok) return "error";
