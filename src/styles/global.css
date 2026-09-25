@@ -164,6 +164,11 @@ p {
 :focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* A slight rounding for rings around plain text, at no specificity so
+   that a button or card keeps its own radius under the ring. */
+:where(:focus-visible) {
   border-radius: 2px;
 }
 
