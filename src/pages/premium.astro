@@ -367,7 +367,12 @@ const faq = [
             spellcheck="false"
             placeholder="xxxx-xxxx-xxxx-xxxx"
           />
-          <p id="renew-key-error" class="mt-1.5 text-sm font-medium" hidden></p>
+          <p
+            id="renew-key-error"
+            class="mt-1.5 text-sm font-medium"
+            role="alert"
+            hidden
+          ></p>
         </div>
         <fieldset class="mt-5">
           <legend class="text-sm font-medium">Time to add</legend>
@@ -736,6 +741,10 @@ const faq = [
     event.preventDefault();
     if (!keyInput || !renewButton || !renewStates || isBusy(renewButton)) return;
     if (renewNote) renewNote.hidden = true;
+    // The error is an alert, read out when it appears, even when the field
+    // already has the focus, as after Enter. Taken down while the server
+    // checks the key, so that the same answer is read out again.
+    fieldError(null);
     const compact = keyInput.value.replace(/-/g, "");
     if (!/^[a-z0-9]{16}$/.test(compact)) {
       fieldError("Enter the 16 characters of your key.");
