@@ -336,7 +336,8 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     const text = document.createElement("span");
     text.className = "min-w-0 flex-1";
     const label = document.createElement("span");
-    label.className = "font-data block truncate text-data";
+    // Wrapped, not cut: the end of a name is what tells two files apart.
+    label.className = "font-data block text-data wrap-anywhere";
     label.textContent = asset.name;
     text.append(label);
     if (note) {
