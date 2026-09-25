@@ -672,7 +672,9 @@ p {
   height: 36px;
   border: 0;
   border-radius: var(--radius-sm);
-  background: transparent;
+  /* The block's own surface: a line wider than a phone runs under the
+     button instead of showing through the icon. */
+  background: var(--color-sunken);
   color: var(--color-muted);
   cursor: pointer;
   transition:
