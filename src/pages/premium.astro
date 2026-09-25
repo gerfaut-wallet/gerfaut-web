@@ -533,9 +533,17 @@ const faq = [
     }
   }
 
+  // A waiting button keeps the focus: `disabled` would drop it to the
+  // page, and a keyboard user would start again from the top. The form
+  // ignores a second submit while the first one is out.
   function busy(button: HTMLButtonElement, on: boolean) {
-    button.disabled = on;
+    if (on) button.setAttribute("aria-disabled", "true");
+    else button.removeAttribute("aria-disabled");
     button.textContent = (on ? button.dataset.busy : button.dataset.label) ?? "";
+  }
+
+  function isBusy(button: HTMLButtonElement): boolean {
+    return button.getAttribute("aria-disabled") === "true";
   }
 
   function note(box: HTMLElement, text: string) {
@@ -600,7 +608,7 @@ const faq = [
 
   buyForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!buyButton || !buyStates) return;
+    if (!buyButton || !buyStates || isBusy(buyButton)) return;
     const plan = (new FormData(buyForm).get("plan") as string | null) ?? "year";
     if (buyNote) buyNote.hidden = true;
     busy(buyButton, true);
@@ -726,7 +734,7 @@ const faq = [
 
   renewForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!keyInput || !renewButton || !renewStates) return;
+    if (!keyInput || !renewButton || !renewStates || isBusy(renewButton)) return;
     if (renewNote) renewNote.hidden = true;
     const compact = keyInput.value.replace(/-/g, "");
     if (!/^[a-z0-9]{16}$/.test(compact)) {
