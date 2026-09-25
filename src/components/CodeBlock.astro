@@ -13,7 +13,8 @@ const { text, label } = Astro.props;
 ---
 
 <div class="code-copy">
-  <pre class="code-block"><code>{text}</code></pre>
+  {/* Focusable, so that a keyboard can scroll a line wider than a phone. */}
+  <pre class="code-block" tabindex="0"><code>{text}</code></pre>
   <button
     type="button"
     class="code-copy-button"
