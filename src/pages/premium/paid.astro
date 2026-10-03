@@ -89,9 +89,7 @@ import Base from "../../layouts/Base.astro";
             <h1
               class="font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em]"
             >
-              Paid. Your Premium key is active until
-              <span data-paid-until class="tabular-nums whitespace-nowrap"
-              ></span>.
+              Paid. Your Premium key is active until the end of your plan.
             </h1>
             <p class="mt-4 text-muted">
               Thank you. The time is on your key; the next step happens in the
@@ -212,24 +210,15 @@ import Base from "../../layouts/Base.astro";
   const API = "https://api.gerfaut-wallet.com";
   const EVERY = 3000;
   const LIMIT = 10 * 60 * 1000;
-  const MONTHS = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-  ];
 
+  // Where the charge stands, and nothing of the account it pays for:
+  // the reference travels in URLs, and the paid time is read in the app.
   type Status = {
     charge_id: string;
     status: string;
     plan: string;
     paid_at: number | null;
-    paid_until: number | null;
   };
-
-  // One language, one format: "Sep 5, 2027", in the reader's time zone.
-  function formatDate(unix: number): string {
-    const date = new Date(unix * 1000);
-    return `${MONTHS[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-  }
 
   function formatTime(date: Date): string {
     const two = (n: number) => String(n).padStart(2, "0");
@@ -310,10 +299,6 @@ import Base from "../../layouts/Base.astro";
     switch (data.status) {
       case "paid":
         done = true;
-        fill(
-          "[data-paid-until]",
-          data.paid_until ? formatDate(data.paid_until) : "the end of your plan",
-        );
         setState("paid");
         return;
       case "underpaid":
