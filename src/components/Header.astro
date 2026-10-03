@@ -90,7 +90,7 @@ const links = [
       button.setAttribute("aria-expanded", String(open));
       panel.hidden = !open;
     };
-    button.addEventListener("click", () => set(panel.hidden));
+    button.addEventListener("click", () => set(Boolean(panel.hidden)));
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && !panel.hidden) {
         set(false);
