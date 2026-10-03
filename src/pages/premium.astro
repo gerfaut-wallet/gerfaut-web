@@ -57,7 +57,7 @@ const faq = [
   },
   {
     q: "What exactly does the server see?",
-    a: "What a watch-only wallet sees: the descriptors and single addresses you register, the addresses the descriptors derive, and the coins and transactions on them. Plus the channels you add. Never a private key, no name, no IP address. Remove a wallet from the app and the server deletes its descriptor, its addresses and its alerts.",
+    a: "What a watch-only wallet sees: the descriptors and single addresses you register, the addresses the descriptors derive, and the coins and transactions on them. Plus the channels you add. Never a private key, no IP address, and no name except the one Telegram gives a chat you link. Remove a wallet from the app and the server deletes its descriptor, its addresses and its alerts.",
   },
   {
     q: "Can I cancel, or get a refund?",
@@ -69,7 +69,7 @@ const faq = [
   },
   {
     q: "Are there limits?",
-    a: "One Premium key watches up to 21 wallets, reaches up to 10 channels and connects up to 10 devices. A wallet that holds more than 5,000 coins is refused, and the app says why. Wallets registered or changed: 30 an hour per key; a rename does not count. New devices: five an hour and 10 a day. Test messages and channel confirmation codes: five an hour. E-mail alerts: 50 a day; past that, the remaining e-mails go out the next day, and ntfy, Telegram and webhooks are not affected. Alerts about your devices and your key use at most five of those 50; past that, they reach your other channels only.",
+    a: "One Premium key watches up to 21 wallets, reaches up to 10 channels and connects up to 10 devices. A wallet that holds more than 5,000 coins is refused, and the app says why. Wallets registered or changed: 30 an hour per key; a rename does not count. New devices: five an hour and 10 a day. Test messages and channel confirmation codes: five an hour and 20 a day. E-mail alerts: 50 a day; past that, the remaining e-mails go out the next day, and ntfy, Telegram and webhooks are not affected. Alerts about your devices and your key use at most five of those 50; past that, they reach your other channels only.",
   },
   {
     q: "Can a webhook point at a machine on my own network?",
@@ -77,7 +77,7 @@ const faq = [
   },
   {
     q: "What does the server keep about me?",
-    a: "A hash of your Premium key, the descriptors and addresses you register with the names you gave them, and the channels you add. For each device you connect, its kind, such as Android phone or Mac, the day it connected and a hash of its own access token. When it refuses a wallet for holding more than 5,000 coins, it also keeps a hash of that wallet, which cannot be turned back into its addresses, so that sending it again within the hour is refused without a new scan; the hash is deleted two hours later at most. No IP address, no request log, no e-mail unless you add one as a channel, no name: there is no account.",
+    a: "A hash of your Premium key, the descriptors and addresses you register with the names you gave them, and the channels you add, with the name Telegram shows for a chat you link. For each device you connect, its kind, such as Android phone or Mac, the day it connected and a hash of its own access token. When it refuses a wallet for holding more than 5,000 coins, it also keeps a hash of that wallet, which cannot be turned back into its addresses, so that sending it again within the hour is refused without a new scan; the hash is deleted two hours later at most. No IP address, no request log, no e-mail unless you add one as a channel, and no other name: there is no account.",
   },
   {
     q: "Can I run the server myself?",
