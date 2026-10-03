@@ -7,8 +7,10 @@ Website of [Gerfaut](https://github.com/gerfaut-wallet), a Bitcoin watch-only wa
 ## Scope
 
 - Product website and landing pages
-- User documentation
-- Changelog and release downloads
+- Release downloads and how to verify them
+- Premium: the checkout and its Terms of Sale
+
+The user documentation lives in [`gerfaut-docs`](https://github.com/gerfaut-wallet/gerfaut-docs), which Mintlify serves at [gerfaut-wallet.com/docs](https://gerfaut-wallet.com/docs).
 
 ## Development
 
@@ -17,9 +19,12 @@ The site is built with [Astro](https://astro.build) and Tailwind CSS, and compil
 ```sh
 npm install
 npm run dev      # local dev server
+npm run check    # type-check the pages and their scripts
 npm run build    # static build into dist/
 npm run preview  # serve the built site locally
 ```
+
+The Deploy workflow builds the site and publishes it to Cloudflare Pages. It runs only when someone starts it by hand.
 
 ## Project
 
@@ -28,7 +33,8 @@ npm run preview  # serve the built site locally
 | [`gerfaut-core`](https://github.com/gerfaut-wallet/gerfaut-core) | Core Rust library |
 | [`gerfaut-mobile`](https://github.com/gerfaut-wallet/gerfaut-mobile) | Mobile app (Flutter, Android first) |
 | [`gerfaut-desktop`](https://github.com/gerfaut-wallet/gerfaut-desktop) | Desktop app (Tauri v2, for Windows, macOS, and Linux) |
-| `gerfaut-web` | Website, documentation, downloads, this repository |
+| [`gerfaut-docs`](https://github.com/gerfaut-wallet/gerfaut-docs) | User documentation (Mintlify), served at gerfaut-wallet.com/docs |
+| `gerfaut-web` | Website and downloads, this repository |
 
 ## License
 
