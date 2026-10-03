@@ -42,4 +42,4 @@ npm run build    # build the static site into dist/
 npm run preview  # serve dist/ at http://localhost:4321
 ```
 
-The preview does not send the headers of `public/_headers`, so the Content Security Policy only applies once the site is deployed. In practice, an inline script or style that works in the preview is blocked in production. Then open the pages you changed at phone and desktop widths, and go through them with the keyboard.
+Then open the pages you changed at phone and desktop widths, and go through them with the keyboard. The preview does not send the headers of `public/_headers`, so the Content Security Policy only applies once the site is deployed: an inline script or style that works in the preview is blocked in production.
