@@ -10,6 +10,10 @@ export default defineConfig({
   // the first at /download, the address every link and the sitemap use,
   // and moves the second to /download/.
   build: { format: "file" },
+  // Sentences run over several lines and around links in the markup.
+  // JSX whitespace rules, the default since Astro 7, would glue their
+  // words together; this keeps the space HTML would show.
+  compressHTML: true,
   integrations: [
     // The return page after a payment means nothing without its reference.
     sitemap({ filter: (page) => !page.includes("/premium/paid") }),
