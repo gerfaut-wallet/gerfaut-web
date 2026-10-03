@@ -318,7 +318,7 @@ const faq = [
           </div>
 
           <div data-state="soon" hidden class="card mx-auto max-w-xl p-5">
-            <p class="font-medium">Premium opens soon</p>
+            <h3 id="buy-soon" tabindex="-1" class="font-medium">Premium opens soon</h3>
             <p class="mt-1 text-sm text-muted">
               Payments are not open yet: Premium opens with the first public
               release of the apps. Nothing was created and nothing was
@@ -415,7 +415,7 @@ const faq = [
               <p></p>
             </div>
           </div>
-          <div data-state="soon" hidden class="note note-neutral">
+          <div data-state="soon" id="renew-soon" tabindex="-1" hidden class="note note-neutral">
             <Icon name="info" size={16} />
             <p>
               Payments are not open yet: Premium opens with the first public
@@ -551,6 +551,14 @@ const faq = [
     }
   }
 
+  // A panel that takes the place of the one holding the focused button
+  // takes the focus with it: hidden, the button would drop it to the top
+  // of the page.
+  function showInstead(region: HTMLElement, state: string, target: HTMLElement | null) {
+    setState(region, state);
+    target?.focus();
+  }
+
   // A waiting button keeps the focus: `disabled` would drop it to the
   // page, and a keyboard user would start again from the top. The form
   // ignores a second submit while the first one is out.
@@ -638,7 +646,7 @@ const faq = [
     }
     switch (result.kind) {
       case "soon":
-        setState(buyStates, "soon");
+        showInstead(buyStates, "soon", document.getElementById("buy-soon"));
         break;
       case "offline":
         if (buyNote) note(buyNote, OFFLINE);
@@ -785,7 +793,7 @@ const faq = [
     }
     switch (result.kind) {
       case "soon":
-        setState(renewStates, "soon");
+        showInstead(renewStates, "soon", document.getElementById("renew-soon"));
         break;
       case "unknown-key":
         fieldError("We do not know this Premium key. Check each character against the one you saved. If you have no key yet, get one with Get Premium above: a key is created when you buy it.");
