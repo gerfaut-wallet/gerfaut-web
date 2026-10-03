@@ -11,9 +11,9 @@ interface Props {
 }
 
 const { title, description, noindex = false } = Astro.props;
-// The address as the links write it: no .html, no final slash.
+// The address as the links write it: no index, no .html, no final slash.
 const canonical = new URL(
-  Astro.url.pathname.replace(/(\.html|\/)$/, "") || "/",
+  Astro.url.pathname.replace(/(\/index)?(\.html)?\/?$/, "") || "/",
   Astro.site,
 );
 const ogImage = new URL("/og.png", Astro.site);
