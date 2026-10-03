@@ -20,7 +20,7 @@ import Base from "../../layouts/Base.astro";
           Premium
         </span>
 
-        <div id="paid-states" class="mt-5" aria-live="polite">
+        <div id="paid-states" class="mt-5">
           <div data-state="checking">
             <h1
               class="font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em]"
@@ -189,10 +189,12 @@ import Base from "../../layouts/Base.astro";
           </div>
         </div>
 
-        <div id="paid-note" class="note note-pending mt-6" hidden>
+        <div id="paid-note" class="note note-pending mt-6" role="status" hidden>
           <Icon name="info" size={16} />
           <p></p>
         </div>
+
+        <p id="paid-said" class="sr-only" role="status"></p>
 
         <p id="paid-ref" class="mt-10 text-sm text-muted" hidden>
           Payment reference
@@ -229,17 +231,27 @@ import Base from "../../layouts/Base.astro";
   const noteBox = document.getElementById("paid-note");
   const refLine = document.getElementById("paid-ref");
 
+  // A screen reader hears the title of each new state, once, and the
+  // note when one appears. The panels themselves are not a live region:
+  // the time of the last check changes every 3 seconds in them.
+  const said = document.getElementById("paid-said");
+
   function setState(state: string) {
     if (!region) return;
     for (const panel of region.querySelectorAll<HTMLElement>(":scope > [data-state]")) {
-      panel.hidden = panel.dataset.state !== state;
+      const shown = panel.dataset.state === state;
+      if (shown && panel.hidden && said) {
+        said.textContent = panel.querySelector("h1")?.textContent?.replace(/\s+/g, " ").trim() ?? "";
+      }
+      panel.hidden = !shown;
     }
   }
 
   function note(text: string | null) {
     if (!noteBox) return;
     const p = noteBox.querySelector("p");
-    if (p && text) p.textContent = text;
+    // The same words again would be read out again, every 3 seconds.
+    if (p && text && p.textContent !== text) p.textContent = text;
     noteBox.hidden = !text;
   }
 
