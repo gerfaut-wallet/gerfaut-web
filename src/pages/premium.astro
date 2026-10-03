@@ -807,29 +807,11 @@ const faq = [
     else window.addEventListener("load", go, { once: true });
   }
 
-  // The apps used to open this page with the key in the address. Take
-  // it, then swap the address for a clean one. replaceState keeps the key
-  // out of the bar and out of a reload, but the browser has already
-  // written the visit to its global history: that is why the apps now
-  // open #renew instead and put the key on the clipboard.
-  const params = new URLSearchParams(window.location.search);
-  const presetKey = params.get("key");
-  if (presetKey && keyInput) {
-    keyInput.value = presetKey;
-    formatKeyInput(keyInput);
-    params.delete("key");
-    const query = params.toString();
-    history.replaceState(
-      null,
-      "",
-      `${window.location.pathname}${query ? `?${query}` : ""}#renew`,
-    );
-    document.getElementById("renew")?.scrollIntoView();
-    if (renewButton) focusWhenLoaded(renewButton);
-  } else if (window.location.hash === "#renew" && keyInput) {
-    // Opened straight on the renewal form: the browser scrolls to it,
-    // the field is empty, and the key is on the clipboard when the app
-    // sent you here.
+  // Opened straight on the renewal form, as the apps open it: the
+  // browser scrolls to it, the field is empty, and the key is on the
+  // clipboard when an app sent you here. The key never travels in the
+  // address, where the browser history would keep it.
+  if (window.location.hash === "#renew" && keyInput) {
     if (renewPaste) renewPaste.hidden = false;
     focusWhenLoaded(keyInput);
   }
