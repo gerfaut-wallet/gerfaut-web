@@ -24,6 +24,10 @@ export default defineConfig({
       // Every script and stylesheet stays in its own file: the CSP in
       // public/_headers allows 'self' and nothing inline.
       assetsInlineLimit: 0,
+      // Lightning CSS, the default since Vite 8, folds the thickness of
+      // the struck price into the text-decoration shorthand, which Safari
+      // ignores before 26.2.
+      cssMinify: "esbuild",
     },
   },
 });
