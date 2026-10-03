@@ -13,6 +13,8 @@ export function detectPlatform(): Platform | null {
   if (/Android/i.test(ua)) return { slot: "android", name: "Android" };
   if (/iPhone|iPad|iPod/i.test(ua)) return null;
   if (/Win/i.test(platform)) return { slot: "windows", name: "Windows" };
+  // Safari on an iPad says Mac, but no Mac has a touch screen.
+  if (/Mac/i.test(platform) && navigator.maxTouchPoints > 1) return null;
   if (/Mac/i.test(platform)) return { slot: "macos", name: "macOS" };
   if (/Linux/i.test(platform)) return { slot: "linux", name: "Linux" };
   return null;
