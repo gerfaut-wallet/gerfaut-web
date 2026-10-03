@@ -2,15 +2,15 @@
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
 import { offer } from "../lib/offer";
+import { fromPerMonth, perMonth, plans } from "../lib/plans";
 
-// Prices of the API contract, the standard ones, and the launch offer on
-// the yearly plan. The checkout answer carries the amount really charged
-// and the key panel shows it before anyone pays.
-const plans = [
-  { id: "month", name: "1 month", days: 31, price: 5, perMonth: "5 € a month" },
-  { id: "half_year", name: "6 months", days: 183, price: 24, perMonth: "4 € a month" },
-  { id: "year", name: "1 year", days: 366, price: 36, perMonth: "3 € a month", offer: offer.price },
-] as const;
+// The plans as the page writes them: the monthly figure under each, and
+// the launch offer on its plan while it runs.
+const cards = plans.map((plan) => ({
+  ...plan,
+  perMonth: `${perMonth(plan)} € a month`,
+  offer: offer.active && plan.id === offer.plan ? offer.price : undefined,
+}));
 
 // What the server does, in the order a buyer meets it.
 const does = [
@@ -88,7 +88,7 @@ const faq = [
 
 <Base
   title="Gerfaut Premium · Alerts for your cold storage"
-  description="Gerfaut Premium is a server that watches your Bitcoin wallets around the clock and tells you within seconds when coins move, over ntfy, Telegram, e-mail or webhook. From 3 € a month, paid in bitcoin, no account."
+  description={`Gerfaut Premium is a server that watches your Bitcoin wallets around the clock and tells you within seconds when coins move, over ntfy, Telegram, e-mail or webhook. From ${fromPerMonth} € a month, paid in bitcoin, no account.`}
 >
   <section class="dark-island bg-background pt-16 pb-16 text-text md:pt-24 md:pb-24">
     <div class="site-container">
@@ -112,7 +112,7 @@ const faq = [
           <a href="#renew" class="btn btn-primary">Add time to a Premium key</a>
         </div>
         <p class="mt-5 text-sm text-muted">
-          From 3&nbsp;€ a month &middot; Paid in bitcoin &middot; No account
+          From {fromPerMonth}&nbsp;€ a month &middot; Paid in bitcoin &middot; No account
         </p>
         {
           offer.active && (
@@ -182,7 +182,7 @@ const faq = [
           <legend class="sr-only">Plan</legend>
           <div class="grid gap-3 sm:grid-cols-3 lg:gap-4">
             {
-              plans.map((plan) => (
+              cards.map((plan) => (
                 <label class="plan plan-premium">
                   <input
                     type="radio"
@@ -197,7 +197,7 @@ const faq = [
                         {plan.name}
                       </span>
                       <span class="mt-3 flex flex-wrap items-baseline gap-x-2 text-amount tabular-nums">
-                        {"offer" in plan && offer.active ? (
+                        {plan.offer !== undefined ? (
                           <>
                             <span class="price-old">{plan.price}&nbsp;€</span>
                             <span>{plan.offer}&nbsp;€</span>
@@ -378,7 +378,7 @@ const faq = [
           <legend class="text-sm font-medium">Time to add</legend>
           <div class="mt-1.5 grid gap-2 sm:grid-cols-3">
             {
-              plans.map((plan) => (
+              cards.map((plan) => (
                 <label class="choice">
                   <input
                     type="radio"
@@ -388,7 +388,7 @@ const faq = [
                     checked={plan.id === "month"}
                   />
                   <span class="tabular-nums">
-                    {plan.name} &middot; {"offer" in plan && offer.active ? plan.offer : plan.price}&nbsp;€
+                    {plan.name} &middot; {plan.offer ?? plan.price}&nbsp;€
                   </span>
                 </label>
               ))
@@ -463,15 +463,17 @@ const faq = [
 </style>
 
 <script>
+  import { plans } from "../lib/plans";
+
   const API = "https://api.gerfaut-wallet.com";
   // Standard prices, in euro. A lower amount from the API is a launch
   // offer, and the page says so next to the real figure.
-  const STANDARD: Record<string, number> = { month: 5, half_year: 24, year: 36 };
-  const NAMES: Record<string, string> = {
-    month: "1 month",
-    half_year: "6 months",
-    year: "1 year",
-  };
+  const STANDARD: Record<string, number> = Object.fromEntries(
+    plans.map((plan) => [plan.id, plan.price]),
+  );
+  const NAMES: Record<string, string> = Object.fromEntries(
+    plans.map((plan) => [plan.id, plan.name]),
+  );
   // The key alphabet of the server: no l, o, 0 or 1.
   const KEY_SHAPE = /^[a-km-np-z2-9]{16}$/;
 

@@ -4,6 +4,7 @@ import Feature from "../components/Feature.astro";
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
 import { offer } from "../lib/offer";
+import { fromPerMonth } from "../lib/plans";
 import androidWallet from "../assets/android-wallet.webp";
 import androidWallets from "../assets/android-wallets.webp";
 import backup from "../assets/backup.webp";
@@ -58,7 +59,7 @@ const premium = [
 ] as const;
 
 const premiumFacts = [
-  "From 3 € a month",
+  `From ${fromPerMonth} € a month`,
   "Paid in bitcoin",
   "No account",
   "Up to 21 wallets",

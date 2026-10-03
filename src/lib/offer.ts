@@ -1,22 +1,28 @@
+import { plans } from "./plans";
+
 /** The launch offer: the yearly plan at half price until 3 January 2027
     inclusive, the anniversary of the genesis block. One place for the
-    figure and the date, read by the home page, the Premium page and the
-    Terms. The server charges the same discount while its launch-offer
-    flag is on (GERFAUT_LAUNCH_OFFER on the alerts host); the checkout
-    answer is what the buyer pays, and the key panel shows it.
+    discount and the date, read by the home page, the Premium page and
+    the Terms; the prices come from the plans. The server charges the
+    same discount while its launch-offer flag is on (GERFAUT_LAUNCH_OFFER
+    on the alerts host); the checkout answer is what the buyer pays, and
+    the key panel shows it.
 
     `active` is decided at build time: a site built after the last day
     stops showing the offer on its own, and the flag on the server is
     turned off the same day. */
+const percent = 50;
+const yearly = plans.find((plan) => plan.id === "year")!;
+
 export const offer = {
   /** The plan the offer applies to. */
-  plan: "year",
+  plan: yearly.id,
   /** Percent off. */
-  percent: 50,
+  percent,
   /** The yearly price during the offer, in euro. */
-  price: 18,
+  price: (yearly.price * (100 - percent)) / 100,
   /** The standard yearly price, in euro. */
-  standard: 36,
+  standard: yearly.price,
   /** Last day of the offer, inclusive, as written on the pages. */
   until: "3 January 2027",
   /** The same day for the machine: the last second of it, UTC. */
