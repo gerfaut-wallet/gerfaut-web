@@ -28,5 +28,18 @@ Gerfaut is watch-only. The codebase contains no code that generates keys, handle
 
 - Keep them small and focused, one concern per pull request.
 - Write commit messages in English, imperative mood, with a short subject line.
-- Make sure formatting and lints pass before pushing (tooling is documented per repository once code lands).
+- Run the checks below before you push.
 - Brand assets (name, logo, visual identity) are out of contribution scope. See [TRADEMARK.md](TRADEMARK.md).
+
+## Checks
+
+Run these from the repository root before you open a pull request. CI runs the first three on every pull request and every push to `main`.
+
+```sh
+npm ci           # install the exact versions of package-lock.json
+npm run check    # type-check the pages and their scripts
+npm run build    # build the static site into dist/
+npm run preview  # serve dist/ at http://localhost:4321
+```
+
+The preview does not send the headers of `public/_headers`, so the Content Security Policy only applies once the site is deployed. In practice, an inline script or style that works in the preview is blocked in production. Then open the pages you changed at phone and desktop widths, and go through them with the keyboard.

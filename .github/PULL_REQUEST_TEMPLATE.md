@@ -6,4 +6,4 @@
 
 - [ ] I have read [CONTRIBUTING.md](https://github.com/gerfaut-wallet/gerfaut-web/blob/main/CONTRIBUTING.md) and agree to the contribution license terms
 - [ ] This change contains no private key handling of any kind
-- [ ] Formatting and lints pass
+- [ ] `npm run check` and `npm run build` pass
