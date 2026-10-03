@@ -1,4 +1,4 @@
-# The site has to build before it can be deployed. That is the whole check.
+# The site has to type-check and build before it can be deployed.
 
 name: CI
 
@@ -22,6 +22,7 @@ jobs:
           cache: npm
 
       - run: npm ci
+      - run: npm run check
       - run: npm run build
 
   pins:
