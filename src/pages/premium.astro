@@ -199,7 +199,10 @@ const faq = [
                       <span class="mt-3 flex flex-wrap items-baseline gap-x-2 text-amount tabular-nums">
                         {plan.offer !== undefined ? (
                           <>
+                            {/* A strike says nothing to a screen reader. */}
+                            <span class="sr-only">Standard price</span>
                             <span class="price-old">{plan.price}&nbsp;€</span>
+                            <span class="sr-only">, launch offer</span>
                             <span>{plan.offer}&nbsp;€</span>
                           </>
                         ) : (
