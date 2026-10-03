@@ -491,11 +491,12 @@ const faq = [
   };
   type Result = { ok: true; data: Checkout } | ({ ok: false } & Failure);
 
-  // The server answers in a second or two, Bark Pay included. A request
-  // still open after 20 is not going to answer: the page says so instead
-  // of leaving the button waiting. Safari before 16 has no
-  // AbortSignal.timeout, and there the page waits as long as the browser.
-  const PATIENCE = 20_000;
+  // The server answers in a second or two, Bark Pay included, and gives
+  // Bark Pay 20 seconds at most. A request still open after 30 is not
+  // going to answer: the page says so instead of leaving the button
+  // waiting. Safari before 16 has no AbortSignal.timeout, and there the
+  // page waits as long as the browser.
+  const PATIENCE = 30_000;
 
   async function checkout(body: { plan: string; key?: string }): Promise<Result> {
     let res: Response;
