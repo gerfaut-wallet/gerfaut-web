@@ -212,6 +212,7 @@ import Base from "../../layouts/Base.astro";
   const API = "https://api.gerfaut-wallet.com";
   const EVERY = 3000;
   const LIMIT = 10 * 60 * 1000;
+  const PATIENCE = 10_000;
 
   // Where the charge stands, and nothing of the account it pays for:
   // the reference travels in URLs, and the paid time is read in the app.
@@ -286,6 +287,12 @@ import Base from "../../layouts/Base.astro";
     try {
       res = await fetch(`${API}/v1/checkout/${encodeURIComponent(ref)}`, {
         headers: { Accept: "application/json" },
+        // A check that hangs would hold up every check after it: after
+        // 10 seconds it counts as unanswered and the next one goes out.
+        signal:
+          typeof AbortSignal.timeout === "function"
+            ? AbortSignal.timeout(PATIENCE)
+            : undefined,
       });
     } catch {
       note("Could not reach the Gerfaut server. Trying again…");
