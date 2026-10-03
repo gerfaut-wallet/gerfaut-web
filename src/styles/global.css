@@ -612,17 +612,6 @@ p {
   color: var(--color-muted);
 }
 
-/* Numbered step: the figure in Bricolage, the text below. */
-.step-number {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.01em;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-primary);
-}
-
 /* A price replaced by the launch offer: the standard figure struck
    through in the muted colour, the real one in full. */
 .price-old {
@@ -648,11 +637,6 @@ p {
   letter-spacing: 0.04em;
   line-height: 1.4;
   white-space: nowrap;
-}
-.pill-confirmed {
-  background: var(--color-confirmed-surface);
-  color: var(--color-confirmed);
-  border: 1px solid color-mix(in srgb, var(--color-confirmed) 25%, transparent);
 }
 .pill-pending {
   background: var(--color-pending-surface);
@@ -727,16 +711,6 @@ p {
 /* --- forms and notes (premium pages) --- */
 
 @layer components {
-/* Ghost button: transparent, muted text, sunken on hover. */
-.btn-ghost {
-  background: transparent;
-  color: var(--color-muted);
-}
-.btn-ghost:hover {
-  background: var(--color-sunken);
-  color: var(--color-text);
-}
-
 /* A button that waits, or is not allowed yet, keeps its place and its
    colour and stops answering the pointer. */
 .btn:disabled,

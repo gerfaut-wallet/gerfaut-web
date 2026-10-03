@@ -5,9 +5,6 @@ import Base from "../../layouts/Base.astro";
 // The page Bark Pay sends the buyer back to, with the payment reference
 // in `?ref=`. It asks the API every 3 seconds where the charge stands
 // and stops on its own after 10 minutes.
-
-const linkClass =
-  "link";
 ---
 
 <Base
@@ -117,7 +114,7 @@ const linkClass =
                 <Icon name="download" size={16} />
                 Download Gerfaut
               </a>
-              <a href="/premium" class={linkClass + " text-sm"}>Back to Premium</a>
+              <a href="/premium" class="link text-sm">Back to Premium</a>
             </div>
           </div>
 
@@ -164,7 +161,7 @@ const linkClass =
             <p class="mt-4 text-muted">
               The server does not know this reference. Check the address you
               opened. If you did pay, write to
-              <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>
+              <a href="mailto:info@pandul.fr" class="link">info@pandul.fr</a>
               with your Premium key and we will look.
             </p>
             <a href="/premium" class="btn btn-primary mt-8">
@@ -184,7 +181,7 @@ const linkClass =
               address when it sends you back. If you just paid, use your
               browser's back button to return to the checkout page. If the
               payment went through and you cannot find your way back, write to
-              <a href="mailto:info@pandul.fr" class={linkClass}>info@pandul.fr</a>
+              <a href="mailto:info@pandul.fr" class="link">info@pandul.fr</a>
               with your Premium key.
             </p>
             <a href="/premium" class="btn btn-primary mt-8">
