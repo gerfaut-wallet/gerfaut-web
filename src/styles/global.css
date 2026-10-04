@@ -178,6 +178,12 @@ p {
   outline-color: var(--color-page-ring);
 }
 
+/* The footer mark is padded out to a 44 px target: its ring keeps to
+   the mark, clear of the copyright line beside it. */
+.mark-link:focus-visible {
+  outline-offset: -6px;
+}
+
 ::selection {
   background: color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
