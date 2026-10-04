@@ -503,6 +503,10 @@ const faq = [
   // page waits as long as the browser.
   const PATIENCE = 30_000;
 
+  // A day at most: no ceiling of the server lasts longer, and a header
+  // gone wrong must not ask for months.
+  const LONGEST_WAIT = 24 * 3600;
+
   // How long a 429 asks to wait, in seconds. The server sends
   // Retry-After on every 429 of the checkout, and lets the page read it;
   // a date is read too. Without it, the sentence of the error says it
@@ -510,9 +514,11 @@ const faq = [
   // the window of most of its ceilings.
   function waitOf(res: Response, message: string): number {
     const header = res.headers.get("Retry-After")?.trim() ?? "";
-    if (/^\d+$/.test(header)) return Number(header);
+    if (/^\d+$/.test(header)) return Math.min(Number(header), LONGEST_WAIT);
     const date = Date.parse(header);
-    if (!Number.isNaN(date)) return Math.max(0, (date - Date.now()) / 1000);
+    if (!Number.isNaN(date)) {
+      return Math.min(Math.max(0, (date - Date.now()) / 1000), LONGEST_WAIT);
+    }
     const said = /\b(?:in|per)\s+(?:(an?|one|\d+)\s+)?(minute|hour)s?\b/i.exec(message);
     if (said) {
       const count = /^\d+$/.test(said[1] ?? "") ? Number(said[1]) : 1;
