@@ -491,6 +491,8 @@ const faq = [
   type Failure = {
     kind: "offline" | "soon" | "busy" | "unknown-key" | "bad" | "server";
     message: string;
+    /** Seconds to wait before trying again, on a 429. */
+    wait?: number;
   };
   type Result = { ok: true; data: Checkout } | ({ ok: false } & Failure);
 
@@ -500,6 +502,24 @@ const faq = [
   // waiting. Safari before 16 has no AbortSignal.timeout, and there the
   // page waits as long as the browser.
   const PATIENCE = 30_000;
+
+  // How long a 429 asks to wait, in seconds. The server sends
+  // Retry-After on every 429 of the checkout, and lets the page read it;
+  // a date is read too. Without it, the sentence of the error says it
+  // ("try again in an hour", "per minute"), and failing that, a minute,
+  // the window of most of its ceilings.
+  function waitOf(res: Response, message: string): number {
+    const header = res.headers.get("Retry-After")?.trim() ?? "";
+    if (/^\d+$/.test(header)) return Number(header);
+    const date = Date.parse(header);
+    if (!Number.isNaN(date)) return Math.max(0, (date - Date.now()) / 1000);
+    const said = /\b(?:in|per)\s+(?:(an?|one|\d+)\s+)?(minute|hour)s?\b/i.exec(message);
+    if (said) {
+      const count = /^\d+$/.test(said[1] ?? "") ? Number(said[1]) : 1;
+      return count * (said[2].toLowerCase() === "hour" ? 3600 : 60);
+    }
+    return 60;
+  }
 
   async function checkout(body: { plan: string; key?: string }): Promise<Result> {
     let res: Response;
@@ -526,7 +546,9 @@ const faq = [
       const kind = /unknown key/i.test(message) ? "unknown-key" : "soon";
       return { ok: false, kind, message };
     }
-    if (res.status === 429) return { ok: false, kind: "busy", message };
+    if (res.status === 429) {
+      return { ok: false, kind: "busy", message, wait: waitOf(res, message) };
+    }
     if (res.status === 400) return { ok: false, kind: "bad", message };
     return { ok: false, kind: "server", message };
   }
@@ -584,8 +606,25 @@ const faq = [
 
   const OFFLINE =
     "Could not reach the Gerfaut server. Check your connection, then try again.";
-  const BUSY =
-    "Too many checkouts are being created right now. Wait a minute, then try again.";
+  // The server holds checkouts by the minute, its own and each
+  // address's, and an address by the hour as well. The wait is rounded
+  // up, so that waiting what the page says is always enough.
+  function busyNote(failure: Failure): string {
+    const wait = failure.wait ?? 60;
+    const why =
+      wait > 60 || /this address/i.test(failure.message)
+        ? "Too many checkouts were started from your connection."
+        : "Too many checkouts are being created right now.";
+    const minutes = Math.max(1, Math.ceil(wait / 60));
+    const hours = Math.ceil(minutes / 60);
+    const when =
+      minutes === 1
+        ? "Wait a minute, then try again."
+        : minutes < 50
+          ? `Try again in ${minutes} minutes.`
+          : `Try again in ${hours === 1 ? "an hour" : `${hours} hours`}.`;
+    return `${why} ${when}`;
+  }
   const SERVER =
     "The payment service did not answer. Nothing was charged. Try again in a moment.";
 
@@ -656,7 +695,7 @@ const faq = [
         if (buyNote) note(buyNote, OFFLINE);
         break;
       case "busy":
-        if (buyNote) note(buyNote, BUSY);
+        if (buyNote) note(buyNote, busyNote(result));
         break;
       default:
         if (buyNote) note(buyNote, SERVER);
@@ -811,7 +850,7 @@ const faq = [
         if (renewNote) note(renewNote, OFFLINE);
         break;
       case "busy":
-        if (renewNote) note(renewNote, BUSY);
+        if (renewNote) note(renewNote, busyNote(result));
         break;
       default:
         if (renewNote) note(renewNote, SERVER);
