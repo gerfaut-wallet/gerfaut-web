@@ -89,7 +89,7 @@ import Base from "../../layouts/Base.astro";
             <h1
               class="font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em]"
             >
-              Paid. The time is on your Premium key.
+              Paid. The time has been added to your Premium key.
             </h1>
             <p class="mt-4 text-muted">
               Thank you. The next step happens in the app, which also shows the
@@ -214,8 +214,8 @@ import Base from "../../layouts/Base.astro";
   const LIMIT = 10 * 60 * 1000;
   const PATIENCE = 10_000;
 
-  // Where the charge stands, and nothing of the account it pays for:
-  // the reference travels in URLs, and the paid time is read in the app.
+  // Where the charge stands, and nothing about the account it pays for:
+  // the reference travels in URLs, and the app shows the paid time.
   type Status = {
     charge_id: string;
     status: string;
