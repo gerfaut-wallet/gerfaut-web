@@ -189,7 +189,7 @@ import Base from "../../layouts/Base.astro";
           </div>
         </div>
 
-        <div id="paid-note" class="note note-pending mt-6" role="status" hidden>
+        <div id="paid-note" class="note note-pending mt-6" hidden>
           <Icon name="info" size={16} />
           <p></p>
         </div>
@@ -232,9 +232,10 @@ import Base from "../../layouts/Base.astro";
   const noteBox = document.getElementById("paid-note");
   const refLine = document.getElementById("paid-ref");
 
-  // A screen reader hears the title of each new state, once, and the
-  // note when one appears. The panels themselves are not a live region:
-  // the time of the last check changes every 3 seconds in them.
+  // A screen reader hears the title of each new state and each new note
+  // once, through this one region: a note written into its box while the
+  // box is hidden is never read out. The panels themselves are not a live
+  // region: the time of the last check changes every 3 seconds in them.
   const said = document.getElementById("paid-said");
 
   function setState(state: string) {
@@ -251,8 +252,16 @@ import Base from "../../layouts/Base.astro";
   function note(text: string | null) {
     if (!noteBox) return;
     const p = noteBox.querySelector("p");
-    // The same words again would be read out again, every 3 seconds.
-    if (p && text && p.textContent !== text) p.textContent = text;
+    if (p && text && p.textContent !== text) {
+      // Said when it appears, not again every 3 seconds while it stays.
+      p.textContent = text;
+      if (said) said.textContent = text;
+    } else if (p && !text && p.textContent) {
+      // Emptied when it goes, so the same words, back after a good
+      // check, are said again.
+      if (said && said.textContent === p.textContent) said.textContent = "";
+      p.textContent = "";
+    }
     noteBox.hidden = !text;
   }
 
