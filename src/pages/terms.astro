@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { offer } from "../lib/offer";
+import { plans } from "../lib/plans";
 
 const linkClass =
   "link";
@@ -48,7 +49,7 @@ const linkClass =
 
         <h2 class="mt-10 border-t border-border pt-6 text-h2 font-display">3. Plans and prices</h2>
         <p class="mt-2 text-muted">
-          1 month: 5&nbsp;€. 6 months: 24&nbsp;€. 1 year: 36&nbsp;€.
+          {plans.map((plan, i) => <>{i > 0 && " "}{plan.name}: {plan.price}&nbsp;€.</>)}
           {offer.active && (
             <>
               {" "}Launch offer: 1 year for {offer.price}&nbsp;€ instead of
