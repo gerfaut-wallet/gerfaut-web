@@ -612,7 +612,7 @@ const faq = [
   function busyNote(failure: Failure): string {
     const wait = failure.wait ?? 60;
     const why =
-      wait > 60 || /this address/i.test(failure.message)
+      wait > 60 || /\baddress\b/i.test(failure.message)
         ? "Too many checkouts were started from your connection."
         : "Too many checkouts are being created right now.";
     const minutes = Math.max(1, Math.ceil(wait / 60));
