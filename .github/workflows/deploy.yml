@@ -2,13 +2,13 @@
 # serves gerfaut-wallet.com.
 #
 # Run by hand, and it stays that way: the token below can deploy and
-# delete every Pages project of the account, so it never sits in a job
+# delete every Pages project in the account, so it never sits in a job
 # that runs on each push.
 #
 # wrangler is a dev dependency pinned in package-lock.json: `npm ci`
 # installs it with the rest, checked against the lockfile, before the
-# token is in the environment, and the last step runs that copy and
-# nothing fetched on the fly.
+# token is in the environment. The last step runs that copy instead of
+# downloading one when it starts.
 #
 # Needs two repository secrets:
 #   CLOUDFLARE_API_TOKEN   scoped to Cloudflare Pages: Edit
