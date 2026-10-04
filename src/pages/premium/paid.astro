@@ -266,6 +266,9 @@ import Base from "../../layouts/Base.astro";
   const started = Date.now();
   let timer: ReturnType<typeof setTimeout> | undefined;
   let done = false;
+  // One check at a time: the tab coming back starts one, and an older one
+  // still out could answer last and put "paid" back to "pending".
+  let asking = false;
 
   function schedule() {
     clearTimeout(timer);
@@ -273,7 +276,7 @@ import Base from "../../layouts/Base.astro";
   }
 
   async function poll() {
-    if (done) return;
+    if (done || asking) return;
     if (Date.now() - started > LIMIT) {
       done = true;
       note(null);
@@ -283,6 +286,15 @@ import Base from "../../layouts/Base.astro";
     // A hidden tab does not ask; it asks again the moment it is shown.
     if (document.hidden) return;
 
+    asking = true;
+    try {
+      await check();
+    } finally {
+      asking = false;
+    }
+  }
+
+  async function check() {
     let res: Response;
     try {
       res = await fetch(`${API}/v1/checkout/${encodeURIComponent(ref)}`, {
