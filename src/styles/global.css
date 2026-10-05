@@ -40,12 +40,6 @@
   --color-primary: #0e7490;
   --color-primary-hover: #0a5d75;
   --color-on-primary: #ffffff;
-  --color-alert: #b3261e;
-  --color-alert-surface: #fde7e7;
-  --color-confirmed: #116b41;
-  --color-confirmed-surface: #dcf5e6;
-  --color-pending: #745400;
-  --color-pending-surface: #fdf0cf;
 
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-ui: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
@@ -103,12 +97,6 @@
   --color-primary: #7dd3e8;
   --color-primary-hover: #a5e1f0;
   --color-on-primary: #06232b;
-  --color-confirmed: #50b771;
-  --color-confirmed-surface: #161e27;
-  --color-pending: #c1983a;
-  --color-pending-surface: #161e27;
-  --color-alert: #ff706d;
-  --color-alert-surface: #161e27;
   color-scheme: dark;
 }
 
@@ -583,9 +571,7 @@ p {
   color: var(--color-muted);
 }
 
-/* Status pill, light theme rule: tinted surface + dark text + 25% border.
-   In dark islands the tinted surface equals the card surface, which
-   leaves colored text alone, matching the dark theme rule. */
+/* A pill: the "Your system" mark on the download page. */
 .pill {
   display: inline-flex;
   align-items: center;
