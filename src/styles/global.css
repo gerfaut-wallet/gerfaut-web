@@ -1,5 +1,5 @@
 /* Toundra design tokens. The site is light only; .dark-island paints a
-   section at the night end of the ramp (premium, the terminal card). */
+   block at the night end of the ramp (the terminal card). */
 
 @import "tailwindcss";
 
@@ -46,10 +46,6 @@
   --color-confirmed-surface: #dcf5e6;
   --color-pending: #745400;
   --color-pending-surface: #fdf0cf;
-  --color-premium: #6d28d9;
-  --color-premium-hover: #5b21b6;
-  --color-premium-surface: #f3eefc;
-  --color-on-premium: #ffffff;
 
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-ui: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
@@ -95,8 +91,8 @@
   --ease-out-toundra: cubic-bezier(0.2, 0, 0, 1);
 }
 
-/* A self-contained dark island on the light page: the premium section
-   and the terminal card sit at the night end of the ramp. */
+/* A self-contained dark island on the light page: the terminal card
+   sits at the night end of the ramp. */
 .dark-island {
   --color-background: #0b0f14;
   --color-surface: #161e27;
@@ -113,10 +109,6 @@
   --color-pending-surface: #161e27;
   --color-alert: #ff706d;
   --color-alert-surface: #161e27;
-  --color-premium: #c4b5fd;
-  --color-premium-hover: #ddd6fe;
-  --color-premium-surface: #1f2933;
-  --color-on-premium: #0b0f14;
   color-scheme: dark;
 }
 
@@ -328,40 +320,6 @@ p {
   padding: 0 28px;
 }
 
-/* The Premium action: Bruyère instead of Glacier, so that what leads to
-   the paid service reads as such. Light page: #6D28D9 with white text
-   (7.5:1); dark island: #C4B5FD with Night text (13:1). Hover darkens
-   on the light page and lightens in the island, like the primary. */
-.btn-premium {
-  background: var(--color-premium);
-  color: var(--color-on-premium);
-}
-.btn-premium:hover {
-  background: var(--color-premium-hover);
-}
-
-/* The launch offer: one violet-framed line, the percentage in bold. */
-.offer-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  border: 1px solid var(--color-premium);
-  border-radius: var(--radius-md);
-  background: var(--color-premium-surface);
-  color: var(--color-premium);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  line-height: 1.4;
-  text-align: left;
-}
-.offer-badge > svg {
-  flex-shrink: 0;
-}
-.offer-badge strong {
-  font-weight: 700;
-}
-
 /* The wordmark next to the mark: Bricolage ExtraBold, the lockup's
    tracking, 16px on phones and 18px above. */
 .wordmark {
@@ -495,6 +453,13 @@ p {
   border-radius: var(--radius-lg);
 }
 
+/* The platform card that matches the visitor's system: a Glacier
+   border drawn twice as thick. */
+.card-current {
+  border-color: var(--color-primary);
+  box-shadow: inset 0 0 0 1px var(--color-primary);
+}
+
 /* A screenshot of the app, framed like a card: radius 12px, hairline
    border, no shadow. The image fills the frame edge to edge. */
 .shot {
@@ -618,16 +583,6 @@ p {
   color: var(--color-muted);
 }
 
-/* A price replaced by the launch offer: the standard figure struck
-   through in the muted colour, the real one in full. */
-.price-old {
-  font-size: 1.125rem;
-  font-weight: 400;
-  color: var(--color-muted);
-  text-decoration: line-through;
-  text-decoration-thickness: 1px;
-}
-
 /* Status pill, light theme rule: tinted surface + dark text + 25% border.
    In dark islands the tinted surface equals the card surface, which
    leaves colored text alone, matching the dark theme rule. */
@@ -643,11 +598,6 @@ p {
   letter-spacing: 0.04em;
   line-height: 1.4;
   white-space: nowrap;
-}
-.pill-pending {
-  background: var(--color-pending-surface);
-  color: var(--color-pending);
-  border: 1px solid color-mix(in srgb, var(--color-pending) 25%, transparent);
 }
 .pill-neutral {
   background: var(--color-sunken);
@@ -711,223 +661,5 @@ p {
   font-variant-numeric: tabular-nums;
   overflow-x: auto;
   white-space: pre;
-}
-}
-
-/* --- forms and notes (premium pages) --- */
-
-@layer components {
-/* A button that waits, or is not allowed yet, keeps its place and its
-   colour and stops answering the pointer. */
-.btn:disabled,
-.btn[aria-disabled="true"] {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
-.btn:disabled:active,
-.btn[aria-disabled="true"]:active {
-  transform: none;
-}
-
-/* Premium marker: gem + PREMIUM in Bruyère. Only ever a small mark,
-   never a background wash. */
-.pill-premium {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  background: var(--color-premium-surface);
-  color: var(--color-premium);
-  border: 1px solid color-mix(in srgb, var(--color-premium) 25%, transparent);
-  font-family: var(--font-ui);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  line-height: 1.4;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-/* Warning note: its own panel, tinted surface, hairline in the text
-   colour at 25%, icon on the first line of text. Red only when funds
-   or privacy are at stake, amber for what is good to know, neutral for
-   plain context. */
-.note {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid;
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-.note > svg {
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-.note a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.note-alert {
-  background: var(--color-alert-surface);
-  color: var(--color-alert);
-  border-color: color-mix(in srgb, var(--color-alert) 25%, transparent);
-}
-.note-pending {
-  background: var(--color-pending-surface);
-  color: var(--color-pending);
-  border-color: color-mix(in srgb, var(--color-pending) 25%, transparent);
-}
-.note-neutral {
-  background: var(--color-sunken);
-  color: var(--color-muted);
-  border-color: var(--color-border);
-}
-
-/* Text field: sunken, radius 4px, 44px tall, 16px so phones do not zoom.
-   Focus is the 1px border turning Glacier with a 3px halo at 15%. */
-.field {
-  display: block;
-  width: 100%;
-  height: 44px;
-  padding: 0 12px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  background: var(--color-sunken);
-  color: var(--color-text);
-  font-size: 1rem;
-  line-height: 1.5;
-  transition:
-    border-color 150ms var(--ease-out-toundra),
-    box-shadow 150ms var(--ease-out-toundra);
-}
-.field::placeholder {
-  color: var(--color-muted);
-  opacity: 1;
-}
-.field:focus-visible {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent);
-}
-.field[aria-invalid="true"] {
-  border-color: var(--color-muted);
-}
-
-/* Plan option: a card that is also a radio. The input stays real and
-   invisible; the card draws the selection and carries the focus ring. */
-.plan {
-  position: relative;
-  display: flex;
-  cursor: pointer;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  transition: border-color 150ms var(--ease-out-toundra);
-}
-.plan:hover {
-  border-color: var(--color-muted);
-}
-.plan:has(:checked) {
-  border-color: var(--color-primary);
-  box-shadow: inset 0 0 0 1px var(--color-primary);
-}
-.plan:has(:focus-visible) {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-.plan:has(:disabled) {
-  cursor: default;
-  opacity: 0.6;
-}
-.plan-dot {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  border-radius: 9999px;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-on-primary);
-  transition:
-    background-color 150ms var(--ease-out-toundra),
-    border-color 150ms var(--ease-out-toundra);
-}
-.plan-dot > svg {
-  opacity: 0;
-}
-.plan:has(:checked) .plan-dot {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-}
-.plan:has(:checked) .plan-dot > svg {
-  opacity: 1;
-}
-
-/* Choice group: 44px rows, the current one in Glacier, the others sunken. */
-.choice {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0 12px;
-  border-radius: var(--radius-md);
-  background: var(--color-sunken);
-  color: var(--color-text);
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    background-color 150ms var(--ease-out-toundra),
-    color 150ms var(--ease-out-toundra);
-}
-.choice:hover {
-  background: color-mix(in srgb, var(--color-sunken) 80%, var(--color-border));
-}
-.choice:has(:checked),
-.choice:has(:checked):hover {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-}
-.choice:has(:focus-visible) {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-/* A plan card of the Premium checkout: the chosen one in Bruyère. */
-.plan-premium:has(:checked) {
-  border-color: var(--color-premium);
-  box-shadow: inset 0 0 0 1px var(--color-premium);
-}
-.plan-premium:has(:checked) .plan-dot {
-  background: var(--color-premium);
-  border-color: var(--color-premium);
-  color: var(--color-on-premium);
-}
-.plan-premium:has(:focus-visible) {
-  outline-color: var(--color-premium);
-}
-
-/* Checkbox in the action colour, big enough to hit. */
-.checkbox {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  margin: 0;
-  accent-color: var(--color-primary);
-  cursor: pointer;
-}
-
-/* The platform card that matches the visitor's system: a Glacier
-   border, the same drawing as a selected plan. */
-.card-current {
-  border-color: var(--color-primary);
-  box-shadow: inset 0 0 0 1px var(--color-primary);
 }
 }
