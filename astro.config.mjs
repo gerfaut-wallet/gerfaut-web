@@ -14,10 +14,7 @@ export default defineConfig({
   // JSX whitespace rules, the default since Astro 7, would glue their
   // words together; this keeps the space HTML would show.
   compressHTML: true,
-  integrations: [
-    // The return page after a payment means nothing without its reference.
-    sitemap({ filter: (page) => !page.includes("/premium/paid") }),
-  ],
+  integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()],
     build: {

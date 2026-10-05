@@ -9,7 +9,6 @@ import Mark from "./Mark.astro";
 // The address as the links write it: no index, no .html, no final slash.
 const path = Astro.url.pathname.replace(/(\/index)?(\.html)?\/?$/, "") || "/";
 const links = [
-  { href: "/premium", label: "Premium", icon: "gem" },
   { href: "https://gerfaut-wallet.com/docs", label: "Docs", icon: "book-open" },
   { href: "https://github.com/gerfaut-wallet", label: "GitHub", icon: "github" },
 ] as const;
