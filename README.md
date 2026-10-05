@@ -8,7 +8,6 @@ Website of [Gerfaut](https://github.com/gerfaut-wallet), a Bitcoin watch-only wa
 
 - Product website and landing pages
 - Release downloads and how to verify them
-- Premium: the checkout and its Terms of Sale
 
 The user documentation lives in [`gerfaut-docs`](https://github.com/gerfaut-wallet/gerfaut-docs), which Mintlify serves at [gerfaut-wallet.com/docs](https://gerfaut-wallet.com/docs).
 
