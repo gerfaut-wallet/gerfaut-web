@@ -2,7 +2,11 @@
 
 Website of [Gerfaut](https://github.com/gerfaut-wallet), a Bitcoin watch-only wallet.
 
-![Status: pre-alpha](https://img.shields.io/badge/status-pre--alpha-orange) ![License: AGPL-3.0-only](https://img.shields.io/badge/license-AGPL--3.0--only-blue)
+![Status: public beta](https://img.shields.io/badge/status-public%20beta-yellow) ![License: AGPL-3.0-only](https://img.shields.io/badge/license-AGPL--3.0--only-blue)
+
+## Status: public beta
+
+Gerfaut is in public beta, and a banner at the top of every page says so. Report a problem with the site in the [issues](https://github.com/gerfaut-wallet/gerfaut-web/issues) here, and a problem with an app in that app's repository ([desktop](https://github.com/gerfaut-wallet/gerfaut-desktop/issues), [Android](https://github.com/gerfaut-wallet/gerfaut-mobile/issues)).
 
 ## Scope
 

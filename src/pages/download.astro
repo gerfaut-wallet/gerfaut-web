@@ -61,7 +61,32 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         </p>
       </div>
 
-      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:gap-5">
+      {/* What the beta means for someone about to download, said once
+          above the files. Gone with the first stable release. */}
+      <div
+        class="beta-note mx-auto mt-10 flex max-w-3xl items-start gap-3 px-4 py-3 text-sm"
+        data-beta-note
+      >
+        <Icon name="info" size={16} class="mt-0.5 shrink-0" />
+        <p>
+          <span class="font-medium">Public beta.</span> Gerfaut never holds your
+          private keys, so it cannot move your bitcoin. It is new and has had
+          little testing: check addresses and amounts on your signing device
+          before you rely on them. If something looks wrong, open an issue on
+          GitHub for the
+          <a
+            href="https://github.com/gerfaut-wallet/gerfaut-desktop/issues"
+            class="beta-link">desktop app</a
+          >
+          or the
+          <a
+            href="https://github.com/gerfaut-wallet/gerfaut-mobile/issues"
+            class="beta-link">Android app</a
+          >.
+        </p>
+      </div>
+
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:gap-5">
         {
           platforms.map((platform) => (
             <div

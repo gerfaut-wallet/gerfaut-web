@@ -40,6 +40,9 @@
   --color-primary: #0e7490;
   --color-primary-hover: #0a5d75;
   --color-on-primary: #ffffff;
+  /* Amber: what is worth reading, with nothing at risk (the beta). */
+  --color-pending: #745400;
+  --color-pending-surface: #fdf0cf;
 
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-ui: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
@@ -589,6 +592,49 @@ p {
   background: var(--color-sunken);
   color: var(--color-muted);
   border: 1px solid var(--color-border);
+}
+
+/* The public beta, while the version starts with 0: the banner over
+   every page, the pill next to the wordmark and the note above the
+   download cards. Amber, the tone of what is worth reading, never the
+   red of a risk: a tinted surface, the amber text, and a border of that
+   text at 25%. */
+.pill-beta {
+  background: var(--color-pending-surface);
+  color: var(--color-pending);
+  border: 1px solid color-mix(in srgb, var(--color-pending) 25%, transparent);
+}
+.beta-banner {
+  border-bottom: 1px solid color-mix(in srgb, var(--color-pending) 25%, transparent);
+  background: var(--color-pending-surface);
+  color: var(--color-pending);
+}
+.beta-note {
+  border: 1px solid color-mix(in srgb, var(--color-pending) 25%, transparent);
+  border-radius: var(--radius-md);
+  background: var(--color-pending-surface);
+  color: var(--color-pending);
+}
+/* A link in amber text: underlined in the amber of the border, solid
+   on hover. In the banner it is the one target of the line, 44px tall,
+   which sets the height of the banner. */
+.beta-link {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-pending) 45%, transparent);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 150ms var(--ease-out-toundra);
+}
+.beta-link:hover {
+  text-decoration-color: currentColor;
+}
+.beta-banner .beta-link {
+  display: inline-flex;
+  min-height: 44px;
+  flex-shrink: 0;
+  align-items: center;
+  white-space: nowrap;
 }
 
 /* A code block with its copy button in the top right corner. The
