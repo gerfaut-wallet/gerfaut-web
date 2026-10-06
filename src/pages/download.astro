@@ -208,6 +208,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         />
         <h3 class="mt-6 text-sm font-medium">Author's minisign public key</h3>
         <CodeBlock text={minisignKey} label="the minisign public key" />
+        <p id="copy-said" class="sr-only" role="status"></p>
         <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border pt-5">
           <a
             href="https://gerfaut-wallet.com/docs/getting-started/verify-your-download"
@@ -464,15 +465,35 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
   load();
 
   // The copy buttons of the verify section: the clipboard when the page
-  // is allowed to write it, a short check as the only feedback.
+  // is allowed to write it, a short check on the button, and the same
+  // news for a screen reader. Without clipboard access the text is
+  // selected instead, so that a manual copy is one keystroke.
+  const copySaid = document.getElementById("copy-said");
+  function say(text: string) {
+    if (!copySaid) return;
+    // Emptied first, so that a second copy of the same block is read out.
+    copySaid.textContent = "";
+    setTimeout(() => (copySaid.textContent = text), 50);
+  }
   for (const button of document.querySelectorAll<HTMLButtonElement>("[data-copy]")) {
     button.addEventListener("click", async () => {
+      const what = button.getAttribute("aria-label")?.replace(/^Copy: /, "") ?? "";
       try {
         await navigator.clipboard.writeText(button.dataset.copy ?? "");
       } catch {
+        const code = button.parentElement?.querySelector("code");
+        if (code) {
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          const selection = window.getSelection();
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+        }
+        say(`No clipboard access: ${what} is selected instead, ready to copy.`);
         return;
       }
       button.setAttribute("data-done", "");
+      say(`Copied: ${what}.`);
       setTimeout(() => button.removeAttribute("data-done"), 1500);
     });
   }

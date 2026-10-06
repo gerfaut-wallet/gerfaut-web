@@ -1,9 +1,14 @@
 # Builds the site and publishes it to the Cloudflare Pages project that
 # serves gerfaut-wallet.com.
 #
-# Run by hand for now: the site goes live the day the first release does,
-# not the day this file lands. Switch the trigger to `push` on `main`
-# once that day has passed.
+# Run by hand, and it stays that way: the token below can deploy and
+# delete every Pages project in the account, so it never sits in a job
+# that runs on each push.
+#
+# wrangler is a dev dependency pinned in package-lock.json: `npm ci`
+# installs it with the rest, checked against the lockfile, before the
+# token is in the environment. The last step runs that copy instead of
+# downloading one when it starts.
 #
 # Needs two repository secrets:
 #   CLOUDFLARE_API_TOKEN   scoped to Cloudflare Pages: Edit
@@ -21,6 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -30,8 +37,8 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3.15.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=gerfaut-web --branch=main
+      - name: Publish to Cloudflare Pages
+        run: ./node_modules/.bin/wrangler pages deploy dist --project-name=gerfaut-web --branch=main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

@@ -4,9 +4,7 @@ import Mark from "./Mark.astro";
 const links = [
   { href: "https://github.com/gerfaut-wallet", label: "GitHub" },
   { href: "/download", label: "Download" },
-  { href: "/premium", label: "Premium" },
   { href: "https://gerfaut-wallet.com/docs", label: "Docs" },
-  { href: "/terms", label: "Terms" },
   { href: "mailto:info@pandul.fr", label: "info@pandul.fr" },
 ];
 const linkClass =
@@ -17,18 +15,33 @@ const linkClass =
   <div
     class="site-container flex flex-col gap-4 py-8 md:flex-row md:items-center md:justify-between md:py-10"
   >
-    <p class="flex items-center gap-3 text-sm text-muted">
-      <a href="/" class="text-primary" aria-label="Gerfaut home">
-        <Mark class="h-5 w-auto" />
-      </a>
-      <span>
-        &copy; {new Date().getFullYear()} Lo&iuml;c Morel &middot;
+    <div>
+      <p class="flex items-center gap-3 text-sm text-muted">
+        {/* The padding widens the target to 44 px and the negative margin
+            takes it back: the mark stays where it was. */}
         <a
-          href="https://www.gnu.org/licenses/agpl-3.0.html"
-          class="transition-colors duration-150 hover:text-text">AGPL-3.0</a
+          href="/"
+          class="mark-link -mx-2.5 inline-flex min-h-11 items-center px-2.5 text-primary"
+          aria-label="Gerfaut home"
         >
-      </span>
-    </p>
+          <Mark class="h-5 w-auto" />
+        </a>
+        <span>
+          &copy; {new Date().getFullYear()} Lo&iuml;c Morel &middot;
+          <a
+            href="https://www.gnu.org/licenses/agpl-3.0.html"
+            class="inline-flex min-h-11 items-center transition-colors duration-150 hover:text-text"
+            >AGPL-3.0</a
+          >
+        </span>
+      </p>
+      {/* French law asks every site to name its host, with its address and
+          phone number. */}
+      <p class="text-xs text-muted">
+        Hosted by Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107,
+        USA, +1 650 319 8930
+      </p>
+    </div>
     <nav aria-label="Footer">
       <ul class="flex flex-wrap gap-x-5 gap-y-0 text-sm">
         {

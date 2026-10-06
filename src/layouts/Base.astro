@@ -11,9 +11,9 @@ interface Props {
 }
 
 const { title, description, noindex = false } = Astro.props;
-// The address as the links write it: no .html, no final slash.
+// The address as the links write it: no index, no .html, no final slash.
 const canonical = new URL(
-  Astro.url.pathname.replace(/(\.html|\/)$/, "") || "/",
+  Astro.url.pathname.replace(/(\/index)?(\.html)?\/?$/, "") || "/",
   Astro.site,
 );
 const ogImage = new URL("/og.png", Astro.site);
@@ -71,7 +71,7 @@ const ogImage = new URL("/og.png", Astro.site);
   <body>
     <a
       href="#main"
-      class="sr-only rounded-md bg-primary px-4 py-2 text-sm font-medium text-on-primary focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50"
+      class="sr-only rounded-md bg-primary px-4 py-2 text-sm font-medium text-on-primary focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2"
       >Skip to content</a
     >
     <Header />

@@ -3,7 +3,6 @@ import { Image } from "astro:assets";
 import Feature from "../components/Feature.astro";
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
-import { offer } from "../lib/offer";
 import androidWallet from "../assets/android-wallet.webp";
 import androidWallets from "../assets/android-wallets.webp";
 import backup from "../assets/backup.webp";
@@ -38,31 +37,6 @@ const desktopSizes =
 const desktopWidths = [640, 960, 1280, 1600, 2300];
 const phoneWidths = [300, 400, 600, 800];
 const phoneSizes = "(min-width: 1024px) 300px, 45vw";
-
-const premium = [
-  {
-    icon: "shield-alert",
-    title: "Coins move, you know",
-    body: "Even with Gerfaut closed on every device: one alert when the transaction enters the mempool, another when it confirms.",
-  },
-  {
-    icon: "timer",
-    title: "Timelock warnings",
-    body: "30, 7 and 1 day before a recovery path opens, and again the day it does.",
-  },
-  {
-    icon: "bell",
-    title: "Your channels",
-    body: "ntfy, Telegram, e-mail, or a webhook signed with HMAC-SHA256.",
-  },
-] as const;
-
-const premiumFacts = [
-  "From 3 € a month",
-  "Paid in bitcoin",
-  "No account",
-  "Up to 21 wallets",
-] as const;
 
 const sourceFacts = [
   "AGPL-3.0, the apps and the core alike",
@@ -233,7 +207,7 @@ const sourceFacts = [
     facts={[
       "electrs or Fulcrum over TLS or plain TCP, Esplora over HTTPS",
       "Test the connection before you save it",
-      "Live notifications within seconds over Electrum, within a minute over Esplora",
+      "Live notifications within seconds over Electrum. Over Esplora, Gerfaut checks a few addresses a minute, in turn, so a payment can take longer to show",
       "Mainnet, signet, testnet4 and regtest, each with its own backend",
     ]}
     reverse
@@ -328,71 +302,7 @@ const sourceFacts = [
     </figure>
   </Feature>
 
-  <section
-    class="dark-island section bg-background text-text"
-    aria-labelledby="premium-heading"
-  >
-    <div class="site-container">
-      <div class="mx-auto max-w-2xl text-center">
-        <span class="pill-premium">
-          <Icon name="gem" size={12} />
-          Premium
-        </span>
-        <h2 id="premium-heading" class="section-title mt-5">
-          The apps watch. Premium wakes you up.
-        </h2>
-        <p class="mt-4 text-lg text-muted">
-          A server that follows your wallets around the clock and tells you
-          when coins move.
-        </p>
-      </div>
-      <ul class="mt-12 grid list-none gap-4 p-0 md:grid-cols-3 lg:gap-5">
-        {
-          premium.map((item) => (
-            <li class="card p-5 md:p-6">
-              <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken text-primary">
-                <Icon name={item.icon} size={18} />
-              </span>
-              <h3 class="mt-4 font-display text-[1.0625rem] font-semibold">
-                {item.title}
-              </h3>
-              <p class="mt-1.5 text-sm text-muted">{item.body}</p>
-            </li>
-          ))
-        }
-      </ul>
-      <ul class="check-line mt-8 justify-center">
-        {
-          premiumFacts.map((fact) => (
-            <li>
-              <Icon name="check" size={16} />
-              {fact}
-            </li>
-          ))
-        }
-      </ul>
-      {
-        offer.active && (
-          <p class="mt-8 flex justify-center">
-            <span class="offer-badge">
-              <Icon name="gem" size={16} />
-              <span>
-                Launch offer: <strong>&minus;{offer.percent}&nbsp;%</strong> on the first year, until {offer.until}
-              </span>
-            </span>
-          </p>
-        )
-      }
-      <div class="mt-8 text-center">
-        <a href="/premium" class="btn btn-premium btn-wide">
-          Explore Premium
-          <Icon name="arrow-up-right" size={16} />
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="source-heading">
+  <section class="section border-t border-border" aria-labelledby="source-heading">
     <div
       class="site-container grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
     >
@@ -416,10 +326,7 @@ const sourceFacts = [
             <Icon name="github" size={16} />
             Fork on GitHub
           </a>
-          <a href="/download#verify" class="link-quiet">
-            Verify a download
-            <Icon name="arrow-up-right" size={14} />
-          </a>
+          <a href="/download#verify" class="link-quiet">Verify a download</a>
         </div>
       </div>
       <pre class="dark-island terminal" tabindex="0"><code><span class="prompt">$</span> git clone https://github.com/gerfaut-wallet/gerfaut-desktop
