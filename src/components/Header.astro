@@ -2,9 +2,9 @@
 import Icon from "./Icon.astro";
 import Mark from "./Mark.astro";
 
-/** The header: the mark and the wordmark, Download always in reach,
-    and the other entries inline from 768px or behind a menu button on
-    phones. The panel is plain markup toggled by the script below; with
+/** The header: the mark and the wordmark with the beta pill, Download
+    always in reach, and the other entries inline from 768px or behind
+    a menu button on phones. The panel is plain markup toggled by the script below; with
     no script it stays closed and the entries remain in the footer. */
 // The address as the links write it: no index, no .html, no final slash.
 const path = Astro.url.pathname.replace(/(\/index)?(\.html)?\/?$/, "") || "/";
@@ -16,14 +16,21 @@ const links = [
 
 <header class="sticky top-0 z-30 border-b border-border bg-background">
   <div class="site-container relative flex h-16 items-center justify-between gap-3">
-    <a
-      href="/"
-      class="flex min-h-11 items-center gap-2.5 text-primary transition-colors duration-150 hover:text-primary-hover"
-      aria-label="Gerfaut home"
-    >
-      <Mark class="h-7 w-auto sm:h-8" />
-      <span class="wordmark">Gerfaut</span>
-    </a>
+    <div class="flex min-w-0 items-center gap-2.5">
+      <a
+        href="/"
+        class="flex min-h-11 items-center gap-2.5 text-primary transition-colors duration-150 hover:text-primary-hover"
+        aria-label="Gerfaut home"
+      >
+        <Mark class="h-7 w-auto sm:h-8" />
+        <span class="wordmark">Gerfaut</span>
+      </a>
+      {/* Outside the link, which names itself: the pill is read after
+          it as a word of its own. Under 390px the bar has no room left
+          beside Download and the menu button, and the banner above says
+          it alone. Gone with the first stable release, like the banner. */}
+      <span class="pill pill-beta hidden min-[390px]:inline-flex" data-beta-pill>Beta</span>
+    </div>
     <nav aria-label="Main" class="flex items-center gap-1">
       <a
         href="/download"

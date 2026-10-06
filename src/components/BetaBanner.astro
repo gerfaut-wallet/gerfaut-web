@@ -1,0 +1,22 @@
+---
+import Icon from "./Icon.astro";
+
+/** The public beta, said over every page while the version starts
+    with 0: one line in amber, the tone of what is worth reading, with
+    the way to report a problem. Wide screens get the whole message,
+    phones the first sentence. Remove it, the header pill and the note
+    of the download page with the first stable release. */
+const contact = "https://gerfaut-wallet.com/docs/help/contact#report-a-bug-or-suggest-a-change";
+---
+
+<div class="beta-banner" data-beta-banner>
+  <p class="site-container flex items-center justify-center gap-x-2 text-sm">
+    <Icon name="info" size={16} class="shrink-0" />
+    <span class="lg:hidden">Gerfaut is in public beta.</span>
+    <span class="hidden lg:inline">
+      Gerfaut is in public beta. It cannot move your bitcoin, but it is new:
+      check addresses and amounts on your signing device.
+    </span>
+    <a href={contact} class="beta-link">Report a problem</a>
+  </p>
+</div>
