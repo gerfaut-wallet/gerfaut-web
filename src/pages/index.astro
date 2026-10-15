@@ -40,7 +40,7 @@ const phoneSizes = "(min-width: 1024px) 300px, 45vw";
 
 const sourceFacts = [
   "AGPL-3.0, the apps and the core alike",
-  "Reproducible builds: rebuild any release on Linux and get the same bytes",
+  "Every release built by GitHub Actions from its tag",
   "Every release signed with minisign",
 ] as const;
 ---
@@ -309,7 +309,7 @@ const sourceFacts = [
       <div class="max-w-lg">
         <p class="eyebrow">Open source</p>
         <h2 id="source-heading" class="section-title mt-3">
-          Read the code. Build it yourself.
+          Read the code. Check every file.
         </h2>
         <ul class="fact-list mt-6">
           {
@@ -329,12 +329,12 @@ const sourceFacts = [
           <a href="/download#verify" class="link-quiet">Verify a download</a>
         </div>
       </div>
-      <pre class="dark-island terminal" tabindex="0"><code><span class="prompt">$</span> git clone https://github.com/gerfaut-wallet/gerfaut-desktop
-<span class="prompt">$</span> cd gerfaut-desktop
-<span class="prompt">$</span> reproducible/verify.sh v0.1.0
-<span class="out">rebuilt from the tag in a pinned container</span>
-<span class="out">compared byte for byte with the release page</span>
-<span class="out">==&gt; VERIFIED</span></code></pre>
+      <pre class="dark-island terminal" tabindex="0"><code><span class="prompt">$</span> minisign -Vm SHA256SUMS \
+    -P RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O
+<span class="out">Signature and comment signature verified</span>
+<span class="out">Trusted comment: Gerfaut v0.1.0</span>
+<span class="prompt">$</span> sha256sum --check SHA256SUMS --ignore-missing
+<span class="out">Gerfaut_0.1.0_amd64.AppImage: OK</span></code></pre>
     </div>
   </section>
 
