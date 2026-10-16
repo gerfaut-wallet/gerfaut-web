@@ -26,7 +26,7 @@ const inputs = [
 const inputFacts = [
   "Mainnet, signet, testnet4 and regtest",
   "Several wallets at once, named, iconed, reordered",
-  "Exports from other wallets read as they are",
+  "Sparrow and Coldcard exports read as they are",
 ] as const;
 
 // Every desktop picture is the whole window, 1150 logical pixels wide
@@ -134,7 +134,7 @@ const sourceFacts = [
     lead="The same wallets on Android, carried over from the desktop by scanning an animated QR code."
     facts={[
       "Every wallet on one screen, with its icon and its balance",
-      "Home screen widgets, amounts hidden if you say so",
+      "Home screen widgets, amounts hidden until you ask for them",
       "Live notifications in the background, even after a reboot, through the backend you chose",
       "Light and dark mode",
     ]}
@@ -205,9 +205,9 @@ const sourceFacts = [
     title="Your node. Tor built in."
     lead="Electrum or Esplora, yours or a public one. An .onion backend needs nothing else installed."
     facts={[
-      "electrs or Fulcrum over TLS or plain TCP, Esplora over HTTPS",
-      "Test the connection before you save it",
-      "Live notifications within seconds over Electrum. Over Esplora, Gerfaut checks a few addresses a minute, in turn, so a payment can take longer to show",
+      "electrs or Fulcrum over TLS or plain TCP, Esplora over HTTPS or HTTP",
+      "Self-signed certificates pinned by their fingerprint",
+      "Live notifications within seconds over Electrum, the public default included. Over Esplora, the addresses the server does not push wait their turn, a few a minute, so a payment can take longer to show",
       "Mainnet, signet, testnet4 and regtest, each with its own backend",
     ]}
     reverse
@@ -231,7 +231,7 @@ const sourceFacts = [
     facts={[
       "A PIN or a password to open the app, biometrics on Android",
       "Stealth mode on Android: a real calculator hides the app, type your PIN and press equals",
-      "Locked, Gerfaut shows no wallet, allows no screenshot and stays blank in the recent apps",
+      "Locked, Gerfaut shows no wallet. On Android, a lock also blocks screenshots and blanks Gerfaut in the recent apps",
       "Wrong guesses slow down: three tries, then a growing delay",
     ]}
   >
@@ -258,10 +258,10 @@ const sourceFacts = [
   <Feature
     id="feature-policy"
     title="Miniscript, read in plain words."
-    lead="Every spending path of a descriptor, each timelock counted down to the block it opens."
+    lead="Every spending path of a descriptor, each timelock counted down to the block or the date it opens."
     facts={[
       "Multisig m‑of‑n, sorted or not, and BSMS imports",
-      "Recovery paths and inheritance setups, with the wait left on each coin",
+      "Recovery paths and inheritance setups, with the coins unlocked and the wait for the next one",
       "Every signing key with its fingerprint and derivation path",
       "The raw descriptor, one click away",
     ]}
