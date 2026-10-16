@@ -3,24 +3,22 @@ import CodeBlock from "../components/CodeBlock.astro";
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
 
-// Listed in this order whenever the list is written out by hand: Linux,
-// Windows, macOS, Android. The visitor's own system is only marked.
+// Listed in this order whenever the list is written out by hand: Android,
+// Linux, macOS, Windows. The visitor's own system is only marked.
 const platforms = [
+  {
+    slot: "android",
+    name: "Android",
+    icon: "smartphone",
+    formats: "one .apk per processor",
+    repo: "gerfaut-mobile",
+  },
   {
     slot: "linux",
     name: "Linux",
     icon: "monitor",
     formats: ".AppImage, .deb and .rpm for x86_64",
     repo: "gerfaut-desktop",
-  },
-  {
-    slot: "windows",
-    name: "Windows",
-    icon: "monitor",
-    formats: ".exe installer",
-    repo: "gerfaut-desktop",
-    firstLaunch:
-      'The installer has no code-signing certificate, so SmartScreen may stop it the first time. Click "More info", then "Run anyway".',
   },
   {
     slot: "macos",
@@ -32,11 +30,13 @@ const platforms = [
       'Apple has not notarized the app, so macOS refuses it the first time. Open System Settings, then Privacy & Security, and click "Open Anyway". Since macOS Sequoia, right-click and Open no longer gets past it.',
   },
   {
-    slot: "android",
-    name: "Android",
-    icon: "smartphone",
-    formats: "one .apk per processor",
-    repo: "gerfaut-mobile",
+    slot: "windows",
+    name: "Windows",
+    icon: "monitor",
+    formats: ".exe installer",
+    repo: "gerfaut-desktop",
+    firstLaunch:
+      'The installer has no code-signing certificate, so SmartScreen may stop it the first time. Click "More info", then "Run anyway".',
   },
 ] as const;
 
@@ -45,7 +45,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
 
 <Base
   title="Download Gerfaut · Bitcoin watch-only wallet"
-  description="Download Gerfaut for Linux, Windows, macOS and Android. Free and open source, with checksums signed by the author's minisign key."
+  description="Download Gerfaut for Android, Linux, macOS and Windows. Free and open source, with checksums signed by the author's minisign key."
 >
   <section class="pt-16 pb-12 md:pt-24">
     <div class="site-container">
@@ -75,13 +75,13 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
           before you rely on them. If something looks wrong, open an issue on
           GitHub for the
           <a
-            href="https://github.com/gerfaut-wallet/gerfaut-desktop/issues"
-            class="beta-link">desktop app</a
+            href="https://github.com/gerfaut-wallet/gerfaut-mobile/issues"
+            class="beta-link">Android app</a
           >
           or the
           <a
-            href="https://github.com/gerfaut-wallet/gerfaut-mobile/issues"
-            class="beta-link">Android app</a
+            href="https://github.com/gerfaut-wallet/gerfaut-desktop/issues"
+            class="beta-link">desktop app</a
           >.
         </p>
       </div>
@@ -210,13 +210,13 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
           <span class="font-data">SHA256SUMS</span> file and its signature sit
           next to the builds on the release page,
           <a
-            href="https://github.com/gerfaut-wallet/gerfaut-desktop/releases/latest"
-            class="link">desktop</a
+            href="https://github.com/gerfaut-wallet/gerfaut-mobile/releases/latest"
+            class="link">Android</a
           >
           or
           <a
-            href="https://github.com/gerfaut-wallet/gerfaut-mobile/releases/latest"
-            class="link">Android</a
+            href="https://github.com/gerfaut-wallet/gerfaut-desktop/releases/latest"
+            class="link">desktop</a
           >, and go in the folder of the file you are checking.
         </p>
         <h3 class="mt-6 text-sm font-medium">
@@ -243,7 +243,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
             <Icon name="arrow-up-right" size={16} />
           </a>
           <p class="text-sm text-muted">
-            Linux, Windows, macOS and Android, in the documentation.
+            Android, Linux, macOS and Windows, in the documentation.
           </p>
         </div>
       </div>
@@ -493,10 +493,10 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       latest("gerfaut-desktop"),
       latest("gerfaut-mobile"),
     ]);
-    render("linux", desktop);
-    render("windows", desktop);
-    render("macos", desktop);
     render("android", mobile);
+    render("linux", desktop);
+    render("macos", desktop);
+    render("windows", desktop);
   }
 
   // The card of the visitor's system stands out: a Glacier border and a
