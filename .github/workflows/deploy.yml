@@ -5,10 +5,11 @@
 # delete every Pages project in the account, so it never sits in a job
 # that runs on each push.
 #
-# wrangler is a dev dependency pinned in package-lock.json: `npm ci`
-# installs it with the rest, checked against the lockfile, before the
-# token is in the environment. The last step runs that copy instead of
-# downloading one when it starts.
+# Two jobs. The build runs the site's dependencies (astro, vite, sharp)
+# without the token. The deploy job never runs them: it installs the
+# lockfile without package scripts, takes the built site from the first
+# job, and runs only wrangler, pinned in package-lock.json, with the
+# token.
 #
 # Needs two repository secrets:
 #   CLOUDFLARE_API_TOKEN   scoped to Cloudflare Pages: Edit
@@ -22,7 +23,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -34,8 +35,34 @@ jobs:
           node-version: 24
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run build
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: site
+          path: dist
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+
+      - run: npm ci --ignore-scripts
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: site
+          path: dist
 
       - name: Publish to Cloudflare Pages
         run: ./node_modules/.bin/wrangler pages deploy dist --project-name=gerfaut-web --branch=main

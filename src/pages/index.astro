@@ -26,7 +26,7 @@ const inputs = [
 const inputFacts = [
   "Mainnet, signet, testnet4 and regtest",
   "Several wallets at once, named, iconed, reordered",
-  "Exports from other wallets read as they are",
+  "Sparrow and Coldcard exports read as they are",
 ] as const;
 
 // Every desktop picture is the whole window, 1150 logical pixels wide
@@ -40,8 +40,8 @@ const phoneSizes = "(min-width: 1024px) 300px, 45vw";
 
 const sourceFacts = [
   "AGPL-3.0, the apps and the core alike",
-  "Reproducible builds: rebuild any release on Linux and get the same bytes",
-  "Every release signed with minisign",
+  "Every release built by GitHub Actions from its tag",
+  "Every release ships a SHA256SUMS file signed with minisign",
 ] as const;
 ---
 
@@ -134,7 +134,7 @@ const sourceFacts = [
     lead="The same wallets on Android, carried over from the desktop by scanning an animated QR code."
     facts={[
       "Every wallet on one screen, with its icon and its balance",
-      "Home screen widgets, amounts hidden if you say so",
+      "Home screen widgets, amounts hidden until you ask for them",
       "Live notifications in the background, even after a reboot, through the backend you chose",
       "Light and dark mode",
     ]}
@@ -205,9 +205,9 @@ const sourceFacts = [
     title="Your node. Tor built in."
     lead="Electrum or Esplora, yours or a public one. An .onion backend needs nothing else installed."
     facts={[
-      "electrs or Fulcrum over TLS or plain TCP, Esplora over HTTPS",
-      "Test the connection before you save it",
-      "Live notifications within seconds over Electrum. Over Esplora, Gerfaut checks a few addresses a minute, in turn, so a payment can take longer to show",
+      "electrs or Fulcrum over TLS or plain TCP, Esplora over HTTPS or HTTP",
+      "Self-signed certificates pinned by their fingerprint",
+      "Live notifications within seconds over Electrum, the public default included. Over Esplora, the addresses the server does not push wait their turn, a few a minute, so a payment can take longer to show",
       "Mainnet, signet, testnet4 and regtest, each with its own backend",
     ]}
     reverse
@@ -231,7 +231,7 @@ const sourceFacts = [
     facts={[
       "A PIN or a password to open the app, biometrics on Android",
       "Stealth mode on Android: a real calculator hides the app, type your PIN and press equals",
-      "Locked, Gerfaut shows no wallet, allows no screenshot and stays blank in the recent apps",
+      "Locked, Gerfaut shows no wallet. On Android, a lock also blocks screenshots and blanks Gerfaut in the recent apps",
       "Wrong guesses slow down: three tries, then a growing delay",
     ]}
   >
@@ -258,10 +258,10 @@ const sourceFacts = [
   <Feature
     id="feature-policy"
     title="Miniscript, read in plain words."
-    lead="Every spending path of a descriptor, each timelock counted down to the block it opens."
+    lead="Every spending path of a descriptor, each timelock counted down to the block or the date it opens."
     facts={[
       "Multisig m‑of‑n, sorted or not, and BSMS imports",
-      "Recovery paths and inheritance setups, with the wait left on each coin",
+      "Recovery paths and inheritance setups, with the coins unlocked and the wait for the next one",
       "Every signing key with its fingerprint and derivation path",
       "The raw descriptor, one click away",
     ]}
@@ -309,7 +309,7 @@ const sourceFacts = [
       <div class="max-w-lg">
         <p class="eyebrow">Open source</p>
         <h2 id="source-heading" class="section-title mt-3">
-          Read the code. Build it yourself.
+          Read the code. Check every file.
         </h2>
         <ul class="fact-list mt-6">
           {
@@ -329,12 +329,12 @@ const sourceFacts = [
           <a href="/download#verify" class="link-quiet">Verify a download</a>
         </div>
       </div>
-      <pre class="dark-island terminal" tabindex="0"><code><span class="prompt">$</span> git clone https://github.com/gerfaut-wallet/gerfaut-desktop
-<span class="prompt">$</span> cd gerfaut-desktop
-<span class="prompt">$</span> reproducible/verify.sh v0.1.0
-<span class="out">rebuilt from the tag in a pinned container</span>
-<span class="out">compared byte for byte with the release page</span>
-<span class="out">==&gt; VERIFIED</span></code></pre>
+      <pre class="dark-island terminal" tabindex="0"><code><span class="prompt">$</span> minisign -Vm SHA256SUMS \
+    -P RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O
+<span class="out">Signature and comment signature verified</span>
+<span class="out">Trusted comment: Gerfaut v0.1.0</span>
+<span class="prompt">$</span> sha256sum --check SHA256SUMS --ignore-missing
+<span class="out">Gerfaut_0.1.0_amd64.AppImage: OK</span></code></pre>
     </div>
   </section>
 
@@ -362,12 +362,12 @@ const sourceFacts = [
   // The download buttons name the visitor's system when it is one the
   // apps run on, and point at its card on the download page. Anything
   // else keeps the generic label.
-  const detected = detectPlatform();
-  if (detected) {
+  detectPlatform().then((detected) => {
+    if (!detected) return;
     for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-os-download]")) {
       link.href = `/download#${detected.slot}`;
       const label = link.querySelector("span");
       if (label) label.textContent = `Download for ${detected.name}`;
     }
-  }
+  });
 </script>
