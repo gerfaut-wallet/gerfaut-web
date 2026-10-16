@@ -511,8 +511,9 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
   const named = window.location.hash.slice(1);
   if (named in matchers) highlight(named);
   else {
-    const detected = detectPlatform();
-    if (detected) highlight(detected.slot);
+    detectPlatform().then((detected) => {
+      if (detected) highlight(detected.slot);
+    });
   }
 
   load();

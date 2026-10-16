@@ -362,12 +362,12 @@ const sourceFacts = [
   // The download buttons name the visitor's system when it is one the
   // apps run on, and point at its card on the download page. Anything
   // else keeps the generic label.
-  const detected = detectPlatform();
-  if (detected) {
+  detectPlatform().then((detected) => {
+    if (!detected) return;
     for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-os-download]")) {
       link.href = `/download#${detected.slot}`;
       const label = link.querySelector("span");
       if (label) label.textContent = `Download for ${detected.name}`;
     }
-  }
+  });
 </script>
