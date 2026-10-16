@@ -10,7 +10,7 @@ const platforms = [
     slot: "linux",
     name: "Linux",
     icon: "monitor",
-    formats: ".AppImage, .deb and .rpm packages",
+    formats: ".AppImage, .deb and .rpm for x86_64",
     repo: "gerfaut-desktop",
   },
   {
@@ -281,9 +281,9 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       repo: "gerfaut-desktop",
       pattern: /\.(appimage|deb|rpm)$/i,
       variants: [
-        { pattern: /\.appimage$/i, note: "Any distribution: make it executable, then run it" },
-        { pattern: /\.deb$/i, note: "Debian, Ubuntu and their derivatives" },
-        { pattern: /\.rpm$/i, note: "Fedora and other RPM-based systems" },
+        { pattern: /\.appimage$/i, note: "Any distribution with glibc 2.35 or newer: make it executable, then run it" },
+        { pattern: /\.deb$/i, note: "Debian 12, Ubuntu 22.04 and newer, and their derivatives" },
+        { pattern: /\.rpm$/i, note: "Fedora" },
       ],
     },
     windows: {

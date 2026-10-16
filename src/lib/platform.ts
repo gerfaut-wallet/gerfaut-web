@@ -16,6 +16,10 @@ export function detectPlatform(): Platform | null {
   // Safari on an iPad says Mac, but no Mac has a touch screen.
   if (/Mac/i.test(platform) && navigator.maxTouchPoints > 1) return null;
   if (/Mac/i.test(platform)) return { slot: "macos", name: "macOS" };
-  if (/Linux/i.test(platform)) return { slot: "linux", name: "Linux" };
+  // The Linux builds are x86_64 only. navigator.platform still names the
+  // processor ("Linux aarch64") where userAgentData says "Linux" alone.
+  if (/Linux/i.test(platform)) {
+    return /aarch64|arm/i.test(navigator.platform) ? null : { slot: "linux", name: "Linux" };
+  }
   return null;
 }
