@@ -401,6 +401,24 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       .map((asset) => ({ asset, note: variants[rank(asset)]?.note }));
   }
 
+  // A link only ever leads to this repository's release files, whatever
+  // the answer says. The address is parsed first, so "..", "%2e%2e" or a
+  // backslash in it cannot step out of the release folder.
+  function releaseFile(repo: string, address: unknown): string | null {
+    if (typeof address !== "string") return null;
+    let url: URL;
+    try {
+      url = new URL(address);
+    } catch {
+      return null;
+    }
+    const folder = `/gerfaut-wallet/${repo}/releases/download/`;
+    if (url.origin !== "https://github.com" || !url.pathname.startsWith(folder)) {
+      return null;
+    }
+    return url.href;
+  }
+
   // Every state but the list ends on a link to GitHub: no release yet,
   // a release without a file for this system, or no answer at all.
   function render(name: string, release: Latest) {
@@ -410,15 +428,19 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       setState(slot, release === "none" ? "empty" : "elsewhere");
       return;
     }
-    // A link only ever leads to this repository's release files, whatever
-    // the answer says.
-    const origin = `https://github.com/gerfaut-wallet/${matchers[name]?.repo}/releases/download/`;
-    const assets = release.assets.filter(
-      (asset) =>
-        matchers[name]?.pattern.test(asset.name) &&
-        typeof asset.browser_download_url === "string" &&
-        asset.browser_download_url.startsWith(origin),
+    const named = release.assets.filter((asset) =>
+      matchers[name]?.pattern.test(asset.name),
     );
+    const assets = named.flatMap((asset) => {
+      const href = releaseFile(matchers[name]?.repo ?? "", asset.browser_download_url);
+      return href ? [{ ...asset, browser_download_url: href }] : [];
+    });
+    // Files GitHub lists but whose address leaves the release folder: the
+    // card sends the visitor to the releases page rather than to them.
+    if (named.length > 0 && assets.length === 0) {
+      setState(slot, "elsewhere");
+      return;
+    }
     if (assets.length === 0) {
       const named = slot.querySelector<HTMLElement>("[data-missing-version]");
       if (named) named.textContent = release.tag_name;
