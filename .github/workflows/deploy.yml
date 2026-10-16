@@ -34,7 +34,9 @@ jobs:
           node-version: 24
           cache: npm
 
-      - run: npm ci
+      # No package scripts: the next step hands the Cloudflare token to a
+      # binary from node_modules, which an install script could replace.
+      - run: npm ci --ignore-scripts
       - run: npm run build
 
       - name: Publish to Cloudflare Pages
