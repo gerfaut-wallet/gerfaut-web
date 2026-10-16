@@ -410,8 +410,14 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       setState(slot, release === "none" ? "empty" : "elsewhere");
       return;
     }
-    const assets = release.assets.filter((asset) =>
-      matchers[name]?.pattern.test(asset.name),
+    // A link only ever leads to this repository's release files, whatever
+    // the answer says.
+    const origin = `https://github.com/gerfaut-wallet/${matchers[name]?.repo}/releases/download/`;
+    const assets = release.assets.filter(
+      (asset) =>
+        matchers[name]?.pattern.test(asset.name) &&
+        typeof asset.browser_download_url === "string" &&
+        asset.browser_download_url.startsWith(origin),
     );
     if (assets.length === 0) {
       const named = slot.querySelector<HTMLElement>("[data-missing-version]");
