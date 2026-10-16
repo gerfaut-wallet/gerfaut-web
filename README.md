@@ -6,7 +6,7 @@ Website of [Gerfaut](https://github.com/gerfaut-wallet), a Bitcoin watch-only wa
 
 ## Status: public beta
 
-Gerfaut is in public beta, and a banner at the top of every page says so. Report a problem with the site in the [issues](https://github.com/gerfaut-wallet/gerfaut-web/issues) here, and a problem with an app in that app's repository ([desktop](https://github.com/gerfaut-wallet/gerfaut-desktop/issues), [Android](https://github.com/gerfaut-wallet/gerfaut-mobile/issues)).
+Gerfaut is in public beta, and a banner at the top of every page says so. Report a problem with the site in the [issues](https://github.com/gerfaut-wallet/gerfaut-web/issues) here, and a problem with an app in that app's repository ([Android](https://github.com/gerfaut-wallet/gerfaut-mobile/issues), [desktop](https://github.com/gerfaut-wallet/gerfaut-desktop/issues)).
 
 ## Scope
 
@@ -35,7 +35,7 @@ The Deploy workflow builds the site and publishes it to Cloudflare Pages. It run
 |---|---|
 | [`gerfaut-core`](https://github.com/gerfaut-wallet/gerfaut-core) | Core Rust library |
 | [`gerfaut-mobile`](https://github.com/gerfaut-wallet/gerfaut-mobile) | Mobile app (Flutter, Android first) |
-| [`gerfaut-desktop`](https://github.com/gerfaut-wallet/gerfaut-desktop) | Desktop app (Tauri v2, for Windows, macOS, and Linux) |
+| [`gerfaut-desktop`](https://github.com/gerfaut-wallet/gerfaut-desktop) | Desktop app (Tauri v2, for Linux, macOS, and Windows) |
 | [`gerfaut-docs`](https://github.com/gerfaut-wallet/gerfaut-docs) | User documentation (Mintlify), served at gerfaut-wallet.com/docs |
 | `gerfaut-web` | Website and downloads, this repository |
 
