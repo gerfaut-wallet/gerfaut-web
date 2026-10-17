@@ -5,4 +5,4 @@
 [[IgnoredVulns]]
 id = "GHSA-wq5f-xc86-pv6w"
 ignoreUntil = 2026-11-17T00:00:00Z
-reason = "sharp 0.35.4 comes with miniflare, the local server of wrangler dev, and nothing in the build or the deployment runs it: wrangler pages deploy decodes no image, and the site's images go through Astro's own sharp, 0.35.5. Fixed by wrangler 4.149.0 or later."
+reason = "sharp 0.35.4 comes with miniflare, which loads it only to serve the local image services of wrangler dev; wrangler pages deploy decodes none, and the site's images go through Astro's own sharp, 0.35.5. Wrangler 4.149.0 brings the fixed sharp: it moves with the batch of updates before the next release, on purpose, since wrangler runs with the deployment token."
