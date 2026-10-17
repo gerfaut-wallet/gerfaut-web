@@ -1,0 +1,8 @@
+# Exceptions to .github/workflows/dependencies.yml. Each one names the
+# advisory, why it does not reach the site or its deployment, and a date
+# after which it stops applying and the check fails again.
+
+[[IgnoredVulns]]
+id = "GHSA-wq5f-xc86-pv6w"
+ignoreUntil = 2026-11-17T00:00:00Z
+reason = "sharp 0.35.4 comes with miniflare, the local server of wrangler dev, and nothing in the build or the deployment runs it: wrangler pages deploy decodes no image, and the site's images go through Astro's own sharp, 0.35.5. Fixed by wrangler 4.149.0 or later."
