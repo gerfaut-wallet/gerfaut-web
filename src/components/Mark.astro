@@ -1,6 +1,10 @@
 ---
 /** The gyrfalcon head, inline so it follows currentColor.
-    Path from the brand kit master gerfaut-mark.svg. */
+    Path from the brand kit master gerfaut-mark.svg. Its viewBox hugs
+    the path (the back of the head at x 0, the beak at x 695 of 697),
+    and a browser clips an inline svg to its box once snapped to device
+    pixels, which shaved the tip of the beak flat. The viewBox here
+    leaves 7 to 8 units on every side, and overflow stays visible. */
 interface Props {
   class?: string;
 }
@@ -8,7 +12,8 @@ const { class: className } = Astro.props;
 ---
 
 <svg
-  viewBox="0 0 697 574"
+  viewBox="-8 -6 711 587"
+  overflow="visible"
   aria-hidden="true"
   class={className}
   fill="currentColor"
