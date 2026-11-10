@@ -205,7 +205,7 @@ const sourceFacts = [
     facts={[
       "electrs or Fulcrum over TLS or plain TCP, Esplora over HTTPS or HTTP",
       "Self-signed certificates pinned by their fingerprint",
-      "Live notifications within seconds over Electrum, the public default included. Over Esplora, the addresses the server does not push wait their turn, a few a minute, so a payment can take longer to show",
+      "Live notifications within seconds over Electrum, the public default included. Over Esplora, addresses the server does not push are checked a few a minute, so a payment can take longer to show",
       "Mainnet, signet, testnet4 and regtest, each with its own backend",
     ]}
     reverse
@@ -321,7 +321,7 @@ const sourceFacts = [
         </ul>
         <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
           <Button href="https://github.com/gerfaut-wallet" icon="github">
-            Fork on GitHub
+            Read the code on GitHub
           </Button>
           <Button href="/download#verify" variant="quiet">Verify a download</Button>
         </div>
@@ -344,9 +344,9 @@ const sourceFacts = [
         <Button href="/download" size="wide" icon="download" data-os-download>
           Download Gerfaut
         </Button>
-        <Button href="/download" variant="quiet">
+        <p class="text-sm text-muted">
           Android &middot; Linux &middot; macOS &middot; Windows
-        </Button>
+        </p>
       </div>
     </div>
   </section>
