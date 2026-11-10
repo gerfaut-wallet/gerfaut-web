@@ -115,8 +115,8 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
                 <div data-state="empty" hidden>
                   <p class="text-sm font-medium">No release yet.</p>
                   <p class="mt-1 text-sm text-muted">
-                    The files appear here with the first one. Until then,
-                    follow the project on
+                    The files will appear here once one is published. Until
+                    then, follow the project on
                     <a href="https://github.com/gerfaut-wallet" class="link">
                       GitHub</a
                     >.
@@ -136,9 +136,9 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
                   </p>
                 </div>
                 <div data-state="elsewhere">
-                  <p class="text-sm font-medium">The latest release did not load.</p>
+                  <p class="text-sm font-medium">Could not load the latest release.</p>
                   <p class="mt-1 text-sm text-muted">
-                    Get the files from its
+                    Get the files from the
                     <a
                       href={`https://github.com/gerfaut-wallet/${platform.repo}/releases/latest`}
                       class="link">release page</a
@@ -165,8 +165,8 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         <a href="https://github.com/gerfaut-wallet" class="link"
           >github.com/gerfaut-wallet</a
         >. The apps check there for a new release at most once a day, through
-        Tor when your backend is an .onion address. Turn the check off in the
-        About settings.
+        Tor when your backend is an .onion address, and tell you when one is
+        out. Turn the check off in the About settings.
       </p>
     </div>
   </section>
@@ -186,8 +186,8 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         />
         <p class="mt-4 text-sm text-muted">
           Two commands prove that the checksum list comes from the author
-          and that your file matches it. Shown here for Linux. Put the
-          <span class="font-data">SHA256SUMS</span> file and its signature,
+          and that your file matches it. Shown here for Linux. Download the
+          <span class="font-data">SHA256SUMS</span> file and its signature
           from the
           <a
             href="https://github.com/gerfaut-wallet/gerfaut-mobile/releases/latest"
@@ -197,7 +197,8 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
           <a
             href="https://github.com/gerfaut-wallet/gerfaut-desktop/releases/latest"
             class="link">desktop</a
-          > release page, in the folder of the file you are checking.
+          > release page, and save them in the folder of the file you are
+          checking.
         </p>
         <h3 class="mt-6 text-sm font-medium">
           1. Check the signature of the checksum file
