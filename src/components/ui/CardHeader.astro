@@ -1,0 +1,39 @@
+---
+import type { ComponentProps } from "astro/types";
+import Icon from "../Icon.astro";
+
+/** The head of a card: an icon on the sunken surface, the title, an
+    optional line under it, and an optional `action` slot pushed to the
+    right (badges, a version). On a phone, when the title would drop
+    under 9rem, the action moves to a line of its own rather than
+    squeezing the title. `size="lg"` is for a card that is a whole
+    section, the title then in h1 instead of h2. */
+interface Props {
+  icon: ComponentProps<typeof Icon>["name"];
+  title: string;
+  description?: string;
+  size?: "md" | "lg";
+  titleId?: string;
+}
+
+const { icon, title, description, size = "md", titleId } = Astro.props;
+---
+
+<div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+  <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sunken text-primary">
+    <Icon name={icon} />
+  </span>
+  <div class="min-w-0 flex-1 basis-36">
+    <h2 id={titleId} class:list={["font-display", size === "lg" ? "text-h1" : "text-h2"]}>
+      {title}
+    </h2>
+    {description && <p class="text-sm text-muted">{description}</p>}
+  </div>
+  {
+    Astro.slots.has("action") && (
+      <div class="ml-auto flex items-center gap-2">
+        <slot name="action" />
+      </div>
+    )
+  }
+</div>

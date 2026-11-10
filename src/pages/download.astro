@@ -2,6 +2,11 @@
 import CodeBlock from "../components/CodeBlock.astro";
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
+import Alert from "../components/ui/Alert.astro";
+import Badge from "../components/ui/Badge.astro";
+import Button from "../components/ui/Button.astro";
+import Card from "../components/ui/Card.astro";
+import CardHeader from "../components/ui/CardHeader.astro";
 
 // Listed in this order whenever the list is written out by hand: Android,
 // Linux, macOS, Windows. The visitor's own system is only marked.
@@ -63,13 +68,8 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
 
       {/* What the beta means for someone about to download, said once
           above the files. Gone with the first stable release. */}
-      <div
-        class="beta-note mx-auto mt-10 flex max-w-3xl items-start gap-3 px-4 py-3 text-sm"
-        data-beta-note
-      >
-        <Icon name="info" size={16} class="mt-0.5 shrink-0" />
-        <p>
-          <span class="font-medium">Public beta.</span> Gerfaut never holds your
+      <Alert title="Public beta." class="mx-auto mt-10 max-w-3xl" data-beta-note>
+          Gerfaut never holds your
           private keys, so it cannot move your bitcoin. It is new and has had
           little testing: check addresses and amounts on your signing device
           before you rely on them. If something looks wrong, open an issue on
@@ -83,38 +83,25 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
             href="https://github.com/gerfaut-wallet/gerfaut-desktop/issues"
             class="beta-link">desktop app</a
           >.
-        </p>
-      </div>
+      </Alert>
 
       <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:gap-5">
         {
           platforms.map((platform) => (
-            <div
+            <Card
               id={platform.slot}
-              class="card flex min-w-0 scroll-mt-24 flex-col p-6"
+              class="flex min-w-0 scroll-mt-24 flex-col p-6"
               data-platform={platform.slot}
             >
-              {/* The pills keep the name and formats on one line each: on
-                  a phone, when the text would drop under 9rem, they
-                  move to a line of their own. */}
-              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sunken text-primary">
-                  <Icon name={platform.icon} />
-                </span>
-                <div class="min-w-0 flex-1 basis-36">
-                  <h2 class="text-h2 font-display">{platform.name}</h2>
-                  <p class="text-sm text-muted">{platform.formats}</p>
-                </div>
-                <div class="ml-auto flex items-center gap-2">
-                  <span class="pill pill-neutral hidden" data-platform-current>
-                    Your system
-                  </span>
+              <CardHeader icon={platform.icon} title={platform.name} description={platform.formats}>
+                <Fragment slot="action">
+                  <Badge class="hidden" data-platform-current>Your system</Badge>
                   <span
                     class="font-data hidden rounded-sm bg-sunken px-2 py-1 text-data text-muted"
                     data-release-version={platform.slot}
                   />
-                </div>
-              </div>
+                </Fragment>
+              </CardHeader>
               <div
                 class="mt-5 border-t border-border pt-4"
                 data-release={platform.slot}
@@ -171,7 +158,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
                   </p>
                 )
               }
-            </div>
+            </Card>
           ))
         }
       </div>
@@ -193,17 +180,13 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     aria-labelledby="verify-heading"
   >
     <div class="site-container">
-      <div class="card mx-auto max-w-3xl p-6 md:p-8">
-        <div class="flex items-center gap-3">
-          <span
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-sunken text-primary"
-          >
-            <Icon name="shield-check" />
-          </span>
-          <h2 id="verify-heading" class="text-h1 font-display">
-            Verify your download
-          </h2>
-        </div>
+      <Card class="mx-auto max-w-3xl p-6 md:p-8">
+        <CardHeader
+          icon="shield-check"
+          title="Verify your download"
+          size="lg"
+          titleId="verify-heading"
+        />
         <p class="mt-4 text-sm text-muted">
           Two commands prove that the checksum list comes from the author
           and that your file matches it. Shown here for Linux: the
@@ -235,20 +218,20 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         <CodeBlock text={minisignKey} label="the minisign public key" />
         <p id="copy-said" class="sr-only" role="status"></p>
         <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-border pt-5">
-          <a
+          <Button
             href="https://gerfaut-wallet.com/docs/getting-started/verify-your-download"
-            class="btn btn-primary"
+            external
           >
             Every system, step by step
-            <Icon name="arrow-up-right" size={16} />
-          </a>
+          </Button>
           <p class="text-sm text-muted">
             Android, Linux, macOS and Windows, in the documentation.
           </p>
         </div>
-      </div>
+      </Card>
     </div>
   </section>
+  <template id="disclosure-icon"><Icon name="chevron-right" size={16} /></template>
 </Base>
 
 <script>
@@ -312,6 +295,10 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       ],
     },
   };
+
+  // The chevron of a disclosure, drawn once in the page: the script
+  // only copies it.
+  const disclosureIcon = document.querySelector<HTMLTemplateElement>("#disclosure-icon");
 
   function setState(slot: Element, state: string) {
     for (const panel of slot.querySelectorAll<HTMLElement>("[data-state]")) {
@@ -471,9 +458,10 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       const details = document.createElement("details");
       details.className = "mt-2";
       const summary = document.createElement("summary");
-      summary.className =
-        "flex min-h-11 cursor-pointer items-center rounded-md px-1 text-sm text-muted transition-colors duration-150 hover:text-text";
-      summary.textContent = `Other architectures (${folded.length})`;
+      summary.className = "disclosure";
+      const chevron = disclosureIcon?.content.firstElementChild?.cloneNode(true);
+      if (chevron) summary.append(chevron);
+      summary.append(`Other architectures (${folded.length})`);
       const inner = document.createElement("ul");
       inner.className = "mt-2 space-y-2";
       for (const { asset, note } of folded) inner.append(row(asset, note));

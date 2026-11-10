@@ -1,6 +1,7 @@
 ---
 import Icon from "./Icon.astro";
 import Mark from "./Mark.astro";
+import Badge from "./ui/Badge.astro";
 
 /** The header: the mark and the wordmark with the beta pill, Download
     always in reach, and the other entries inline from 768px or behind
@@ -29,7 +30,7 @@ const links = [
           it as a word of its own. Under 390px the bar has no room left
           beside Download and the menu button, and the banner above says
           it alone. Gone with the first stable release, like the banner. */}
-      <span class="pill pill-beta hidden min-[390px]:inline-flex" data-beta-pill>Beta</span>
+      <Badge variant="beta" class="hidden min-[390px]:inline-flex" data-beta-pill>Beta</Badge>
     </div>
     <nav aria-label="Main" class="flex items-center gap-1">
       <a

@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import Feature from "../components/Feature.astro";
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
+import Button from "../components/ui/Button.astro";
 import androidWallet from "../assets/android-wallet.webp";
 import androidWallets from "../assets/android-wallets.webp";
 import backup from "../assets/backup.webp";
@@ -62,15 +63,12 @@ const sourceFacts = [
           your desktop and in your pocket.
         </p>
         <div class="rise rise-3 mt-8 flex flex-col items-center gap-3">
-          <a href="/download" class="btn btn-primary btn-wide" data-os-download>
-            <Icon name="download" size={16} />
-            <span>Download Gerfaut</span>
-          </a>
-          <a href="https://github.com/gerfaut-wallet" class="link-quiet">
-            <Icon name="github" size={16} />
+          <Button href="/download" size="wide" icon="download" data-os-download>
+            Download Gerfaut
+          </Button>
+          <Button href="https://github.com/gerfaut-wallet" variant="quiet" icon="github" external>
             Read the source on GitHub
-            <Icon name="arrow-up-right" size={14} />
-          </a>
+          </Button>
         </div>
         <p class="rise rise-4 mt-4 text-sm text-muted">
           Free and open source &middot; Android, Linux, macOS and Windows
@@ -322,11 +320,10 @@ const sourceFacts = [
           }
         </ul>
         <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
-          <a href="https://github.com/gerfaut-wallet" class="btn btn-primary">
-            <Icon name="github" size={16} />
+          <Button href="https://github.com/gerfaut-wallet" icon="github">
             Fork on GitHub
-          </a>
-          <a href="/download#verify" class="link-quiet">Verify a download</a>
+          </Button>
+          <Button href="/download#verify" variant="quiet">Verify a download</Button>
         </div>
       </div>
       <pre class="dark-island terminal" tabindex="0"><code><span class="prompt">$</span> minisign -Vm SHA256SUMS \
@@ -344,13 +341,12 @@ const sourceFacts = [
         Your cold storage deserves a watcher.
       </h2>
       <div class="mt-8 flex flex-col items-center gap-3">
-        <a href="/download" class="btn btn-primary btn-wide" data-os-download>
-          <Icon name="download" size={16} />
-          <span>Download Gerfaut</span>
-        </a>
-        <a href="/download" class="link-quiet">
+        <Button href="/download" size="wide" icon="download" data-os-download>
+          Download Gerfaut
+        </Button>
+        <Button href="/download" variant="quiet">
           Android &middot; Linux &middot; macOS &middot; Windows
-        </a>
+        </Button>
       </div>
     </div>
   </section>
