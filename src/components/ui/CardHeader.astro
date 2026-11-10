@@ -6,8 +6,8 @@ import Icon from "../Icon.astro";
     optional line under it, and an optional `action` slot pushed to the
     right (badges, a version). On a phone, when the title would drop
     under 9rem, the action moves to a line of its own rather than
-    squeezing the title. `size="lg"` is for a card that is a whole
-    section, the title then in h1 instead of h2. */
+    squeezing the title. The title is always an h2; `size="lg"`, for a
+    card that is a whole section, draws it at the h1 size of the scale. */
 interface Props {
   icon: ComponentProps<typeof Icon>["name"];
   title: string;

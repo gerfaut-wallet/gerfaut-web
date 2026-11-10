@@ -69,20 +69,19 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       {/* What the beta means for someone about to download, said once
           above the files. Gone with the first stable release. */}
       <Alert title="Public beta." class="mx-auto mt-10 max-w-3xl" data-beta-note>
-          Gerfaut never holds your
-          private keys, so it cannot move your bitcoin. It is new and has had
-          little testing: check addresses and amounts on your signing device
-          before you rely on them. If something looks wrong, open an issue on
-          GitHub for the
-          <a
-            href="https://github.com/gerfaut-wallet/gerfaut-mobile/issues"
-            class="beta-link">Android app</a
-          >
-          or the
-          <a
-            href="https://github.com/gerfaut-wallet/gerfaut-desktop/issues"
-            class="beta-link">desktop app</a
-          >.
+        Gerfaut never holds your private keys, so it cannot move your bitcoin.
+        It is new and has had little testing: check addresses and amounts on
+        your signing device before you rely on them. If something looks wrong,
+        open an issue on GitHub for the
+        <a
+          href="https://github.com/gerfaut-wallet/gerfaut-mobile/issues"
+          class="beta-link">Android app</a
+        >
+        or the
+        <a
+          href="https://github.com/gerfaut-wallet/gerfaut-desktop/issues"
+          class="beta-link">desktop app</a
+        >.
       </Alert>
 
       <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:gap-5">
@@ -135,14 +134,17 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
                     >.
                   </p>
                 </div>
+                {/* Shown before the script runs and without it, as well as
+                    when GitHub gives no usable answer: it says where the
+                    files are, not that something failed. */}
                 <div data-state="elsewhere">
-                  <p class="text-sm font-medium">Could not load the latest release.</p>
+                  <p class="text-sm font-medium">The files are on GitHub.</p>
                   <p class="mt-1 text-sm text-muted">
-                    Get the files from the
+                    Get them from the
                     <a
                       href={`https://github.com/gerfaut-wallet/${platform.repo}/releases/latest`}
                       class="link">release page</a
-                    > on GitHub.
+                    >.
                   </p>
                 </div>
                 <ul data-state="list" hidden class="space-y-2" />

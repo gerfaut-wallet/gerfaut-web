@@ -5,23 +5,31 @@ import Icon from "../Icon.astro";
 /** Every action of the site, one component for all of them: a link with
     `href`, a button without. Two variants, as the site has only two
     ranks: `primary`, the Glacier button, and `quiet`, the muted link
-    that takes the second rank beside it. The icon is 16px and leads
-    the label; `external` adds the arrow of a link that leaves the site.
-    The label sits in its own span, which a script may rewrite (the
-    download buttons name the visitor's system). A link is never
+    that takes the second rank beside it. A quiet entry is always a
+    link: a button with a label always has a fill. The icon is 16px and
+    leads the label; `external` adds the arrow of a link that leaves the
+    site. The label sits in its own span, which a script may rewrite
+    (the download buttons name the visitor's system). A link is never
     disabled; a button is, at half opacity, with no hover and no press. */
-type Variant = "primary" | "quiet";
-type Size = "md" | "wide";
-
-type Props = Omit<HTMLAttributes<"a"> & HTMLAttributes<"button">, "type"> & {
-  href?: string;
-  variant?: Variant;
-  size?: Size;
+type Common = {
   icon?: ComponentProps<typeof Icon>["name"];
   external?: boolean;
-  type?: "button" | "submit";
-  disabled?: boolean;
 };
+type LinkProps = Omit<HTMLAttributes<"a">, "type"> &
+  Common &
+  (
+    | { href: string; variant?: "primary"; size?: "md" | "wide" }
+    | { href: string; variant: "quiet"; size?: never }
+  ) & { type?: never; disabled?: never };
+type ButtonProps = Omit<HTMLAttributes<"button">, "type"> &
+  Common & {
+    href?: never;
+    variant?: "primary";
+    size?: "md" | "wide";
+    type?: "button" | "submit";
+    disabled?: boolean;
+  };
+type Props = LinkProps | ButtonProps;
 
 const {
   href,
