@@ -43,6 +43,8 @@
   /* Amber: what is worth reading, with nothing at risk (the beta). */
   --color-pending: #745400;
   --color-pending-surface: #fdf0cf;
+  /* The border of anything amber: its text colour at 25%. */
+  --color-pending-border: color-mix(in srgb, var(--color-pending) 25%, transparent);
 
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-ui: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
@@ -309,6 +311,20 @@ p {
 }
 .btn-wide {
   padding: 0 28px;
+}
+/* Disabled: half opacity, no hover, no press. Only a primary <button>
+   gets there; a link is never disabled. */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+/* An icon in a button or a quiet link never shrinks and never takes
+   the click from the element around it. */
+.btn svg,
+.link-quiet svg {
+  flex-shrink: 0;
+  pointer-events: none;
 }
 
 /* The wordmark next to the mark: Bricolage ExtraBold, the lockup's
@@ -595,23 +611,40 @@ p {
 }
 
 /* The public beta, while the version starts with 0: the banner over
-   every page, the pill next to the wordmark and the note above the
-   download cards. Amber, the tone of what is worth reading, never the
+   every page, the pill next to the wordmark and the note (an alert)
+   above the download cards. Amber, the tone of what is worth reading, never the
    red of a risk: a tinted surface, the amber text, and a border of that
    text at 25%. */
 .pill-beta {
   background: var(--color-pending-surface);
   color: var(--color-pending);
-  border: 1px solid color-mix(in srgb, var(--color-pending) 25%, transparent);
+  border: 1px solid var(--color-pending-border);
 }
 .beta-banner {
-  border-bottom: 1px solid color-mix(in srgb, var(--color-pending) 25%, transparent);
+  border-bottom: 1px solid var(--color-pending-border);
   background: var(--color-pending-surface);
   color: var(--color-pending);
 }
-.beta-note {
-  border: 1px solid color-mix(in srgb, var(--color-pending) 25%, transparent);
+
+/* A note worth reading: a panel of its own, the icon on the first line
+   of text, the text in body-sm. Amber is the one tone of the site. */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
+  font-size: var(--text-body-sm);
+  line-height: var(--text-body-sm--line-height);
+}
+.alert-icon {
+  flex-shrink: 0;
+  /* The 16px icon centred on the first line of body-sm text. */
+  margin-top: calc((var(--text-body-sm) * var(--text-body-sm--line-height) - 16px) / 2);
+}
+.alert-pending {
+  border-color: var(--color-pending-border);
   background: var(--color-pending-surface);
   color: var(--color-pending);
 }
@@ -680,6 +713,41 @@ p {
 .code-copy-button[data-done] .code-copy-done {
   display: block;
   color: var(--color-primary);
+}
+
+/* A disclosure: it shows part of the page, it does nothing, so it has
+   no fill. A chevron then the label in the muted colour, the sunken
+   surface on hover, and the chevron turned down once open. */
+.disclosure {
+  display: flex;
+  width: fit-content;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  color: var(--color-muted);
+  list-style: none;
+  cursor: pointer;
+  transition:
+    background-color 150ms var(--ease-out-toundra),
+    color 150ms var(--ease-out-toundra);
+}
+.disclosure::-webkit-details-marker {
+  display: none;
+}
+.disclosure:hover {
+  background: var(--color-sunken);
+  color: var(--color-text);
+}
+.disclosure svg {
+  flex-shrink: 0;
+  transition: transform 150ms var(--ease-out-toundra);
+}
+details[open] > .disclosure svg {
+  transform: rotate(90deg);
 }
 
 /* Inline code and command blocks: data font on the sunken surface. */

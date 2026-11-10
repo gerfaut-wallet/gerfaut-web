@@ -1,0 +1,14 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+/** A short word in a pill: `neutral` marks a fact about the page (the
+    visitor's own system), `beta` the public beta, in amber. A badge is
+    read, never pressed. */
+type Props = HTMLAttributes<"span"> & {
+  variant?: "neutral" | "beta";
+};
+
+const { variant = "neutral", class: className, ...rest } = Astro.props;
+---
+
+<span class:list={["pill", `pill-${variant}`, className]} {...rest}><slot /></span>

@@ -1,0 +1,24 @@
+---
+import type { ComponentProps, HTMLAttributes } from "astro/types";
+import Icon from "../Icon.astro";
+
+/** A note worth reading before going on, in its own panel: a tinted
+    surface, a border of the text colour at 25%, radius 8px, a 16px icon
+    on the first line of text, and the text in body-sm. The title leads
+    the first sentence in 500. Amber is the only tone the site needs: the
+    red of a risk has no place on it. The note is part of the page, so
+    it carries no live role: a screen reader reads it in turn. */
+type Props = HTMLAttributes<"div"> & {
+  title?: string;
+  icon?: ComponentProps<typeof Icon>["name"];
+};
+
+const { title, icon = "info", class: className, ...rest } = Astro.props;
+---
+
+<div class:list={["alert alert-pending", className]} {...rest}>
+  <Icon name={icon} size={16} class="alert-icon" />
+  <p>
+    {title && <span class="font-medium">{title}</span>}{title && " "}<slot />
+  </p>
+</div>

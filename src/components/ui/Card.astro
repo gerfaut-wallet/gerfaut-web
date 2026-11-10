@@ -1,0 +1,11 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+/** A card: the white surface, a hairline border, radius 12px, never a
+    shadow. It sets no padding, so that each card keeps its own. */
+type Props = HTMLAttributes<"div">;
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class:list={["card", className]} {...rest}><slot /></div>
