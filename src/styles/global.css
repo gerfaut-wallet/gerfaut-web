@@ -278,8 +278,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 44px;
-  padding: 0 20px;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 8px 20px;
   border: 0;
   border-radius: var(--radius-md);
   font-family: var(--font-ui);
@@ -524,7 +525,7 @@ body {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .tile-row {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
@@ -552,7 +553,8 @@ body {
 /* Three short facts under a row of tiles, each led by a check, on the
    grid of the tiles: the same hairline gap, border and padding, so the
    checks line up with the text of the tiles above. One fact per line
-   on phones, three columns from 640px, where the tiles go by three. */
+   on phones, three columns from 640px, where the tiles go by three
+   and then by six. */
 .check-line {
   display: grid;
   gap: 10px 1px;
