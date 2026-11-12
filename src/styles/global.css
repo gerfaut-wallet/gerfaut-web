@@ -392,6 +392,9 @@ body {
     background: var(--color-sunken);
   }
 }
+.menu-button[aria-expanded="true"] {
+  background: var(--color-sunken);
+}
 .menu-button .menu-close {
   display: none;
 }
