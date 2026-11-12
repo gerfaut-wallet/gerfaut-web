@@ -825,4 +825,25 @@ details[open] > .disclosure svg {
   flex-shrink: 0;
   color: var(--color-primary);
 }
+
+/* The right end of a card head (badges, a version): a line of its own
+   under the title on phones, and nothing at all while it holds nothing
+   to show. */
+.card-action {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  gap: 8px;
+  padding-left: 52px;
+}
+.card-action:not(:has(> :not(.hidden))) {
+  display: none;
+}
+@media (min-width: 640px) {
+  .card-action {
+    flex-basis: auto;
+    margin-left: auto;
+    padding-left: 0;
+  }
+}
 }

@@ -4,9 +4,8 @@ import Icon from "../Icon.astro";
 
 /** The head of a card: an icon on the sunken surface, the title, an
     optional line under it, and an optional `action` slot pushed to the
-    right (badges, a version). On a phone, when the title would drop
-    under 9rem, the action moves to a line of its own rather than
-    squeezing the title. The title is always an h2; `size="lg"`, for a
+    right (badges, a version). On a phone the action sits on a line of
+    its own under the title, the same on every card, whatever it holds. The title is always an h2; `size="lg"`, for a
     card that is a whole section, draws it at the h1 size of the scale. */
 interface Props {
   icon: ComponentProps<typeof Icon>["name"];
@@ -31,7 +30,7 @@ const { icon, title, description, size = "md", titleId } = Astro.props;
   </div>
   {
     Astro.slots.has("action") && (
-      <div class="ml-auto flex items-center gap-2">
+      <div class="card-action">
         <slot name="action" />
       </div>
     )
