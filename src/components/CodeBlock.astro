@@ -1,30 +1,21 @@
 ---
+import { codeWords } from "../lib/words";
 import Icon from "./Icon.astro";
 
 /** A command or a value in the data font, with a button that copies it
     to the clipboard. The text is passed as a prop so the button copies
     exactly what the block shows. A line too long for the block wraps
-    between words, never inside an option such as --ignore-missing; only
-    a word longer than any line, the public key, breaks where it must. */
+    between words (see `codeWords`). */
 interface Props {
   text: string;
   label: string;
 }
 
 const { text, label } = Astro.props;
-
-const escape = (word: string) =>
-  word.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const words = text
-  .split(" ")
-  .map((word) =>
-    word.length <= 24 ? `<span class="whitespace-nowrap">${escape(word)}</span>` : escape(word),
-  )
-  .join(" ");
 ---
 
 <div class="code-copy">
-  <pre class="code-block"><code set:html={words} /></pre>
+  <pre class="code-block"><code set:html={codeWords(text)} /></pre>
   <button
     type="button"
     class="code-copy-button"

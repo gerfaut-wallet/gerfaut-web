@@ -793,6 +793,9 @@ details[open] > .disclosure svg {
 /* Inline code and command blocks: data font on the sunken surface. A
    command or a key too long for the block wraps, so that it shows
    whole: the copy button gives it back on one line. */
+.code-word {
+  display: inline-block;
+}
 .code-block {
   margin: 0;
   background: var(--color-sunken);
