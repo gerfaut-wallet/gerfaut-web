@@ -8,8 +8,10 @@ const links = [
   { href: "https://github.com/gerfaut-wallet", label: "GitHub" },
   { href: "mailto:info@pandul.fr", label: "info@pandul.fr" },
 ];
+// The padding widens each target past 44 px and the list takes it back:
+// the labels stay where they were.
 const linkClass =
-  "inline-flex min-h-11 items-center text-muted transition-colors duration-150 hover:text-text";
+  "inline-flex min-h-11 items-center px-2.5 text-muted transition-colors duration-150 hover:text-text";
 ---
 
 <footer class="border-t border-border">
@@ -45,7 +47,7 @@ const linkClass =
       </p>
     </div>
     <nav aria-label="Footer">
-      <ul class="flex flex-wrap gap-x-5 gap-y-0 text-sm">
+      <ul class="-mx-2.5 flex flex-wrap text-sm">
         {
           links.map((link) => (
             <li>
