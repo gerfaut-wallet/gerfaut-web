@@ -352,7 +352,9 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     link.href = asset.browser_download_url;
     link.className = "file-row";
     const text = document.createElement("span");
-    text.className = "min-w-0 flex-1";
+    // On a phone the name takes the whole line, so that it shows on one,
+    // and the weight and the arrow close the row on the right.
+    text.className = "min-w-0 basis-full sm:flex-1 sm:basis-0";
     const label = document.createElement("span");
     // Wrapped, not cut: the end of a name is what tells two files apart.
     // A name too long for its row breaks after a dash or an underscore,
@@ -365,12 +367,12 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     text.append(label);
     if (note) {
       const hint = document.createElement("span");
-      hint.className = "mt-0.5 block text-sm text-muted";
+      hint.className = "mt-0.5 block text-sm text-pretty text-muted";
       hint.textContent = note;
       text.append(hint);
     }
     const size = document.createElement("span");
-    size.className = "shrink-0 text-sm text-muted tabular-nums";
+    size.className = "ml-auto shrink-0 text-sm text-muted tabular-nums";
     size.textContent = formatSize(asset.size);
     link.append(text, size);
     const arrow = downloadIcon?.content.firstElementChild?.cloneNode(true);

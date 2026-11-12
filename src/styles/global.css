@@ -804,9 +804,10 @@ details[open] > .disclosure svg {
    the download arrow that says the row is the action. */
 .file-row {
   display: flex;
+  flex-wrap: wrap;
   min-height: 44px;
   align-items: center;
-  gap: 12px;
+  gap: 4px 12px;
   padding: 10px 12px;
   border-radius: var(--radius-md);
   background: var(--color-sunken);
