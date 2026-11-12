@@ -71,10 +71,12 @@ const sourceFacts = [
             Read the source on GitHub
           </Button>
         </div>
-        <p class="rise rise-4 mt-4 text-sm text-balance text-muted">
-          Free and open source
-          <span class="sep" aria-hidden="true">&middot;</span>
-          Android, Linux, macOS and Windows
+        {/* Two facts: side by side with a dot between them, or one
+            under the other on a phone, never cut inside the list. */}
+        <p class="rise rise-4 mt-4 text-sm text-muted">
+          <span class="block sm:inline">Free and open source</span>
+          <span class="sep hidden sm:inline" aria-hidden="true">&middot;</span>
+          <span class="block sm:inline">Android, Linux, macOS and Windows</span>
         </p>
       </div>
       <figure class="rise rise-5 shot mt-12 md:mt-16">
