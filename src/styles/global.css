@@ -538,30 +538,30 @@ p {
   text-wrap: balance;
 }
 
-/* Short facts, each led by a check: one under the other with the
-   checks in a column, the block centred, then a single line once the
-   page is wide enough to hold them all. */
+/* Short facts under a row of tiles, each led by a check, on the grid
+   of the tiles: the checks line up with the text of the tiles above,
+   one fact per line on phones and three columns from 640px. */
 .check-line {
-  display: flex;
-  flex-direction: column;
-  gap: 10px 28px;
-  width: fit-content;
+  display: grid;
+  gap: 10px 1px;
   padding: 0;
-  margin-inline: auto;
+  margin-inline: 1px;
   margin-bottom: 0;
   list-style: none;
   font-size: var(--text-body-sm);
   color: var(--color-text);
 }
-@media (min-width: 1024px) {
+@media (min-width: 640px) {
   .check-line {
-    flex-direction: row;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 .check-line > li {
   display: flex;
   align-items: flex-start;
   gap: 8px;
+  padding-inline: 20px;
+  text-wrap: balance;
 }
 .check-line svg {
   /* The 16px check centred on the first line of body-sm text. */
