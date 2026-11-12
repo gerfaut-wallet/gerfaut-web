@@ -4,6 +4,7 @@ import Feature from "../components/Feature.astro";
 import Icon from "../components/Icon.astro";
 import Base from "../layouts/Base.astro";
 import Button from "../components/ui/Button.astro";
+import { codeWords } from "../lib/words";
 import androidWallet from "../assets/android-wallet.webp";
 import androidWallets from "../assets/android-wallets.webp";
 import backup from "../assets/backup.webp";
@@ -70,8 +71,12 @@ const sourceFacts = [
             Read the source on GitHub
           </Button>
         </div>
+        {/* Two facts: side by side with a dot between them, or one
+            under the other on a phone, never cut inside the list. */}
         <p class="rise rise-4 mt-4 text-sm text-muted">
-          Free and open source &middot; Android, Linux, macOS and Windows
+          <span class="block sm:inline">Free and open source</span>
+          <span class="sep hidden sm:inline" aria-hidden="true">&middot;</span>
+          <span class="block sm:inline">Android, Linux, macOS and Windows</span>
         </p>
       </div>
       <figure class="rise rise-5 shot mt-12 md:mt-16">
@@ -113,12 +118,12 @@ const sourceFacts = [
           ))
         }
       </ul>
-      <ul class="check-line mt-8 justify-center">
+      <ul class="check-line mt-8">
         {
           inputFacts.map((fact) => (
             <li>
               <Icon name="check" size={16} />
-              {fact}
+              <span>{fact}</span>
             </li>
           ))
         }
@@ -137,14 +142,14 @@ const sourceFacts = [
       "Light and dark mode",
     ]}
   >
-    <div class="mx-auto flex max-w-md items-start justify-center gap-4 sm:gap-6 lg:max-w-none">
+    <div class="mx-auto flex max-w-md items-start justify-center gap-4 sm:gap-6 md:max-w-[664px] lg:max-w-none">
       <Image
         src={androidWallets}
         alt="The Android home screen of Gerfaut in the light theme: four wallets, each with its icon and balance, from cold storage to a family vault"
         widths={phoneWidths}
         sizes={phoneSizes}
         loading="lazy"
-        class="block h-auto w-1/2 max-w-[320px]"
+        class="block h-auto max-w-[320px] min-w-0 flex-1"
       />
       <Image
         src={androidWallet}
@@ -152,7 +157,7 @@ const sourceFacts = [
         widths={phoneWidths}
         sizes={phoneSizes}
         loading="lazy"
-        class="mt-10 block h-auto w-1/2 max-w-[320px] sm:mt-16"
+        class="mt-10 block h-auto max-w-[320px] min-w-0 flex-1 sm:mt-16"
       />
     </div>
   </Feature>
@@ -233,14 +238,14 @@ const sourceFacts = [
       "Wrong guesses slow down: three tries, then a growing delay",
     ]}
   >
-    <div class="mx-auto flex max-w-md items-start justify-center gap-4 sm:gap-6 lg:max-w-none">
+    <div class="mx-auto flex max-w-md items-start justify-center gap-4 sm:gap-6 md:max-w-[664px] lg:max-w-none">
       <Image
         src={security}
         alt="An Android phone showing a plain calculator: the stealth mode of the Gerfaut app, which opens when the PIN is typed and equals is pressed"
         widths={phoneWidths}
         sizes={phoneSizes}
         loading="lazy"
-        class="block h-auto w-1/2 max-w-[320px]"
+        class="block h-auto max-w-[320px] min-w-0 flex-1"
       />
       <Image
         src={lock}
@@ -248,7 +253,7 @@ const sourceFacts = [
         widths={phoneWidths}
         sizes={phoneSizes}
         loading="lazy"
-        class="mt-10 block h-auto w-1/2 max-w-[320px] sm:mt-16"
+        class="mt-10 block h-auto max-w-[320px] min-w-0 flex-1 sm:mt-16"
       />
     </div>
   </Feature>
@@ -302,11 +307,10 @@ const sourceFacts = [
 
   <section class="section border-t border-border" aria-labelledby="source-heading">
     <div
-      class="site-container grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
+      class="site-container grid items-center gap-10 xl:grid-cols-2 xl:gap-16"
     >
       <div class="max-w-lg">
-        <p class="eyebrow">Open source</p>
-        <h2 id="source-heading" class="section-title mt-3">
+        <h2 id="source-heading" class="section-title">
           Read the code. Check every file.
         </h2>
         <ul class="fact-list mt-6">
@@ -326,11 +330,11 @@ const sourceFacts = [
           <Button href="/download#verify" variant="quiet">Verify a download</Button>
         </div>
       </div>
-      <pre class="dark-island terminal" tabindex="0"><code><span class="prompt">$</span> minisign -Vm SHA256SUMS \
-    -P RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O
+      <pre class="dark-island terminal"><code><span class="prompt">$</span> <Fragment set:html={codeWords("minisign -Vm SHA256SUMS \\")} />
+<Fragment set:html={codeWords("    -P RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O")} />
 <span class="out">Signature and comment signature verified</span>
 <span class="out">Trusted comment: Gerfaut v0.1.0</span>
-<span class="prompt">$</span> sha256sum --check SHA256SUMS --ignore-missing
+<span class="prompt">$</span> <Fragment set:html={codeWords("sha256sum --check SHA256SUMS --ignore-missing")} />
 <span class="out">Gerfaut_0.1.0_amd64.AppImage: OK</span></code></pre>
     </div>
   </section>
@@ -345,7 +349,9 @@ const sourceFacts = [
           Download Gerfaut
         </Button>
         <p class="text-sm text-muted">
-          Android &middot; Linux &middot; macOS &middot; Windows
+          Android <span class="sep" aria-hidden="true">&middot;</span> Linux
+          <span class="sep" aria-hidden="true">&middot;</span> macOS
+          <span class="sep" aria-hidden="true">&middot;</span> Windows
         </p>
       </div>
     </div>

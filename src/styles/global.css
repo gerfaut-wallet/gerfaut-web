@@ -109,9 +109,9 @@
 
 :root {
   color-scheme: light;
-  /* The page's action color, kept as it is at the root: a dark island
-     redefines --color-primary but not this. */
-  --color-page-ring: var(--color-primary);
+  /* What pushes a 16px icon down to the middle of the first line of
+     body-sm text. */
+  --icon-on-body-sm: calc((var(--text-body-sm) * var(--text-body-sm--line-height) - 16px) / 2);
 }
 
 html {
@@ -135,14 +135,17 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-h1,
-h2,
-h3 {
-  text-wrap: balance;
-}
+/* In the base layer, so that one paragraph can ask for balance. */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
 
-p {
-  text-wrap: pretty;
+  p {
+    text-wrap: pretty;
+  }
 }
 
 /* Focus: 2px ring in the theme's action color, offset 2px. */
@@ -155,12 +158,6 @@ p {
    that a button or card keeps its own radius under the ring. */
 :where(:focus-visible) {
   border-radius: 2px;
-}
-
-/* The terminal card is a dark island whose ring is drawn on the light
-   page: the island's pale action color would all but vanish there. */
-.terminal:focus-visible {
-  outline-color: var(--color-page-ring);
 }
 
 /* The footer mark is padded out to a 44 px target: its ring keeps to
@@ -247,14 +244,10 @@ p {
   }
 }
 
-/* Small caps label above a title. */
-.eyebrow {
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  line-height: 1.4;
-  text-transform: uppercase;
-  color: var(--color-primary);
+/* The dot between two short facts on one line, with the same room on
+   both sides: the font's own space is too thin to set it apart. */
+.sep {
+  margin-inline: 0.3em;
 }
 
 .rise {
@@ -277,22 +270,25 @@ p {
 /* --- shared component classes --- */
 
 @layer components {
-/* Buttons: 44px, radius 8px, Instrument Sans 14px/500, press scale 0.96. */
+/* Buttons: 44px, radius 8px, Instrument Sans 14px/500, press scale 0.96.
+   A label too long for its place wraps and the button grows, rather
+   than run out of the card around it. */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 44px;
-  padding: 0 20px;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 8px 20px;
   border: 0;
   border-radius: var(--radius-md);
   font-family: var(--font-ui);
   font-size: 0.875rem;
   font-weight: 500;
-  line-height: 1;
+  line-height: 1.25;
+  text-align: center;
   text-decoration: none;
-  white-space: nowrap;
   cursor: pointer;
   transition:
     background-color 150ms var(--ease-out-toundra),
@@ -306,11 +302,13 @@ p {
   background: var(--color-primary);
   color: var(--color-on-primary);
 }
-.btn-primary:hover {
-  background: var(--color-primary-hover);
+@media (hover: hover) {
+  .btn-primary:hover {
+    background: var(--color-primary-hover);
+  }
 }
 .btn-wide {
-  padding: 0 28px;
+  padding-inline: 28px;
 }
 /* Disabled: half opacity, no hover, no press. Only a primary <button>
    gets there; a link is never disabled. */
@@ -343,11 +341,11 @@ p {
   }
 }
 
-/* A header entry: 40px tall, quiet until hovered, the current page in
-   the action colour. */
+/* A header entry: 44px tall, quiet until hovered, the current page in
+   the action colour and underlined. */
 .nav-item {
   display: inline-flex;
-  height: 40px;
+  height: 44px;
   cursor: pointer;
   align-items: center;
   gap: 6px;
@@ -361,12 +359,17 @@ p {
     background-color 150ms var(--ease-out-toundra),
     color 150ms var(--ease-out-toundra);
 }
-.nav-item:hover {
-  background: var(--color-sunken);
-  color: var(--color-text);
+@media (hover: hover) {
+  .nav-item:hover {
+    background: var(--color-sunken);
+    color: var(--color-text);
+  }
 }
 .nav-item[aria-current="page"] {
   color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 6px;
 }
 
 /* The phone menu: a 44px button, and a panel that drops under the
@@ -384,7 +387,12 @@ p {
   color: var(--color-text);
   transition: background-color 150ms var(--ease-out-toundra);
 }
-.menu-button:hover {
+@media (hover: hover) {
+  .menu-button:hover {
+    background: var(--color-sunken);
+  }
+}
+.menu-button[aria-expanded="true"] {
   background: var(--color-sunken);
 }
 .menu-button .menu-close {
@@ -402,6 +410,10 @@ p {
   top: 100%;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-background);
+  /* A menu is a detached surface: the overlay shadow, cut at the top
+     edge so that none of it falls back on the header. */
+  box-shadow: var(--shadow-overlay);
+  clip-path: inset(0 0 -32px 0);
 }
 .menu-panel[hidden] {
   display: none;
@@ -417,8 +429,10 @@ p {
   color: var(--color-text);
   text-decoration: none;
 }
-.menu-panel a:hover {
-  background: var(--color-sunken);
+@media (hover: hover) {
+  .menu-panel a:hover {
+    background: var(--color-sunken);
+  }
 }
 .menu-panel a[aria-current="page"] {
   color: var(--color-primary);
@@ -437,8 +451,10 @@ p {
   cursor: pointer;
   transition: color 150ms var(--ease-out-toundra);
 }
-.link-quiet:hover {
-  color: var(--color-text);
+@media (hover: hover) {
+  .link-quiet:hover {
+    color: var(--color-text);
+  }
 }
 
 /* Inline link in running text. */
@@ -449,8 +465,10 @@ p {
   text-underline-offset: 2px;
   transition: color 150ms var(--ease-out-toundra);
 }
-.link:hover {
-  color: var(--color-primary-hover);
+@media (hover: hover) {
+  .link:hover {
+    color: var(--color-primary-hover);
+  }
 }
 
 /* Card: surface, hairline border, radius 12px, never a shadow. */
@@ -482,6 +500,12 @@ p {
   height: auto;
 }
 
+/* The padding of a tile, shared with the facts set under the row. */
+.tile-row,
+.check-line {
+  --tile-padding: 20px;
+}
+
 /* A row of tiles separated by hairlines: one hairline of background
    shows through the 1px gap between surfaces. */
 .tile-row {
@@ -501,7 +525,7 @@ p {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   .tile-row {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
@@ -510,7 +534,7 @@ p {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 20px;
+  padding: var(--tile-padding);
   background: var(--color-surface);
 }
 .tile-name {
@@ -520,29 +544,42 @@ p {
   line-height: 1.3;
 }
 .tile-note {
-  font-size: 0.8125rem;
-  line-height: 1.45;
+  font-size: var(--text-body-sm);
+  line-height: var(--text-body-sm--line-height);
   color: var(--color-muted);
+  text-wrap: balance;
 }
 
-/* A line of short facts, each led by a check. */
+/* Three short facts under a row of tiles, each led by a check, on the
+   grid of the tiles: the same hairline gap, border and padding, so the
+   checks line up with the text of the tiles above. One fact per line
+   on phones, three columns from 640px, where the tiles go by three
+   and then by six. */
 .check-line {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 28px;
+  display: grid;
+  gap: 10px 1px;
   padding: 0;
-  margin: 0;
+  margin-inline: 1px;
+  margin-bottom: 0;
   list-style: none;
-  font-size: 0.875rem;
+  font-size: var(--text-body-sm);
   color: var(--color-text);
 }
+@media (min-width: 640px) {
+  .check-line {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
 .check-line > li {
-  display: inline-flex;
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
   gap: 8px;
+  padding-inline: var(--tile-padding);
+  text-wrap: balance;
 }
 .check-line svg {
   flex-shrink: 0;
+  margin-top: var(--icon-on-body-sm);
   color: var(--color-primary);
 }
 
@@ -567,7 +604,8 @@ p {
 }
 
 /* The terminal card: a dark island on the light page, mono text, the
-   prompt in the island's action colour. */
+   prompt in the island's action colour. A line too long for a phone
+   wraps: nothing to scroll, and the public key shows whole. */
 .terminal {
   margin: 0;
   padding: 20px 24px;
@@ -579,8 +617,13 @@ p {
   font-size: 0.8125rem;
   line-height: 1.8;
   font-variant-numeric: tabular-nums;
-  overflow-x: auto;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 639px) {
+  .terminal {
+    padding: 16px;
+  }
 }
 .terminal .prompt {
   color: var(--color-primary);
@@ -640,8 +683,7 @@ p {
 }
 .alert-icon {
   flex-shrink: 0;
-  /* The 16px icon centred on the first line of body-sm text. */
-  margin-top: calc((var(--text-body-sm) * var(--text-body-sm--line-height) - 16px) / 2);
+  margin-top: var(--icon-on-body-sm);
 }
 .alert-pending {
   border-color: var(--color-pending-border);
@@ -670,39 +712,39 @@ p {
   white-space: nowrap;
 }
 
-/* A code block with its copy button in the top right corner. The
-   button swaps its icon for a check for a moment once the text is on
-   the clipboard. */
+/* A code block with its copy button down its right edge, 44px wide
+   and as tall as the block. The button swaps its icon for a check for
+   a moment once the text is on the clipboard. */
 .code-copy {
   position: relative;
   margin-top: 8px;
 }
 .code-copy .code-block {
-  padding-right: 52px;
+  padding-right: 56px;
 }
 .code-copy-button {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  inset-block: 0;
+  right: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  min-height: 44px;
   border: 0;
-  border-radius: var(--radius-sm);
-  /* The block's own surface: a line wider than a phone runs under the
-     button instead of showing through the icon. */
-  background: var(--color-sunken);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: transparent;
   color: var(--color-muted);
   cursor: pointer;
   transition:
     background-color 150ms var(--ease-out-toundra),
     color 150ms var(--ease-out-toundra);
 }
-.code-copy-button:hover {
-  background: color-mix(in srgb, var(--color-sunken) 60%, var(--color-border));
-  color: var(--color-text);
+@media (hover: hover) {
+  .code-copy-button:hover {
+    background: color-mix(in srgb, var(--color-sunken) 60%, var(--color-border));
+    color: var(--color-text);
+  }
 }
 .code-copy-button .code-copy-done {
   display: none;
@@ -738,9 +780,11 @@ p {
 .disclosure::-webkit-details-marker {
   display: none;
 }
-.disclosure:hover {
-  background: var(--color-sunken);
-  color: var(--color-text);
+@media (hover: hover) {
+  .disclosure:hover {
+    background: var(--color-sunken);
+    color: var(--color-text);
+  }
 }
 .disclosure svg {
   flex-shrink: 0;
@@ -750,16 +794,73 @@ details[open] > .disclosure svg {
   transform: rotate(90deg);
 }
 
-/* Inline code and command blocks: data font on the sunken surface. */
+/* Inline code and command blocks: data font on the sunken surface. A
+   command or a key too long for the block wraps, so that it shows
+   whole: the copy button gives it back on one line. */
+.code-word {
+  display: inline-block;
+}
 .code-block {
+  margin: 0;
   background: var(--color-sunken);
   border-radius: var(--radius-sm);
   padding: 12px 16px;
   font-family: var(--font-data);
-  font-size: 0.8125rem;
-  line-height: 1.6;
+  font-size: var(--text-data);
+  line-height: var(--text-data--line-height);
   font-variant-numeric: tabular-nums;
-  overflow-x: auto;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* One file of a release: its name, what it is for, its weight, and
+   the download arrow that says the row is the action. */
+.file-row {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 44px;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--color-sunken);
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out-toundra);
+}
+@media (hover: hover) {
+  .file-row:hover {
+    background: color-mix(in srgb, var(--color-sunken) 60%, var(--color-border));
+  }
+}
+.file-row svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+/* The right end of a card head (badges, a version): a line of its own
+   under the title on phones, in line with it (40px icon, 12px gap).
+   The space above the line belongs to what the line holds, so that it
+   takes no room while it holds nothing to show. */
+.card-action {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  gap: 8px;
+  padding-left: 52px;
+}
+.card-action > * {
+  margin-top: 8px;
+}
+@media (min-width: 640px) {
+  .card-action {
+    flex-basis: auto;
+    margin-left: auto;
+    padding-left: 0;
+  }
+  .card-action > * {
+    margin-top: 0;
+  }
 }
 }

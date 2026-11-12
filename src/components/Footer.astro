@@ -1,19 +1,22 @@
 ---
 import Mark from "./Mark.astro";
 
+// In the order of the header.
 const links = [
-  { href: "https://github.com/gerfaut-wallet", label: "GitHub" },
   { href: "/download", label: "Download" },
   { href: "https://gerfaut-wallet.com/docs", label: "Docs" },
+  { href: "https://github.com/gerfaut-wallet", label: "GitHub" },
   { href: "mailto:info@pandul.fr", label: "info@pandul.fr" },
 ];
+// The padding widens each target past 44 px and the list takes it back:
+// the labels stay where they were.
 const linkClass =
-  "inline-flex min-h-11 items-center text-muted transition-colors duration-150 hover:text-text";
+  "inline-flex min-h-11 items-center px-2.5 text-muted transition-colors duration-150 hover:text-text";
 ---
 
 <footer class="border-t border-border">
   <div
-    class="site-container flex flex-col gap-4 py-8 md:flex-row md:items-center md:justify-between md:py-10"
+    class="site-container flex flex-col gap-4 py-8 md:py-10 lg:flex-row lg:items-center lg:justify-between"
   >
     <div>
       <p class="flex items-center gap-3 text-sm text-muted">
@@ -27,7 +30,8 @@ const linkClass =
           <Mark class="h-5 w-auto" />
         </a>
         <span>
-          &copy; {new Date().getFullYear()} Lo&iuml;c Morel &middot;
+          &copy; {new Date().getFullYear()} Lo&iuml;c Morel
+          <span class="sep" aria-hidden="true">&middot;</span>
           <a
             href="https://www.gnu.org/licenses/agpl-3.0.html"
             class="inline-flex min-h-11 items-center transition-colors duration-150 hover:text-text"
@@ -39,11 +43,11 @@ const linkClass =
           phone number. */}
       <p class="text-xs text-muted">
         Hosted by Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107,
-        USA, +1 650 319 8930
+        USA, <span class="whitespace-nowrap">+1 650 319 8930</span>
       </p>
     </div>
     <nav aria-label="Footer">
-      <ul class="flex flex-wrap gap-x-5 gap-y-0 text-sm">
+      <ul class="-mx-2.5 flex flex-wrap text-sm">
         {
           links.map((link) => (
             <li>

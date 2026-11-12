@@ -73,7 +73,9 @@ const ogImageAlt =
       crossorigin
     />
   </head>
-  <body>
+  {/* A column as tall as the window: on a short page the footer still
+      sits at the bottom. */}
+  <body class="flex min-h-dvh flex-col">
     <a
       href="#main"
       class="sr-only rounded-md bg-primary px-4 py-2 text-sm font-medium text-on-primary focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2"
@@ -81,7 +83,7 @@ const ogImageAlt =
     >
     <BetaBanner />
     <Header />
-    <main id="main">
+    <main id="main" class="flex-1">
       <slot />
     </main>
     <Footer />

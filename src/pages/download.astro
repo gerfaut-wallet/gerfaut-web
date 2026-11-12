@@ -32,7 +32,7 @@ const platforms = [
     formats: ".app in a .zip archive",
     repo: "gerfaut-desktop",
     firstLaunch:
-      'Apple has not notarized the app, so macOS refuses it the first time. Open System Settings, then Privacy & Security, and click "Open Anyway". Since macOS Sequoia, right-click and Open no longer gets past it.',
+      "Apple has not notarized the app, so macOS refuses it the first time. Open System Settings, then Privacy & Security, and click “Open Anyway”. Since macOS Sequoia, right-click and Open no longer gets past it.",
   },
   {
     slot: "windows",
@@ -41,7 +41,7 @@ const platforms = [
     formats: ".exe installer",
     repo: "gerfaut-desktop",
     firstLaunch:
-      'The installer has no code-signing certificate, so SmartScreen may stop it the first time. Click "More info", then "Run anyway".',
+      "The installer has no code-signing certificate, so SmartScreen may stop it the first time. Click “More info”, then “Run anyway”.",
   },
 ] as const;
 
@@ -84,12 +84,14 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         >.
       </Alert>
 
-      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:gap-5">
+      {/* One column, as wide as the note above, until two cards have
+          the room to show a file name and its note on one line each. */}
+      <div class="mx-auto mt-8 grid max-w-3xl gap-4 xl:max-w-none xl:grid-cols-2 xl:gap-5">
         {
           platforms.map((platform) => (
             <Card
               id={platform.slot}
-              class="flex min-w-0 scroll-mt-24 flex-col p-6"
+              class="flex min-w-0 scroll-mt-24 flex-col p-4 sm:p-6"
               data-platform={platform.slot}
             >
               <CardHeader icon={platform.icon} title={platform.name} description={platform.formats}>
@@ -162,7 +164,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         }
       </div>
 
-      <p class="mx-auto mt-8 max-w-2xl text-center text-sm text-muted">
+      <p class="mx-auto mt-8 max-w-xl text-center text-sm text-muted">
         All builds and release notes live on
         <a href="https://github.com/gerfaut-wallet" class="link"
           >github.com/gerfaut-wallet</a
@@ -179,14 +181,14 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     aria-labelledby="verify-heading"
   >
     <div class="site-container">
-      <Card class="mx-auto max-w-3xl p-6 md:p-8">
+      <Card class="mx-auto max-w-3xl p-4 sm:p-6 md:p-8">
         <CardHeader
           icon="shield-check"
           title="Verify your download"
           size="lg"
           titleId="verify-heading"
         />
-        <p class="mt-4 text-sm text-muted">
+        <p class="mt-4 max-w-[66ch] text-sm text-muted">
           Two commands prove that the checksum list comes from the author
           and that your file matches it. Shown here for Linux. Download the
           <span class="font-data">SHA256SUMS</span> file and its signature
@@ -229,6 +231,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     </div>
   </section>
   <template id="disclosure-icon"><Icon name="chevron-right" size={16} /></template>
+  <template id="download-icon"><Icon name="download" size={16} /></template>
 </Base>
 
 <script>
@@ -293,9 +296,10 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     },
   };
 
-  // The chevron of a disclosure, drawn once in the page: the script
-  // only copies it.
+  // The chevron of a disclosure and the arrow of a file, drawn once in
+  // the page: the script only copies them.
   const disclosureIcon = document.querySelector<HTMLTemplateElement>("#disclosure-icon");
+  const downloadIcon = document.querySelector<HTMLTemplateElement>("#download-icon");
 
   function setState(slot: Element, state: string) {
     for (const panel of slot.querySelectorAll<HTMLElement>("[data-state]")) {
@@ -346,25 +350,34 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     const item = document.createElement("li");
     const link = document.createElement("a");
     link.href = asset.browser_download_url;
-    link.className =
-      "flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-md bg-sunken px-3 py-2.5 transition-colors duration-150 hover:bg-border/60";
+    link.className = "file-row";
     const text = document.createElement("span");
-    text.className = "min-w-0 flex-1";
+    // On a phone the name takes the whole line, so that it shows on one,
+    // and the weight and the arrow close the row on the right.
+    text.className = "min-w-0 basis-full sm:flex-1 sm:basis-0";
     const label = document.createElement("span");
     // Wrapped, not cut: the end of a name is what tells two files apart.
+    // A name too long for its row breaks after a dash or an underscore,
+    // and inside a word only when even that leaves it too long.
     label.className = "font-data block text-data wrap-anywhere";
-    label.textContent = asset.name;
+    const parts = asset.name.match(/[^-_]*[-_]?/g) ?? [asset.name];
+    for (const [index, part] of parts.filter(Boolean).entries()) {
+      if (index > 0) label.append(document.createElement("wbr"));
+      label.append(part);
+    }
     text.append(label);
     if (note) {
       const hint = document.createElement("span");
-      hint.className = "mt-0.5 block text-sm text-muted";
+      hint.className = "mt-0.5 block text-sm text-pretty text-muted";
       hint.textContent = note;
       text.append(hint);
     }
     const size = document.createElement("span");
-    size.className = "shrink-0 text-sm text-muted";
+    size.className = "ml-auto shrink-0 text-sm text-muted tabular-nums";
     size.textContent = formatSize(asset.size);
     link.append(text, size);
+    const arrow = downloadIcon?.content.firstElementChild?.cloneNode(true);
+    if (arrow) link.append(arrow);
     item.append(link);
     return item;
   }
