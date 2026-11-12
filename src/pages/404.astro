@@ -9,16 +9,19 @@ import Base from "../layouts/Base.astro";
   description="This page does not exist."
 >
   <section class="py-24 md:py-32">
-    <div class="site-container">
+    <div class="site-container text-center">
       <h1
-        class="font-display text-[2rem] leading-[1.1] font-semibold tracking-[-0.02em]"
+        class="font-display text-[2.25rem] leading-[1.05] font-semibold tracking-[-0.03em] sm:text-[2.75rem] lg:text-hero"
       >
         Page not found
       </h1>
-      <p class="mt-4 max-w-md text-muted">
+      <p class="mt-5 text-lg text-muted">
         This address does not exist. Check it for a typo.
       </p>
-      <Button href="/" class="mt-8">Go to the home page</Button>
+      <div class="mt-8 flex flex-col items-center gap-3">
+        <Button href="/" size="wide">Go to the home page</Button>
+        <Button href="/download" variant="quiet" icon="download">Download Gerfaut</Button>
+      </div>
     </div>
   </section>
 </Base>
