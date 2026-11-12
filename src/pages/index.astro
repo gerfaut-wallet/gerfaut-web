@@ -70,8 +70,10 @@ const sourceFacts = [
             Read the source on GitHub
           </Button>
         </div>
-        <p class="rise rise-4 mt-4 text-sm text-muted">
-          Free and open source &middot; Android, Linux, macOS and Windows
+        <p class="rise rise-4 mt-4 text-sm text-balance text-muted">
+          Free and open source
+          <span class="sep" aria-hidden="true">&middot;</span>
+          Android, Linux, macOS and Windows
         </p>
       </div>
       <figure class="rise rise-5 shot mt-12 md:mt-16">
@@ -113,12 +115,12 @@ const sourceFacts = [
           ))
         }
       </ul>
-      <ul class="check-line mt-8 justify-center">
+      <ul class="check-line mt-8">
         {
           inputFacts.map((fact) => (
             <li>
               <Icon name="check" size={16} />
-              {fact}
+              <span>{fact}</span>
             </li>
           ))
         }
@@ -305,8 +307,7 @@ const sourceFacts = [
       class="site-container grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
     >
       <div class="max-w-lg">
-        <p class="eyebrow">Open source</p>
-        <h2 id="source-heading" class="section-title mt-3">
+        <h2 id="source-heading" class="section-title">
           Read the code. Check every file.
         </h2>
         <ul class="fact-list mt-6">
@@ -345,7 +346,9 @@ const sourceFacts = [
           Download Gerfaut
         </Button>
         <p class="text-sm text-muted">
-          Android &middot; Linux &middot; macOS &middot; Windows
+          Android <span class="sep" aria-hidden="true">&middot;</span> Linux
+          <span class="sep" aria-hidden="true">&middot;</span> macOS
+          <span class="sep" aria-hidden="true">&middot;</span> Windows
         </p>
       </div>
     </div>
