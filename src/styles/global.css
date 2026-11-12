@@ -335,9 +335,8 @@ body {
   }
 }
 
-/* A header entry: 44px tall under a finger and 40px under a mouse,
-   quiet until hovered, the current page in the action colour and
-   underlined. */
+/* A header entry: 44px tall, quiet until hovered, the current page in
+   the action colour and underlined. */
 .nav-item {
   display: inline-flex;
   height: 44px;
@@ -353,11 +352,6 @@ body {
   transition:
     background-color 150ms var(--ease-out-toundra),
     color 150ms var(--ease-out-toundra);
-}
-@media (min-width: 768px) {
-  .nav-item {
-    height: 40px;
-  }
 }
 @media (hover: hover) {
   .nav-item:hover {
