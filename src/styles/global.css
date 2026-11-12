@@ -109,9 +109,6 @@
 
 :root {
   color-scheme: light;
-  /* The page's action color, kept as it is at the root: a dark island
-     redefines --color-primary but not this. */
-  --color-page-ring: var(--color-primary);
 }
 
 html {
@@ -155,12 +152,6 @@ p {
    that a button or card keeps its own radius under the ring. */
 :where(:focus-visible) {
   border-radius: 2px;
-}
-
-/* The terminal card is a dark island whose ring is drawn on the light
-   page: the island's pale action color would all but vanish there. */
-.terminal:focus-visible {
-  outline-color: var(--color-page-ring);
 }
 
 /* The footer mark is padded out to a 44 px target: its ring keeps to
@@ -567,7 +558,8 @@ p {
 }
 
 /* The terminal card: a dark island on the light page, mono text, the
-   prompt in the island's action colour. */
+   prompt in the island's action colour. A line too long for a phone
+   wraps: nothing to scroll, and the public key shows whole. */
 .terminal {
   margin: 0;
   padding: 20px 24px;
@@ -579,8 +571,13 @@ p {
   font-size: 0.8125rem;
   line-height: 1.8;
   font-variant-numeric: tabular-nums;
-  overflow-x: auto;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 639px) {
+  .terminal {
+    padding: 16px;
+  }
 }
 .terminal .prompt {
   color: var(--color-primary);
@@ -670,39 +667,39 @@ p {
   white-space: nowrap;
 }
 
-/* A code block with its copy button in the top right corner. The
-   button swaps its icon for a check for a moment once the text is on
-   the clipboard. */
+/* A code block with its copy button down its right edge, 44px wide
+   and as tall as the block. The button swaps its icon for a check for
+   a moment once the text is on the clipboard. */
 .code-copy {
   position: relative;
   margin-top: 8px;
 }
 .code-copy .code-block {
-  padding-right: 52px;
+  padding-right: 56px;
 }
 .code-copy-button {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  inset-block: 0;
+  right: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  min-height: 44px;
   border: 0;
-  border-radius: var(--radius-sm);
-  /* The block's own surface: a line wider than a phone runs under the
-     button instead of showing through the icon. */
-  background: var(--color-sunken);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: transparent;
   color: var(--color-muted);
   cursor: pointer;
   transition:
     background-color 150ms var(--ease-out-toundra),
     color 150ms var(--ease-out-toundra);
 }
-.code-copy-button:hover {
-  background: color-mix(in srgb, var(--color-sunken) 60%, var(--color-border));
-  color: var(--color-text);
+@media (hover: hover) {
+  .code-copy-button:hover {
+    background: color-mix(in srgb, var(--color-sunken) 60%, var(--color-border));
+    color: var(--color-text);
+  }
 }
 .code-copy-button .code-copy-done {
   display: none;
@@ -750,16 +747,19 @@ details[open] > .disclosure svg {
   transform: rotate(90deg);
 }
 
-/* Inline code and command blocks: data font on the sunken surface. */
+/* Inline code and command blocks: data font on the sunken surface. A
+   command or a key too long for the block wraps, so that it shows
+   whole: the copy button gives it back on one line. */
 .code-block {
+  margin: 0;
   background: var(--color-sunken);
   border-radius: var(--radius-sm);
   padding: 12px 16px;
   font-family: var(--font-data);
-  font-size: 0.8125rem;
-  line-height: 1.6;
+  font-size: var(--text-data);
+  line-height: var(--text-data--line-height);
   font-variant-numeric: tabular-nums;
-  overflow-x: auto;
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 }

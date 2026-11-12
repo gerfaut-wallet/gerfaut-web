@@ -326,11 +326,11 @@ const sourceFacts = [
           <Button href="/download#verify" variant="quiet">Verify a download</Button>
         </div>
       </div>
-      <pre class="dark-island terminal" tabindex="0"><code><span class="prompt">$</span> minisign -Vm SHA256SUMS \
+      <pre class="dark-island terminal"><code><span class="prompt">$</span> minisign -Vm SHA256SUMS \
     -P RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O
 <span class="out">Signature and comment signature verified</span>
 <span class="out">Trusted comment: Gerfaut v0.1.0</span>
-<span class="prompt">$</span> sha256sum --check SHA256SUMS --ignore-missing
+<span class="prompt">$</span> sha256sum --check SHA256SUMS <span class="whitespace-nowrap">--ignore-missing</span>
 <span class="out">Gerfaut_0.1.0_amd64.AppImage: OK</span></code></pre>
     </div>
   </section>
