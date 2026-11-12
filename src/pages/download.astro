@@ -360,7 +360,8 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
     // A name too long for its row breaks after a dash or an underscore,
     // and inside a word only when even that leaves it too long.
     label.className = "font-data block text-data wrap-anywhere";
-    for (const [index, part] of asset.name.split(/(?<=[-_])/).entries()) {
+    const parts = asset.name.match(/[^-_]*[-_]?/g) ?? [asset.name];
+    for (const [index, part] of parts.filter(Boolean).entries()) {
       if (index > 0) label.append(document.createElement("wbr"));
       label.append(part);
     }
