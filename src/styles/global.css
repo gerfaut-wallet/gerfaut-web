@@ -132,14 +132,17 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-h1,
-h2,
-h3 {
-  text-wrap: balance;
-}
+/* In the base layer, so that one paragraph can ask for balance. */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
 
-p {
-  text-wrap: pretty;
+  p {
+    text-wrap: pretty;
+  }
 }
 
 /* Focus: 2px ring in the theme's action color, offset 2px. */
