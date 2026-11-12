@@ -270,7 +270,9 @@ body {
 /* --- shared component classes --- */
 
 @layer components {
-/* Buttons: 44px, radius 8px, Instrument Sans 14px/500, press scale 0.96. */
+/* Buttons: 44px, radius 8px, Instrument Sans 14px/500, press scale 0.96.
+   A label too long for its place wraps and the button grows, rather
+   than run out of the card around it. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -283,9 +285,9 @@ body {
   font-family: var(--font-ui);
   font-size: 0.875rem;
   font-weight: 500;
-  line-height: 1;
+  line-height: 1.25;
+  text-align: center;
   text-decoration: none;
-  white-space: nowrap;
   cursor: pointer;
   transition:
     background-color 150ms var(--ease-out-toundra),
@@ -305,7 +307,7 @@ body {
   }
 }
 .btn-wide {
-  padding: 0 28px;
+  padding-inline: 28px;
 }
 /* Disabled: half opacity, no hover, no press. Only a primary <button>
    gets there; a link is never disabled. */
