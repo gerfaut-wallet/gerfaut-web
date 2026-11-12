@@ -368,6 +368,9 @@ p {
 }
 .nav-item[aria-current="page"] {
   color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 6px;
 }
 
 /* The phone menu: a 44px button, and a panel that drops under the

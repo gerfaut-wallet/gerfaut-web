@@ -32,7 +32,9 @@ const links = [
           it alone. Gone with the first stable release, like the banner. */}
       <Badge variant="beta" class="hidden min-[390px]:inline-flex" data-beta-pill>Beta</Badge>
     </div>
-    <nav aria-label="Main" class="flex items-center gap-1">
+    {/* Pulled out by the padding of its last entry, so that the last
+        glyph of the bar ends on the edge of the page. */}
+    <nav aria-label="Main" class="-mr-[11px] flex items-center gap-1 md:-mr-3">
       <a
         href="/download"
         class="nav-item"
@@ -50,7 +52,7 @@ const links = [
                 class="nav-item"
                 aria-current={path === link.href ? "page" : undefined}
               >
-                {link.label === "GitHub" && <Icon name="github" size={16} />}
+                <Icon name={link.icon} size={16} />
                 {link.label}
               </a>
             </li>
