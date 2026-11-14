@@ -34,7 +34,7 @@ The Deploy workflow builds the site and publishes it to Cloudflare Pages. It run
 | Repository | Role |
 |---|---|
 | [`gerfaut-core`](https://github.com/gerfaut-wallet/gerfaut-core) | Core Rust library |
-| [`gerfaut-mobile`](https://github.com/gerfaut-wallet/gerfaut-mobile) | Mobile app (Flutter, Android first) |
+| [`gerfaut-mobile`](https://github.com/gerfaut-wallet/gerfaut-mobile) | Mobile app (Flutter), for Android, with iPhone coming soon through TestFlight |
 | [`gerfaut-desktop`](https://github.com/gerfaut-wallet/gerfaut-desktop) | Desktop app (Tauri v2, for Linux, macOS, and Windows) |
 | [`gerfaut-docs`](https://github.com/gerfaut-wallet/gerfaut-docs) | User documentation (Mintlify), served at gerfaut-wallet.com/docs |
 | `gerfaut-web` | Website and downloads, this repository |

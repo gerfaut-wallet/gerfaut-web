@@ -1,9 +1,10 @@
-/** The visitor's system, when it is one the apps run on. iOS has no app
-    yet, and anything unknown gets the generic wording. */
-export type Platform = {
-  slot: "windows" | "macos" | "linux" | "android";
-  name: string;
-};
+/** The visitor's system, when Gerfaut has an app for it. The iPhone app
+    is not out yet: `coming` sends the visitor to its card on the
+    download page, never to a file. An iPad, and anything unknown, gets
+    the generic wording. */
+export type Platform =
+  | { slot: "windows" | "macos" | "linux" | "android"; name: string; release: "out" }
+  | { slot: "iphone"; name: "iPhone"; release: "coming" };
 
 type UserAgentData = {
   platform?: string;
@@ -14,14 +15,15 @@ export async function detectPlatform(): Promise<Platform | null> {
   const ua = navigator.userAgent;
   const data = (navigator as { userAgentData?: UserAgentData }).userAgentData;
   const platform = data?.platform ?? navigator.platform;
-  if (/Android/i.test(ua)) return { slot: "android", name: "Android" };
-  if (/iPhone|iPad|iPod/i.test(ua)) return null;
-  if (/Win/i.test(platform)) return { slot: "windows", name: "Windows" };
+  if (/Android/i.test(ua)) return { slot: "android", name: "Android", release: "out" };
+  if (/iPhone/i.test(ua)) return { slot: "iphone", name: "iPhone", release: "coming" };
+  if (/iPad|iPod/i.test(ua)) return null;
+  if (/Win/i.test(platform)) return { slot: "windows", name: "Windows", release: "out" };
   // Safari on an iPad says Mac, but no Mac has a touch screen.
   if (/Mac/i.test(platform) && navigator.maxTouchPoints > 1) return null;
-  if (/Mac/i.test(platform)) return { slot: "macos", name: "macOS" };
+  if (/Mac/i.test(platform)) return { slot: "macos", name: "macOS", release: "out" };
   if (/Linux/i.test(platform)) {
-    return (await isX86_64Linux(data)) ? { slot: "linux", name: "Linux" } : null;
+    return (await isX86_64Linux(data)) ? { slot: "linux", name: "Linux", release: "out" } : null;
   }
   return null;
 }
