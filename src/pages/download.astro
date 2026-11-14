@@ -54,7 +54,7 @@ const iphoneDifferences = [
   "iOS cannot block screenshots. With a lock set, the app blanks itself in the app switcher.",
 ] as const;
 
-const minisignKey ="RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
+const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
 ---
 
 <Base
@@ -563,8 +563,9 @@ const minisignKey ="RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
       if (!detected) return;
       const card = highlight(detected.slot);
       // A system whose app is not out yet: its card moves to the top,
-      // ahead of files the visitor has no use for.
-      if (card && detected.release === "coming") card.parentElement?.prepend(card);
+      // ahead of files the visitor has no use for. Only on a plain
+      // visit, so that a page opened on #verify never jumps.
+      if (card && detected.release === "coming" && !named) card.parentElement?.prepend(card);
     });
   }
 
