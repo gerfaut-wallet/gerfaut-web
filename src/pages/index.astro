@@ -49,7 +49,7 @@ const sourceFacts = [
 
 <Base
   title="Gerfaut · The ultimate Bitcoin watch-only wallet"
-  description="Gerfaut is a Bitcoin watch-only wallet for Android and desktop. It follows every wallet you own from its descriptor or public key and holds no private keys."
+  description="Gerfaut is a Bitcoin watch-only wallet for Android and desktop, with an iPhone app coming soon. It follows every wallet you own from its descriptor or public key and holds no private keys."
 >
   <section class="pt-16 pb-12 md:pt-24 md:pb-16">
     <div class="site-container">
@@ -72,11 +72,13 @@ const sourceFacts = [
           </Button>
         </div>
         {/* Two facts: side by side with a dot between them, or one
-            under the other on a phone, never cut inside the list. */}
+            under the other on a phone, never cut inside the list. The
+            iPhone, not out yet, keeps a line of its own. */}
         <p class="rise rise-4 mt-4 text-sm text-muted">
           <span class="block sm:inline">Free and open source</span>
           <span class="sep hidden sm:inline" aria-hidden="true">&middot;</span>
           <span class="block sm:inline">Android, Linux, macOS and Windows</span>
+          <span class="block">iPhone coming soon, through TestFlight</span>
         </p>
       </div>
       <figure class="rise rise-5 shot mt-12 md:mt-16">
@@ -210,7 +212,7 @@ const sourceFacts = [
     facts={[
       "electrs or Fulcrum over TLS or plain TCP, Esplora over HTTPS or HTTP",
       "Self-signed certificates pinned by their fingerprint",
-      "Live notifications within seconds over Electrum, the public default included. Over Esplora, addresses the server does not push are checked a few per minute, so a payment can take longer to show",
+      "Live notifications on desktop and Android, within seconds over Electrum, the public default included. Over Esplora, addresses the server does not push are checked a few per minute, so a payment can take longer to show",
       "Mainnet, signet, testnet4 and regtest, each with its own backend",
     ]}
     reverse
@@ -291,6 +293,7 @@ const sourceFacts = [
       "Inputs, outputs and fee drawn before anything leaves",
       "A warning for anything odd: a missing signature, a high fee, dust",
       "Sent through the backend you chose, over Tor when that backend is an .onion",
+      "On desktop and Android only, as the iPhone app will never send a transaction",
     ]}
   >
     <figure class="shot">
@@ -352,6 +355,7 @@ const sourceFacts = [
           Android <span class="sep" aria-hidden="true">&middot;</span> Linux
           <span class="sep" aria-hidden="true">&middot;</span> macOS
           <span class="sep" aria-hidden="true">&middot;</span> Windows
+          <span class="block">iPhone coming soon, through TestFlight</span>
         </p>
       </div>
     </div>
@@ -361,13 +365,15 @@ const sourceFacts = [
 <script>
   import { detectPlatform } from "../lib/platform";
 
-  // The download buttons name the visitor's system when it is one the
-  // apps run on, and point at its card on the download page. Anything
-  // else keeps the generic label.
+  // The download buttons point at the card of the visitor's system on
+  // the download page, and name the system when its app is out. On an
+  // iPhone they keep the generic label: there is nothing to download
+  // yet, and the card says so. Anything else keeps the generic button.
   detectPlatform().then((detected) => {
     if (!detected) return;
     for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-os-download]")) {
       link.href = `/download#${detected.slot}`;
+      if (detected.release !== "out") continue;
       const label = link.querySelector("span");
       if (label) label.textContent = `Download for ${detected.name}`;
     }
