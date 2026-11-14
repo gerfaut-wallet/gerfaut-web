@@ -6,7 +6,7 @@ Website of [Gerfaut](https://github.com/gerfaut-wallet), a Bitcoin watch-only wa
 
 ## Status: public beta
 
-Gerfaut is in public beta, and a banner at the top of every page says so. Report a problem with the site in the [issues](https://github.com/gerfaut-wallet/gerfaut-web/issues) here, and a problem with an app in that app's repository ([Android](https://github.com/gerfaut-wallet/gerfaut-mobile/issues), [desktop](https://github.com/gerfaut-wallet/gerfaut-desktop/issues)).
+Gerfaut is in public beta, and a banner at the top of every page says so. Report a problem with the site in the [issues](https://github.com/gerfaut-wallet/gerfaut-web/issues) here, and a problem with an app in that app's repository ([mobile](https://github.com/gerfaut-wallet/gerfaut-mobile/issues), [desktop](https://github.com/gerfaut-wallet/gerfaut-desktop/issues)).
 
 ## Scope
 

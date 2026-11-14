@@ -8,8 +8,10 @@ import Button from "../components/ui/Button.astro";
 import Card from "../components/ui/Card.astro";
 import CardHeader from "../components/ui/CardHeader.astro";
 
-// Listed in this order whenever the list is written out by hand: Android,
-// Linux, macOS, Windows. The visitor's own system is only marked.
+// Listed in this order whenever the list is written out by hand: the two
+// phones side by side, then Linux, macOS, Windows. The visitor's own
+// system is only marked. A system marked `coming` has no file yet: its
+// card says so where the files would be.
 const platforms = [
   {
     slot: "android",
@@ -17,6 +19,13 @@ const platforms = [
     icon: "smartphone",
     formats: "one .apk per processor",
     repo: "gerfaut-mobile",
+  },
+  {
+    slot: "iphone",
+    name: "iPhone",
+    icon: "smartphone",
+    formats: "iOS 15 or newer",
+    coming: true,
   },
   {
     slot: "linux",
@@ -43,15 +52,6 @@ const platforms = [
     firstLaunch:
       "The installer has no code-signing certificate, so SmartScreen may stop it the first time. Click “More info”, then “Run anyway”.",
   },
-] as const;
-
-// What the iPhone app will not do that the Android app does.
-const iphoneDifferences = [
-  "No Live. iOS lets no app keep a connection open in the background.",
-  "Background checks run when iOS wakes the app, never more often than the interval you set, often less, and not at all once you swipe the app away.",
-  "No calculator disguise and no home screen widgets.",
-  "No Broadcast screen. The iPhone app never sends a transaction to the network.",
-  "iOS cannot block screenshots. With a lock set, the app blanks itself in the app switcher.",
 ] as const;
 
 const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
@@ -84,7 +84,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
         open an issue on GitHub for the
         <a
           href="https://github.com/gerfaut-wallet/gerfaut-mobile/issues"
-          class="beta-link">Android app</a
+          class="beta-link">mobile app</a
         >
         or the
         <a
@@ -106,60 +106,75 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
               <CardHeader icon={platform.icon} title={platform.name} description={platform.formats}>
                 <Fragment slot="action">
                   <Badge class="hidden" data-platform-current>Your system</Badge>
-                  <span
-                    class="font-data hidden rounded-sm bg-sunken px-2 py-1 text-data text-muted"
-                    data-release-version={platform.slot}
-                  />
+                  {!("coming" in platform) && (
+                    <span
+                      class="font-data hidden rounded-sm bg-sunken px-2 py-1 text-data text-muted"
+                      data-release-version={platform.slot}
+                    />
+                  )}
                 </Fragment>
               </CardHeader>
-              <div
-                class="mt-5 border-t border-border pt-4"
-                data-release={platform.slot}
-                aria-live="polite"
-              >
-                <div data-state="loading" hidden>
-                  <p class="text-sm text-muted">
-                    Checking the latest release&hellip;
-                  </p>
-                </div>
-                <div data-state="empty" hidden>
-                  <p class="text-sm font-medium">No release yet.</p>
+              {"coming" in platform ? (
+                <div class="mt-5 border-t border-border pt-4">
+                  <p class="text-sm font-medium">Coming soon, through TestFlight.</p>
                   <p class="mt-1 text-sm text-muted">
-                    The files will appear here once one is published. Until
-                    then, follow the project on
-                    <a href="https://github.com/gerfaut-wallet" class="link">
-                      GitHub</a
-                    >.
-                  </p>
-                </div>
-                <div data-state="missing" hidden>
-                  <p class="text-sm font-medium">
-                    <span data-missing-version>This release</span> has no
-                    {platform.name} build.
-                  </p>
-                  <p class="mt-1 text-sm text-muted">
-                    Its notes and the earlier builds are on the
+                    How it differs from Android is in the
                     <a
-                      href={`https://github.com/gerfaut-wallet/${platform.repo}/releases`}
-                      class="link">releases page</a
+                      href="https://gerfaut-wallet.com/docs/getting-started/iphone-app"
+                      class="link">docs</a
                     >.
                   </p>
                 </div>
-                {/* Shown before the script runs and without it, as well as
-                    when GitHub gives no usable answer: it says where the
-                    files are, not that something failed. */}
-                <div data-state="elsewhere">
-                  <p class="text-sm font-medium">The files are on GitHub.</p>
-                  <p class="mt-1 text-sm text-muted">
-                    Get them from the
-                    <a
-                      href={`https://github.com/gerfaut-wallet/${platform.repo}/releases/latest`}
-                      class="link">release page</a
-                    >.
-                  </p>
+              ) : (
+                <div
+                  class="mt-5 border-t border-border pt-4"
+                  data-release={platform.slot}
+                  aria-live="polite"
+                >
+                  <div data-state="loading" hidden>
+                    <p class="text-sm text-muted">
+                      Checking the latest release&hellip;
+                    </p>
+                  </div>
+                  <div data-state="empty" hidden>
+                    <p class="text-sm font-medium">No release yet.</p>
+                    <p class="mt-1 text-sm text-muted">
+                      The files will appear here once one is published. Until
+                      then, follow the project on
+                      <a href="https://github.com/gerfaut-wallet" class="link">
+                        GitHub</a
+                      >.
+                    </p>
+                  </div>
+                  <div data-state="missing" hidden>
+                    <p class="text-sm font-medium">
+                      <span data-missing-version>This release</span> has no
+                      {platform.name} build.
+                    </p>
+                    <p class="mt-1 text-sm text-muted">
+                      Its notes and the earlier builds are on the
+                      <a
+                        href={`https://github.com/gerfaut-wallet/${platform.repo}/releases`}
+                        class="link">releases page</a
+                      >.
+                    </p>
+                  </div>
+                  {/* Shown before the script runs and without it, as well as
+                      when GitHub gives no usable answer: it says where the
+                      files are, not that something failed. */}
+                  <div data-state="elsewhere">
+                    <p class="text-sm font-medium">The files are on GitHub.</p>
+                    <p class="mt-1 text-sm text-muted">
+                      Get them from the
+                      <a
+                        href={`https://github.com/gerfaut-wallet/${platform.repo}/releases/latest`}
+                        class="link">release page</a
+                      >.
+                    </p>
+                  </div>
+                  <ul data-state="list" hidden class="space-y-2" />
                 </div>
-                <ul data-state="list" hidden class="space-y-2" />
-              </div>
+              )}
               {
                 "firstLaunch" in platform && (
                   <p class="mt-4 text-sm text-muted">
@@ -171,42 +186,6 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
             </Card>
           ))
         }
-        {/* No file to offer yet, so the card says what is coming and what
-            will differ, after every card that has one. As wide as two
-            cards once they pair up. */}
-        <Card
-          id="iphone"
-          class="flex min-w-0 scroll-mt-24 flex-col p-4 sm:p-6 xl:col-span-2"
-          data-platform="iphone"
-        >
-          <CardHeader icon="smartphone" title="iPhone" description="iOS 15 or newer">
-            <Fragment slot="action">
-              <Badge class="hidden" data-platform-current>Your system</Badge>
-              <Badge>Coming soon</Badge>
-            </Fragment>
-          </CardHeader>
-          <div class="mt-5 grid gap-x-10 gap-y-5 border-t border-border pt-4 xl:grid-cols-2">
-            <div>
-              <p class="text-sm font-medium">Coming soon, through TestFlight.</p>
-              <p class="mt-1 text-sm text-muted">
-                The iPhone app is built from the same code as the Android
-                app, and every change is built and tested for it. No version
-                is out yet.
-              </p>
-              <p class="mt-3 text-sm text-muted">
-                Everything else is the same app: watch-only, notifications,
-                a PIN or password lock with Face ID, encrypted backups,
-                Electrum and Esplora backends, and Tor built in.
-              </p>
-            </div>
-            <div>
-              <h3 class="text-sm font-medium">How it differs from Android</h3>
-              <ul class="mt-2 list-disc space-y-1.5 pl-5 text-sm text-muted marker:text-border">
-                {iphoneDifferences.map((difference) => <li>{difference}</li>)}
-              </ul>
-            </div>
-          </div>
-        </Card>
       </div>
 
       <p class="mx-auto mt-8 max-w-xl text-center text-sm text-muted">
@@ -240,7 +219,7 @@ const minisignKey = "RWTz3c4gUmglCX5Uvjthigz1ts3TS3ZSdhRNpFgOJRW/Wr4XjGlqTR3O";
           from the
           <a
             href="https://github.com/gerfaut-wallet/gerfaut-mobile/releases/latest"
-            class="link">Android</a
+            class="link">mobile</a
           >
           or
           <a
